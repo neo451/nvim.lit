@@ -2,6 +2,8 @@
 --   require("otter").activate()
 -- end)
 
+vim.wo.conceallevel = 2
+
 pcall(function()
 	vim.keymap.del("i", "<leader>f", { buffer = true })
 	vim.keymap.del("i", "<leader>r", { buffer = true })
@@ -32,3 +34,5 @@ pcall(function()
 	vim.keymap.set("x", "<Leader><M-x>", toggle.checkbox_cycle, opts)
 	vim.keymap.set("x", "<C-h>", toggle.heading, opts)
 end)
+
+vim.keymap.set("n", "<leader>p", "<cmd>Obsidian paste_img<cr>", { buffer = true })

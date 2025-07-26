@@ -1,7 +1,11 @@
+# saghen/blink.cmp
+
+- build: `cargo build --release`
+
 # catppuccin/nvim
 
 ```lua
-vim.cmd("colorscheme catppuccin")
+vim.cmd("colorscheme catppuccin-mocha")
 ```
 
 # nvim-lua/plenary.nvim
@@ -79,6 +83,11 @@ require("snacks").setup({
 	scroll = { enabled = true },
 	image = {
 		enabled = true,
+		resolve = function(path, src)
+			if require("obsidian.api").path_is_note(path) then
+				return require("obsidian.api").resolve_image_path(src)
+			end
+		end,
 		wo = {
 			winhighlight = "FloatBorder:WhichKeyBorder",
 		},
@@ -151,7 +160,7 @@ require("conform").setup({
 
 ```lua
 local nts = require("nvim-treesitter")
-nts.install({ "go" })
+nts.install({ "go", "lua", "xml", "yaml", "markdown", "markdown_inline" })
 ```
 
 ## echasnovski/mini.icons
