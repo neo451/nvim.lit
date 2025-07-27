@@ -1,6 +1,17 @@
+# ibhagwan/fzf-lua
+
+# monaqa/dial.nvim
+
+```lua
+require("_dial")
+```
+
 # saghen/blink.cmp
 
-- build: `cargo build --release`
+- version: `1.*`
+- config: true
+
+<!-- - build: `cargo build --release` -->
 
 # catppuccin/nvim
 
@@ -160,7 +171,7 @@ require("conform").setup({
 
 ```lua
 local nts = require("nvim-treesitter")
-nts.install({ "go", "lua", "xml", "yaml", "markdown", "markdown_inline" })
+nts.install({ "go", "xml", "yaml", "markdown", "markdown_inline" })
 ```
 
 ## echasnovski/mini.icons
@@ -170,6 +181,20 @@ require("mini.icons").setup()
 MiniIcons.mock_nvim_web_devicons()
 ```
 
+## rasulomaroff/reactive.nvim
+
+```lua
+require("reactive").setup({
+	builtin = {
+		cursorline = true,
+		cursor = true,
+		modemsg = true,
+	},
+})
+```
+
 # Markdown
 
 ## OXY2DEV/markview.nvim
+
+## bullets-vim/bullets.vim

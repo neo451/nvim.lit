@@ -33,7 +33,7 @@ require("obsidian").setup({
 	},
 
 	picker = {
-		name = "snacks.pick",
+		name = "fzf-lua",
 	},
 
 	attachments = {
@@ -69,19 +69,19 @@ require("obsidian").setup({
 	workspaces = {
 		{
 			name = "notes",
-			path = "~/Notes",
+			path = "~/Vaults/Notes",
 		},
 		{
 			name = "cosma-test",
-			path = "~/cosma-test/",
+			path = "~/Vaults/cosma-test/",
 		},
-		-- {
-		--   name = "work",
-		--   path = "~/Work",
-		-- },
 		{
-			-- name = "hub",
-			path = "~/obsidian-hub/",
+			name = "work",
+			path = "~/Vaults/Work",
+		},
+		{
+			name = "hub",
+			path = "~/Vaults/obsidian-hub/",
 		},
 		-- {
 		--   name = "stress test",

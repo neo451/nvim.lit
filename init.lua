@@ -11,6 +11,7 @@ vim.keymap.set("n", "<leader>E", "<cmd>e ~/.config/litvim/init.md<cr>")
 -- 	require("vim._extui").enable({})
 -- end)
 
+vim.cmd("packadd fzf-lua")
 vim.cmd("packadd plenary.nvim")
 vim.cmd("packadd snacks.nvim")
 
