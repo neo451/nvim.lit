@@ -1,7 +1,3 @@
--- pcall(function()
---   require("otter").activate()
--- end)
-
 vim.wo.conceallevel = 2
 
 pcall(function()
