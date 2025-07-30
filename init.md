@@ -1,4 +1,35 @@
+# vim
+
+## folke/which-key.nvim
+
+- config: true
+
+## tommcdo/vim-lion
+
+- `glip=`
+- `3gLi(,`
+
+# APPs
+
+## neet-007/rfc-view.nvim
+
+- build: `cd go && build main.go`
+
+```lua
+local rfcview = require("rfcview")
+rfcview.setup({})
+
+vim.keymap.set("n", "<leader>ro", rfcview.open_rfc)
+vim.keymap.set("n", "<leader>rc", rfcview.close_rfc)
+```
+
+## pwntester/octo.nvim
+
+- config: true
+
 # ibhagwan/fzf-lua
+
+# nvim-telescope/telescope.nvim
 
 # monaqa/dial.nvim
 
@@ -9,9 +40,6 @@ require("_dial")
 # saghen/blink.cmp
 
 - version: `1.*`
-- config: true
-
-<!-- - build: `cargo build --release` -->
 
 # catppuccin/nvim
 
@@ -35,27 +63,27 @@ vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>")
 
 ```lua
 require("gitsigns").setup({
-	signs = {
-		add = { text = "▎" },
-		change = { text = "▎" },
-		delete = { text = "" },
-		topdelete = { text = "" },
-		changedelete = { text = "▎" },
-		untracked = { text = "▎" },
-	},
-	signs_staged = {
-		add = { text = "▎" },
-		change = { text = "▎" },
-		delete = { text = "" },
-		topdelete = { text = "" },
-		changedelete = { text = "▎" },
-	},
-	on_attach = function(buffer)
-		local gs = package.loaded.gitsigns
+   signs = {
+      add = { text = "▎" },
+      change = { text = "▎" },
+      delete = { text = "" },
+      topdelete = { text = "" },
+      changedelete = { text = "▎" },
+      untracked = { text = "▎" },
+   },
+   signs_staged = {
+      add = { text = "▎" },
+      change = { text = "▎" },
+      delete = { text = "" },
+      topdelete = { text = "" },
+      changedelete = { text = "▎" },
+   },
+   on_attach = function(buffer)
+      local gs = package.loaded.gitsigns
 
-		local function map(mode, l, r, desc)
-			vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
-		end
+      local function map(mode, l, r, desc)
+         vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+      end
 
     -- stylua: ignore start
     map("n", "]c", function()
@@ -83,7 +111,7 @@ require("gitsigns").setup({
     map("n", "<leader>ghd", gs.diffthis, "Diff This")
     map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
     map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
-	end,
+   end,
 })
 ```
 
@@ -91,50 +119,55 @@ require("gitsigns").setup({
 
 ```lua
 require("snacks").setup({
-	scroll = { enabled = true },
-	image = {
-		enabled = true,
-		resolve = function(path, src)
-			if require("obsidian.api").path_is_note(path) then
-				return require("obsidian.api").resolve_image_path(src)
-			end
-		end,
-		wo = {
-			winhighlight = "FloatBorder:WhichKeyBorder",
-		},
-		doc = {
-			inline = false,
-			max_width = 45,
-			max_height = 20,
-		},
-	},
-	-- bigfile = { enabled = true },
-	input = { enabled = true },
-	picker = {
-		enabled = true,
-	},
-	statuscolumn = { enabled = true },
-	styles = {
-		notification = {
-			wo = { wrap = true },
-		},
-		snacks_image = {
-			relative = "editor",
-			col = -1,
-		},
-	},
-	notifier = {
-		enabled = true,
-		timeout = 3000,
-	},
-	scope = { enabled = true },
+   scroll = { enabled = true },
+   image = {
+      enabled = true,
+      resolve = function(path, src)
+         if require("obsidian.api").path_is_note(path) then
+            return require("obsidian.api").resolve_image_path(src)
+         end
+      end,
+      wo = {
+         winhighlight = "FloatBorder:WhichKeyBorder",
+      },
+      doc = {
+         inline = false,
+         max_width = 45,
+         max_height = 20,
+      },
+   },
+   -- bigfile = { enabled = true },
+   input = { enabled = true },
+   picker = {
+      enabled = true,
+   },
+   statuscolumn = { enabled = true },
+   styles = {
+      notification = {
+         wo = { wrap = true },
+      },
+      snacks_image = {
+         relative = "editor",
+         col = -1,
+      },
+   },
+   notifier = {
+      enabled = true,
+      timeout = 3000,
+   },
+   scope = { enabled = true },
 })
 ```
 
 # stevearc/oil.nvim
 
 ```lua
-require("oil").setup({})
+require("oil").setup({
+   delete_to_trash = true,
+   view_options = {
+      show_hidden = true,
+   },
+})
 vim.keymap.set("n", "-", "<cmd>Oil<cr>")
 ```
 
@@ -142,20 +175,20 @@ vim.keymap.set("n", "-", "<cmd>Oil<cr>")
 
 ```lua
 require("conform").setup({
-	format_on_save = {
-		timeout_ms = 500,
-		lsp_format = "fallback",
-	},
-	formatters_by_ft = {
-		c = { "astyle" },
-		nix = { "nixfmt" },
-		lua = { "stylua" },
-		markdown = { "prettier", "injected" },
-		html = { "prettier" },
-		javascript = { "prettier" },
-		typescript = { "prettier" },
-		json = { "jq" },
-	},
+   format_on_save = {
+      timeout_ms = 500,
+      lsp_format = "fallback",
+   },
+   formatters_by_ft = {
+      c = { "astyle" },
+      nix = { "nixfmt" },
+      lua = { "stylua" },
+      markdown = { "prettier", "injected" },
+      html = { "prettier" },
+      javascript = { "prettier" },
+      typescript = { "prettier" },
+      json = { "jq" },
+   },
 })
 ```
 
@@ -185,11 +218,11 @@ MiniIcons.mock_nvim_web_devicons()
 
 ```lua
 require("reactive").setup({
-	builtin = {
-		cursorline = true,
-		cursor = true,
-		modemsg = true,
-	},
+   builtin = {
+      cursorline = true,
+      cursor = true,
+      modemsg = true,
+   },
 })
 ```
 
@@ -197,4 +230,52 @@ require("reactive").setup({
 
 ## OXY2DEV/markview.nvim
 
+```lua
+require("markview").setup({
+   markdown = {
+      list_items = {
+         shift_width = 0,
+      },
+   },
+})
+```
+
 ## bullets-vim/bullets.vim
+
+## jmbuhr/otter.nvim
+
+```lua
+require("otter").setup({})
+```
+
+# Utilities
+
+## echasnovski/mini.test
+
+```lua
+require("mini.test").setup({})
+```
+
+## echasnovski/mini.surround
+
+```lua
+require("mini.surround").setup({})
+```
+
+## folke/lazydev.nvim
+
+```lua
+require("lazydev").setup({
+   library = {
+      { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+   },
+})
+```
+
+# LSP
+
+## smjonas/inc-rename.nvim
+
+```lua
+require("inc_rename").setup({})
+```
