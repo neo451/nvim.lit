@@ -196,7 +196,14 @@ require("conform").setup({
 
 ## nvim-lualine/lualine.nvim
 
-- config: true
+```lua
+require("lualine").setup({
+   options = {
+      section_separators = "",
+      component_separators = "",
+   },
+})
+```
 
 ## nvim-treesitter/nvim-treesitter
 
@@ -247,6 +254,12 @@ require("markview").setup({
 ```lua
 require("otter").setup({})
 ```
+
+## marcocofano/excalidraw.nvim
+
+- config: true
+
+hi.excalidraw
 
 # Utilities
 
