@@ -1,3 +1,11 @@
+## dmtrKovalenko/fff.nvim
+
+- build: `cargo build --release`
+
+```lua
+require("fff").setup({})
+```
+
 # vim
 
 ## folke/which-key.nvim
@@ -40,6 +48,10 @@ require("_dial")
 # saghen/blink.cmp
 
 - version: `1.*`
+
+```lua
+require("_blink")
+```
 
 # catppuccin/nvim
 
@@ -194,9 +206,11 @@ require("conform").setup({
 
 # UI
 
-## nvim-lualine/lualine.nvim
+## sj2tpgk/nvim-eldoc
 
-- config: true
+```lua
+require("nvim-eldoc").setup({})
+```
 
 ## nvim-treesitter/nvim-treesitter
 
@@ -204,7 +218,24 @@ require("conform").setup({
 
 ```lua
 local nts = require("nvim-treesitter")
-nts.install({ "go", "xml", "yaml", "markdown", "markdown_inline" })
+nts.install({
+   "go",
+   "xml",
+   "yaml",
+   "markdown",
+   "markdown_inline",
+   "rust",
+   "zig",
+   "bash",
+   "fish",
+   "gitcommit",
+})
+```
+
+## nvim-treesitter/nvim-treesitter-context
+
+```lua
+require("treesitter-context").setup({})
 ```
 
 ## echasnovski/mini.icons
@@ -272,10 +303,31 @@ require("lazydev").setup({
 })
 ```
 
+## andrewferrier/debugprint.nvim
+
+- `g?p`/`g?P`
+- `Debugprint qflist`
+
+```lua
+require("debugprint").setup({})
+```
+
 # LSP
 
 ## smjonas/inc-rename.nvim
 
 ```lua
 require("inc_rename").setup({})
+```
+
+# Fun
+
+## davidgranstrom/scnvim
+
+```lua
+require("scnvim").setup({
+   sclang = {
+      cmd = "/mnt/d/install/sclang.exe",
+   },
+})
 ```
