@@ -10,6 +10,10 @@ require("obsidian").setup({
       enabled = true,
    },
 
+   ui = {
+      enable = false,
+   },
+
    checkbox = {
       order = { "x", " " },
       create_new = true,

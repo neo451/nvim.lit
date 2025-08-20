@@ -259,13 +259,22 @@ require("reactive").setup({
 
 # Markdown
 
-## OXY2DEV/markview.nvim
+## MeanderingProgrammer/render-markdown.nvim
 
 ```lua
-require("markview").setup({
-   markdown = {
-      list_items = {
-         shift_width = 0,
+require("render-markdown").setup({
+   -- heading = {
+   --    enabled = false,
+   -- },
+   checkbox = {
+      custom = {
+         right_arrow = {
+            raw = "[>]",
+            rendered = " ",
+            highlight = "ObsidianRightArrow",
+         },
+         tilde = { raw = "[~]", rendered = "󰰱 ", highlight = "ObsidianTilde" },
+         important = { raw = "[!]", rendered = " ", highlight = "ObsidianImportant" },
       },
    },
 })
