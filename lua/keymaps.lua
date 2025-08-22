@@ -1,32 +1,51 @@
 local set = vim.keymap.set
 
+-- Create a new tab
+vim.keymap.set("n", "<leader>tn", ":tabnew<CR>", { desc = "New [t]ab" })
+
+-- Exclude current tab
+vim.keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "E[x]clude tab" })
+
+-- Toggle showing the tabline
+vim.keymap.set("n", "<leader>tt", function()
+   if vim.o.showtabline == 2 then
+      vim.o.showtabline = 0
+   else
+      vim.o.showtabline = 2
+   end
+end, { desc = "Toggle [t]abs" })
+
+-- Navigate tabs
+vim.keymap.set("n", "]t", ":tabnext<CR>", { desc = "Next tab", silent = true })
+vim.keymap.set("n", "[t", ":tabprevious<CR>", { desc = "Previous tab", silent = true })
+
 vim.keymap.set("n", "<leader>U", "<cmd>UndotreeToggle<cr>", { desc = "Toggle UndoTree" })
 
 vim.keymap.set("n", "<leader>?", function()
-  require("which-key").show({ global = false })
+   require("which-key").show({ global = false })
 end, { desc = "Buffer Local Keymaps (which-key)" })
 
 vim.keymap.set("n", "<End>", "<cmd>restart<cr>")
 
 set("n", "grl", function()
-  vim.lsp.buf.document_link({ loclist = false })
+   vim.lsp.buf.document_link({ loclist = false })
 end)
 
 set("n", "<C-S-C>", function()
-  local buf = vim.api.nvim_get_current_buf()
-  local file = vim.api.nvim_buf_get_name(buf)
+   local buf = vim.api.nvim_get_current_buf()
+   local file = vim.api.nvim_buf_get_name(buf)
 
-  vim.ui.input({ prompt = "To copy: ", default = file }, function(input)
-    if input then
-      vim.fn.setreg("+", input)
-      vim.notify("Copied filename to clipboard", 2)
-    end
-  end)
+   vim.ui.input({ prompt = "To copy: ", default = file }, function(input)
+      if input then
+         vim.fn.setreg("+", input)
+         vim.notify("Copied filename to clipboard", 2)
+      end
+   end)
 end)
 
 -- mini version controls
 set("n", "ycc", function()
-  return "yy" .. vim.v.count1 .. "gcc']p"
+   return "yy" .. vim.v.count1 .. "gcc']p"
 end, { remap = true, expr = true })
 
 -- fix previous spell error
@@ -41,72 +60,72 @@ set("n", "J", "mzJ`z:delmarks z<cr>")
 set("i", "jk", "<esc>")
 
 set("n", "<leader><leader>x", function()
-  local base = vim.fs.basename(vim.fn.expand("%"))
-  if vim.startswith(base, "test_") then
-    return "<cmd>lua MiniTest.run_file()<cr>"
-  elseif vim.endswith(base, "_spec.lua") then
-    return "<cmd>PlenaryBustedFile %<cr>"
-  else
-    return "<cmd>w<cr><cmd>so %<cr>"
-  end
+   local base = vim.fs.basename(vim.fn.expand("%"))
+   if vim.startswith(base, "test_") then
+      return "<cmd>lua MiniTest.run_file()<cr>"
+   elseif vim.endswith(base, "_spec.lua") then
+      return "<cmd>PlenaryBustedFile %<cr>"
+   else
+      return "<cmd>w<cr><cmd>so %<cr>"
+   end
 end, { expr = true })
 
 set({ "n", "t" }, "<C-/>", "<cmd>FloatermToggle<cr>", { desc = "Terminal" })
 
 set("n", "<leader>/", function()
-  Snacks.picker.grep()
+   Snacks.picker.grep()
 end, { desc = "Grep" })
 
 set("n", "<leader>ff", function()
-  Snacks.picker.files()
+   Snacks.picker.files()
 end, { desc = "Find files" })
 
 set("n", "<leader>fc", function()
-  Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
+   Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
 end, { desc = "Find Config File" })
 
 set("n", "<leader>fp", function()
-  Snacks.picker.projects()
+   Snacks.picker.projects()
 end, { desc = "Find Prject" })
 
 set("n", "<leader>fR", function()
-  Snacks.picker.resume()
+   Snacks.picker.resume()
 end, { desc = "Resume" })
 
 set("n", "<leader>,", function()
-  Snacks.picker.buffers()
+   Snacks.picker.buffers()
 end, { desc = "Buffers" })
 
 set("n", "<leader>fr", function()
-  Snacks.picker.recent()
+   Snacks.picker.recent()
 end, { desc = "Recent" })
 
 set("n", "<leader>n", function()
-  Snacks.notifier.show_history()
+   Snacks.notifier.show_history()
 end, { desc = "Notification History" })
 
 set("n", "<leader>un", function()
-  Snacks.notifier.hide()
+   Snacks.notifier.hide()
 end, { desc = "Hide Notifications" })
 
 set("n", "<leader>.", function()
-  Snacks.scratch()
+   Snacks.scratch()
 end, { desc = "Scratch Pad" })
 
 set("n", "<leader>fp", function()
-  Snacks.picker.projects()
+   Snacks.picker.projects()
 end, { desc = "Projects" })
 
 set("n", "<leader>sm", function()
-  Snacks.picker.marks()
+   Snacks.picker.marks()
 end, { desc = "Marks" })
 
 set("n", "<leader>gb", function()
-  Snacks.picker.git_branches()
+   Snacks.picker.git_branches()
 end, { desc = "Git branches" })
 
 set("n", "<leader>P", function()
-  Snacks.picker()
+   Snacks.picker()
 end, { desc = "All pickers" })
 
 set("n", "<leader>os", "<cmd>Obsidian quick_switch<cr>")
@@ -139,10 +158,10 @@ set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 -- Clear search, diff update and redraw
 -- taken from runtime/lua/_editor.lua
 set(
-  "n",
-  "<leader>ur",
-  "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
-  { desc = "Redraw / Clear hlsearch / Diff Update" }
+   "n",
+   "<leader>ur",
+   "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+   { desc = "Redraw / Clear hlsearch / Diff Update" }
 )
 
 -- Add undo break-points

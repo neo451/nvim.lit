@@ -25,20 +25,11 @@ require("obsidian").setup({
          vim.ui.open(uri, { cmd = { "wsl-open" } })
       end,
    },
-   --
-   -- daily_notes = {
-   -- 	folder = "daily_notes",
-   -- 	date_format = "%Y/%m/%Y-%m-%d-%A",
-   -- 	-- func = function(datetime)
-   -- 	--   local note = os.date("%Y/%m-%B/%Y-%m-%d", datetime)
-   -- 	--   return "daily_notes/" .. note .. "!.md"
-   -- 	-- end,
-   -- },
+
    daily_notes = {
       date_format = "%Y-%m-%d",
       -- template = "journaling-daily-note.md",
-      folder = "10-areas/journaling/daily",
-      workdays_only = true,
+      folder = "daily_notes",
    },
 
    calendar = {

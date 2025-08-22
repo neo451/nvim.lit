@@ -171,7 +171,11 @@ require("snacks").setup({
 })
 ```
 
-# stevearc/oil.nvim
+# Files
+
+## A7Lavinraj/fyler.nvim
+
+## stevearc/oil.nvim
 
 ```lua
 require("oil").setup({
