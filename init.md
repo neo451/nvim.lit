@@ -294,6 +294,16 @@ require("otter").setup({})
 
 # Utilities
 
+## ibhagwan/fzf-lua
+
+## echasnovski/mini.pick
+
+## echasnovski/mini.ai
+
+```lua
+require("mini.ai").setup({})
+```
+
 ## echasnovski/mini.test
 
 ```lua

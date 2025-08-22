@@ -18,7 +18,10 @@ pcall(function()
    vim.cmd("packadd telescope.nvim")
    vim.cmd("packadd blink.cmp")
    vim.cmd("packadd mini.icons")
+   vim.cmd("packadd mini.pick")
 end)
+
+require("vim._extui").enable({})
 
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
 vim.opt.rtp:append("~/Plugins/nvim-anki/")
@@ -37,3 +40,4 @@ end, { desc = "Create weekly recap note" })
 require("_obsidian")
 
 require("ui.statusline")
+require("ui.tabline")

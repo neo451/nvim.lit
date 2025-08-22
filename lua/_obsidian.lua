@@ -38,7 +38,7 @@ require("obsidian").setup({
    },
 
    picker = {
-      name = "snacks.pick",
+      name = "fzf-lua",
    },
 
    attachments = {
