@@ -128,6 +128,7 @@ set("n", "<leader>P", function()
    Snacks.picker()
 end, { desc = "All pickers" })
 
+set("n", "<leader>oS", "<cmd>Obsidian search<cr>")
 set("n", "<leader>os", "<cmd>Obsidian quick_switch<cr>")
 set("n", "<leader>on", "<cmd>Obsidian new<cr>")
 set("n", "<leader>O", "<cmd>Obsidian<cr>")

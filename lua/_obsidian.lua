@@ -21,9 +21,6 @@ require("obsidian").setup({
 
    open = {
       use_advanced_uri = true,
-      func = function(uri)
-         vim.ui.open(uri, { cmd = { "wsl-open" } })
-      end,
    },
 
    daily_notes = {
@@ -38,7 +35,7 @@ require("obsidian").setup({
    },
 
    picker = {
-      name = "fzf-lua",
+      name = "snacks.pick",
    },
 
    attachments = {
@@ -81,6 +78,10 @@ require("obsidian").setup({
       {
          name = "notes",
          path = "~/Vaults/Notes",
+      },
+      {
+         name = "test",
+         path = "~/Vaults/test",
       },
       -- {
       -- 	name = "cosma-test",
