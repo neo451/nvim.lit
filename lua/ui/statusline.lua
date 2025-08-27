@@ -104,16 +104,15 @@ local function diagnostics_widget()
       return ""
    end
    local diag_count = vim.diagnostic.count()
-   -- local err, warn, info =
    local counts = {
-      err = diag_count[1] or 0,
+      error = diag_count[1] or 0,
       warn = diag_count[2] or 0,
       info = diag_count[3] or 0,
    }
    local buf = {}
 
-   for _, kind in ipairs({ "err", "warn", "info" }) do
-      if counts[kind] > 0 then
+   for _, kind in ipairs({ "error", "warn", "info" }) do
+      if counts[kind] and counts[kind] > 0 then
          buf[#buf + 1] = ICON[kind] .. string.format("%-2d", counts[kind])
       end
    end
