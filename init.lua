@@ -27,3 +27,6 @@ vim.opt.rtp:append("~/diy.nvim/")
 require("diy.fuzzy").enable(false)
 
 require("_obsidian")
+require("ob_git").setup({
+   pull_on_startup = false,
+})
