@@ -37,7 +37,11 @@ require("blink.cmp").setup({
               if ctx.item.client_name == "obsidian-ls" then
                 return ""
               end
-              local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
+              local ok, mini_icons = pcall(require, "mini.icons")
+              if not ok then
+                 return ctx.kind
+              end
+              local kind_icon, _, _ = mini_icons.get("lsp", ctx.kind)
               return kind_icon
             end,
             -- highlight = function(ctx)

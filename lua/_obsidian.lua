@@ -2,9 +2,17 @@ require("obsidian").setup({
    legacy_commands = false,
    -- prefer_config_from_obsidian_app = true,
 
-   note_id_func = function(title, path)
-      return title or vim.fs.basename(tostring(path))
+   note_frontmatter_func = function(note)
+      local out = { id = note.id, tags = note.tags }
+      for k, v in pairs(note.metadata or {}) do
+         out[k] = v
+      end
+      return out
    end,
+
+   -- note_id_func = function(title, path)
+   --    return title or vim.fs.basename(tostring(path))
+   -- end,
 
    comment = {
       enabled = true,
