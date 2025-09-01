@@ -1,7 +1,7 @@
 vim.opt.rtp:append("~/Plugins/lit.nvim/")
 
 vim.g.lit = {
-   init = "/home/n451/Vaults/Notes/nvim.md",
+   init = "~/Vaults/Notes/nvim.md",
 }
 
 require("options")
@@ -21,8 +21,8 @@ pcall(function()
 end)
 
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
-vim.opt.rtp:append("~/Plugins/nvim-anki/")
-vim.opt.rtp:append("~/diy.nvim/")
+-- vim.opt.rtp:append("~/Plugins/nvim-anki/")
+vim.opt.rtp:append("~/Plugins/diy.nvim/")
 
 require("diy.fuzzy").enable(false)
 
