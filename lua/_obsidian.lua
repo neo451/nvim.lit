@@ -75,13 +75,6 @@ require("obsidian").setup({
       },
    },
 
-   completion = {
-      blink = true,
-      nvim_cmp = false,
-      -- blink = vim.g.my_cmp == "blink",
-      -- nvim_cmp = vim.g.my_cmp == "cmp",
-   },
-
    workspaces = {
       {
          name = "notes",

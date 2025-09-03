@@ -1,4 +1,5 @@
 vim.wo.conceallevel = 2
+vim.bo.shiftwidth = 2
 
 pcall(function()
    vim.keymap.del("i", "<leader>f", { buffer = true })
