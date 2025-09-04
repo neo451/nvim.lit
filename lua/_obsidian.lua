@@ -47,8 +47,12 @@ require("obsidian").setup({
    },
 
    attachments = {
+      func = function(uri)
+         vim.ui.open(uri)
+      end,
       confirm_img_paste = false,
-      img_folder = "./imgs",
+      folder = "./attachments",
+      img_folder = "./attachments",
    },
 
    -- note_id_func = function(title)
@@ -68,7 +72,6 @@ require("obsidian").setup({
          },
          meetings = {
             note_id_func = function(title)
-               print(title)
                return title
             end,
          },

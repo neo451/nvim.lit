@@ -16,6 +16,7 @@ pcall(function()
    vim.cmd("packadd snacks.nvim")
    vim.cmd("packadd telescope.nvim")
    vim.cmd("packadd blink.cmp")
+   vim.cmd("packadd nvim-cmp")
    vim.cmd("packadd mini.icons")
    vim.cmd("packadd mini.pick")
 end)
@@ -28,8 +29,8 @@ require("diy.fuzzy").enable(false)
 
 require("_obsidian")
 
-require("ob_git").setup({
-   pull_on_startup = false,
-})
-
+-- require("ob_git").setup({
+--    pull_on_startup = false,
+-- })
+--
 require("babel").enable(true)
