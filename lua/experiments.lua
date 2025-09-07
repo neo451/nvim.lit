@@ -18,7 +18,7 @@ end, { nargs = 1, bang = true, range = true })
 vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})
 
 require("search").setup({})
--- require("vim._extui").enable({})
+require("vim._extui").enable({})
 require("ui.statusline")
 require("ui.tabline")
 
