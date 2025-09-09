@@ -2,6 +2,12 @@ require("obsidian").setup({
    legacy_commands = false,
    -- prefer_config_from_obsidian_app = true,
 
+   templater = {
+      commands = {
+         hi = "hello",
+      },
+   },
+
    note_frontmatter_func = function(note)
       local out = { id = note.id, tags = note.tags }
       for k, v in pairs(note.metadata or {}) do

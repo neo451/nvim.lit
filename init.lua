@@ -34,3 +34,6 @@ require("_obsidian")
 -- })
 --
 require("babel").enable(true)
+
+vim.opt.rtp:append("~/Plugins/nldates.nvim/")
+vim.opt.rtp:append("~/Plugins/templater.nvim/")

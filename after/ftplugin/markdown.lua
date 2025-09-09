@@ -4,6 +4,16 @@ vim.bo.shiftwidth = 2
 vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
 
 pcall(function()
+   vim.keymap.set("v", "<leader>nd", function()
+      require("nldates").parse({
+         callback = function(datestring)
+            return "[[" .. datestring .. "]]"
+         end,
+      })
+   end)
+end)
+
+pcall(function()
    vim.keymap.del("i", "<leader>f", { buffer = true })
    vim.keymap.del("i", "<leader>r", { buffer = true })
 end)

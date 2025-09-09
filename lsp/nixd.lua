@@ -1,4 +1,4 @@
 return {
-	cmd = { "nixd" },
-	filetypes = { "nix" },
+   cmd = { "nixd" },
+   filetypes = { "nix" },
 }

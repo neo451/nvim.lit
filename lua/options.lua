@@ -2,23 +2,11 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.loader.enable(true)
 
----@type "cmp" | "blink" | "mini"
-vim.g.my_cmp = "blink"
-
----@type "snacks.picker" | "mini.pick" | "telescope" | "fzf-lua"
-vim.g.my_picker = "snacks.picker"
-
----@type "tokyonight-storm" | "duskfox" | "rose-pine" | "catppuccin-mocha"
-vim.g.my_color = "rose-pine"
-
----@type "render-markdown" | "markview"
-vim.g.markdown_renderer = "render-markdown"
-
 local opt = vim.opt
 local o = vim.o
 
 -- ui
-o.cmdheight = 1
+o.cmdheight = 0
 o.number = true
 o.relativenumber = true
 o.breakindent = true
@@ -26,9 +14,9 @@ o.showmode = false
 o.cursorline = true
 o.list = true
 opt.listchars = {
-  tab = "  ",
-  trail = "·",
-  nbsp = "␣",
+   tab = "  ",
+   trail = "·",
+   nbsp = "␣",
 }
 
 -- search
@@ -66,8 +54,8 @@ o.spelllang = "en,cjk"
 
 -- diagnostic
 vim.diagnostic.config({
-  -- virtual_text = true,
-  virtual_lines = {
-    current_line = true,
-  },
+   -- virtual_text = true,
+   virtual_lines = {
+      current_line = true,
+   },
 })
