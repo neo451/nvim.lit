@@ -1,7 +1,14 @@
 vim.wo.conceallevel = 2
 vim.bo.shiftwidth = 2
-
 vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
+
+vim.keymap.set("v", "<leader>nd", function()
+   require("nldates").parse({
+      callback = function(datestring)
+         return "[[" .. datestring .. "]]"
+      end,
+   })
+end)
 
 pcall(function()
    vim.keymap.set("v", "<leader>nd", function()

@@ -1,4 +1,31 @@
+local workspaces = {}
+
+local VAULTS = "~/Vaults/"
+
+local overrides = {
+   -- ["obsidian.wiki"] = {
+   --    disable_frontmatter = true,
+   -- },
+}
+
+for dir, t in vim.fs.dir(VAULTS) do
+   if t == "directory" then
+      local spec = {
+         path = vim.fs.joinpath(VAULTS, dir),
+      }
+      if overrides[dir] then
+         spec.overrides = overrides[dir]
+      end
+      workspaces[#workspaces + 1] = spec
+   end
+end
+
 require("obsidian").setup({
+   callbacks = {
+      -- enter_note = function()
+      --    vim.keymap.set("n", "<leader>cb", require("obsidian.api").set_checkbox)
+      -- end,
+   },
    legacy_commands = false,
    -- prefer_config_from_obsidian_app = true,
 
@@ -16,9 +43,16 @@ require("obsidian").setup({
       return out
    end,
 
-   -- note_id_func = function(title, path)
-   --    return title or vim.fs.basename(tostring(path))
-   -- end,
+   note_id_func = function(title, path)
+      return title or vim.fs.basename(tostring(path))
+   end,
+
+   disable_frontmatter = function()
+      if Obsidian.workspace.name == "obsidian.nvim.wiki" then
+         return true
+      end
+      return false
+   end,
 
    comment = {
       enabled = true,
@@ -30,7 +64,7 @@ require("obsidian").setup({
 
    checkbox = {
       order = { "x", " " },
-      create_new = true,
+      create_new = false,
    },
 
    open = {
@@ -84,30 +118,5 @@ require("obsidian").setup({
       },
    },
 
-   workspaces = {
-      {
-         name = "notes",
-         path = "~/Vaults/Notes",
-      },
-      {
-         name = "test",
-         path = "~/Vaults/test",
-      },
-      -- {
-      -- 	name = "cosma-test",
-      -- 	path = "~/Vaults/cosma-test/",
-      -- },
-      -- {
-      -- 	name = "work",
-      -- 	path = "~/Vaults/Work",
-      -- },
-      -- {
-      -- 	name = "hub",
-      -- 	path = "~/Vaults/obsidian-hub/",
-      -- },
-      -- {
-      --   name = "stress test",
-      --   path = "~/.local/share/nvim/nightmare_vault/",
-      -- },
-   },
+   workspaces = workspaces,
 })

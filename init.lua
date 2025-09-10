@@ -22,8 +22,9 @@ pcall(function()
 end)
 
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
--- vim.opt.rtp:append("~/Plugins/nvim-anki/")
 vim.opt.rtp:append("~/Plugins/diy.nvim/")
+vim.opt.rtp:append("~/Plugins/nldates.nvim/")
+vim.opt.rtp:append("~/Plugins/templater.nvim/")
 
 require("diy.fuzzy").enable(false)
 
@@ -35,5 +36,4 @@ require("_obsidian")
 --
 require("babel").enable(true)
 
-vim.opt.rtp:append("~/Plugins/nldates.nvim/")
-vim.opt.rtp:append("~/Plugins/templater.nvim/")
+vim.g.node_host_prog = vim.fn.exepath("neovim-node-host")
