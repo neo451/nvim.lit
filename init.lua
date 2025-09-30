@@ -25,6 +25,9 @@ vim.opt.rtp:append("~/Plugins/obsidian.nvim")
 vim.opt.rtp:append("~/Plugins/diy.nvim/")
 vim.opt.rtp:append("~/Plugins/nldates.nvim/")
 vim.opt.rtp:append("~/Plugins/templater.nvim/")
+vim.opt.rtp:append("~/Plugins/kanban.nvim/")
+
+require("kanban").setup({})
 
 require("diy.fuzzy").enable(false)
 

@@ -1,4 +1,22 @@
-local workspaces = {}
+local workspaces = {
+   {
+      path = "~/this-dont-exist",
+   },
+   -- {
+   --    name = "no-vault",
+   --    path = function()
+   --       -- alternatively use the CWD:
+   --       -- return assert(vim.fn.getcwd())
+   --       return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+   --    end,
+   --    overrides = {
+   --       notes_subdir = vim.NIL, -- have to use 'vim.NIL' instead of 'nil'
+   --       new_notes_location = "current_dir",
+   --       templates = { folder = vim.NIL },
+   --       disable_frontmatter = true,
+   --    },
+   -- },
+}
 
 local VAULTS = "~/Vaults/"
 
@@ -21,10 +39,40 @@ for dir, t in vim.fs.dir(VAULTS) do
 end
 
 require("obsidian").setup({
+   frontmatter = {
+      sort = false,
+      func = function(note)
+         local out = { id = note.id, tags = note.tags }
+         for k, v in pairs(note.metadata or {}) do
+            out[k] = v
+         end
+         return out
+      end,
+      enabled = function()
+         if Obsidian.workspace.name == "obsidian.nvim.wiki" then
+            return false
+         end
+         return true
+      end,
+   },
+
+   lsp = {
+      hover = {
+         note_preview_callback = function(note)
+            note:load_contents()
+            local contents = {}
+            for i = 1, 20 do
+               contents[i] = note.contents[i]
+            end
+            return contents
+         end,
+      },
+   },
+
    callbacks = {
-      -- enter_note = function()
-      --    vim.keymap.set("n", "<leader>cb", require("obsidian.api").set_checkbox)
-      -- end,
+      enter_note = function()
+         vim.keymap.set("n", "<leader>cb", require("obsidian.api").set_checkbox)
+      end,
    },
    legacy_commands = false,
    -- prefer_config_from_obsidian_app = true,
@@ -35,36 +83,36 @@ require("obsidian").setup({
       },
    },
 
-   note_frontmatter_func = function(note)
-      local out = { id = note.id, tags = note.tags }
-      for k, v in pairs(note.metadata or {}) do
-         out[k] = v
-      end
-      return out
-   end,
+   statusline = {
+      enabled = false,
+   },
 
+   -- note_frontmatter_func = function(note)
+   --    local out = { id = note.id, tags = note.tags }
+   --    for k, v in pairs(note.metadata or {}) do
+   --       out[k] = v
+   --    end
+   --    return out
+   -- end,
+   --
    note_id_func = function(title, path)
-      return title or vim.fs.basename(tostring(path))
+      return title
    end,
 
-   disable_frontmatter = function()
-      if Obsidian.workspace.name == "obsidian.nvim.wiki" then
-         return true
-      end
-      return false
-   end,
+   -- disable_frontmatter = function()
+   --    if Obsidian.workspace.name == "obsidian.nvim.wiki" then
+   --       return true
+   --    end
+   --    return false
+   -- end,
+   --
+   comment = { enabled = false },
 
-   comment = {
-      enabled = true,
-   },
-
-   ui = {
-      enable = false,
-   },
+   ui = { enable = false },
 
    checkbox = {
       order = { "x", " " },
-      create_new = false,
+      create_new = true,
    },
 
    open = {
@@ -83,7 +131,7 @@ require("obsidian").setup({
    },
 
    picker = {
-      name = "snacks.pick",
+      name = "telescope.nvim",
    },
 
    attachments = {
@@ -94,10 +142,6 @@ require("obsidian").setup({
       folder = "./attachments",
       img_folder = "./attachments",
    },
-
-   -- note_id_func = function(title)
-   -- 	return title
-   -- end,
 
    templates = {
       folder = "templates",

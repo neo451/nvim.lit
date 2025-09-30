@@ -2,6 +2,11 @@ vim.wo.conceallevel = 2
 vim.bo.shiftwidth = 2
 vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
 
+vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.wo.foldmethod = "expr"
+vim.wo.foldlevel = 99
+vim.cmd("norm zx")
+
 vim.keymap.set("v", "<leader>nd", function()
    require("nldates").parse({
       callback = function(datestring)
