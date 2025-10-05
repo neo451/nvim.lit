@@ -19,6 +19,7 @@ pcall(function()
    vim.cmd("packadd nvim-cmp")
    vim.cmd("packadd mini.icons")
    vim.cmd("packadd mini.pick")
+   vim.cmd("packadd coop.nvim")
 end)
 
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
@@ -26,6 +27,9 @@ vim.opt.rtp:append("~/Plugins/diy.nvim/")
 vim.opt.rtp:append("~/Plugins/nldates.nvim/")
 vim.opt.rtp:append("~/Plugins/templater.nvim/")
 vim.opt.rtp:append("~/Plugins/kanban.nvim/")
+vim.opt.rtp:append("~/Plugins/feed.nvim/")
+
+require("_feed")
 
 require("kanban").setup({})
 

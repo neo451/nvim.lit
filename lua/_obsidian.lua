@@ -117,6 +117,9 @@ require("obsidian").setup({
 
    open = {
       use_advanced_uri = true,
+      func = function(uri)
+         return vim.ui.open(uri, { cmd = { "wsl-open" } })
+      end,
    },
 
    daily_notes = {
