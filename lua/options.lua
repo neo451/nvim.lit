@@ -48,7 +48,7 @@ o.splitbelow = true
 
 -- editing
 o.autowrite = true
-o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
+-- o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
 
 -- completion
 o.completeopt = "menu,menuone"

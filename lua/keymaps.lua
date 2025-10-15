@@ -1,24 +1,56 @@
 local set = vim.keymap.set
 
--- TODO:
--- Create a global table with information about Leader groups in certain modes.
--- This is used to provide 'mini.clue' with extra clues.
--- Add an entry if you create a new group.
+-- mini version control!
+set("n", "ycc", function()
+   return "yy" .. vim.v.count1 .. "gcc']p"
+end, { remap = true, expr = true })
+
+-- fix previous spell error
+set("i", "<C-l>", "<Esc>[s1z=`]a")
+
+set("i", "jk", "<esc>")
+
+set("n", "<leader><leader>x", function()
+   local base = vim.fs.basename(vim.fn.expand("%"))
+   if vim.startswith(base, "test_") then
+      return "<cmd>lua MiniTest.run_file()<cr>"
+   elseif vim.endswith(base, "_spec.lua") then
+      return "<cmd>PlenaryBustedFile %<cr>"
+   else
+      return "<cmd>w<cr><cmd>so %<cr>"
+   end
+end, { expr = true })
+
+-- Copy/paste with system clipboard
+set({ "n", "x" }, "gy", '"+y', { desc = "Copy to system clipboard" })
+set("n", "gp", '"+p', { desc = "Paste from system clipboard" })
+-- - Paste in Visual with `P` to not copy selected text (`:h v_P`)
+set("x", "gp", '"+P', { desc = "Paste from system clipboard" })
+
+-- For 'mini.clue'
 _G.Config.leader_group_clues = {
    { mode = "n", keys = "<Leader>b", desc = "+Buffer" },
    { mode = "n", keys = "<Leader>e", desc = "+Explore/Edit" },
    { mode = "n", keys = "<Leader>f", desc = "+Find" },
    { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
    { mode = "n", keys = "<Leader>g", desc = "+Git" },
-   -- { mode = "n", keys = "<Leader>o", desc = "+Other" },
-   -- { mode = "n", keys = "<Leader>s", desc = "+Session" },
-   -- { mode = "n", keys = "<Leader>v", desc = "+Visits" },
-   -- { mode = "x", keys = "<Leader>g", desc = "+Git" },
+   { mode = "n", keys = "<Leader>u", desc = "+UI" },
+   { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
+   { mode = "n", keys = "<Leader><Leader>", desc = "+Other" },
 }
 
 local nmap_leader = function(suffix, rhs, desc)
    vim.keymap.set("n", "<Leader>" .. suffix, rhs, { desc = desc })
 end
+
+nmap_leader("oS", "<cmd>Obsidian search<cr>")
+nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
+nmap_leader("on", "<cmd>Obsidian new<cr>")
+nmap_leader("O", "<cmd>Obsidian<cr>")
+
+-- u for "Neovim UI and highlights"
+nmap_leader("ui", vim.show_pos, "Inspect Pos")
+nmap_leader("uI", "<cmd>InspectTree<cr>", "Inspect Tree")
 
 nmap_leader("go", function()
    MiniDiff.toggle_overlay()
@@ -39,6 +71,8 @@ end
 
 nmap_leader("ba", "<Cmd>b#<CR>", "alternate")
 nmap_leader("bs", new_scratch_buffer, "scratch")
+set("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 -- nmap_leader("bd", "<Cmd>lua MiniBufremove.delete()<CR>", "Delete")
 -- nmap_leader("bD", "<Cmd>lua MiniBufremove.delete(0, true)<CR>", "Delete!")
 -- nmap_leader("bw", "<Cmd>lua MiniBufremove.wipeout()<CR>", "Wipeout")
@@ -71,7 +105,7 @@ nmap_leader("tn", "<Cmd>tabnew<CR>", "New [t]ab")
 nmap_leader("tx", "<Cmd>tabclose<CR>", "E[x]clude tab")
 
 -- Toggle showing the tabline
-nmap_leader("<leader>tt", function()
+nmap_leader("tt", function()
    if vim.o.showtabline == 2 then
       vim.o.showtabline = 0
    else
@@ -80,12 +114,12 @@ nmap_leader("<leader>tt", function()
 end, "Toggle [t]abs")
 
 -- Navigate tabs
-vim.keymap.set("n", "]t", ":tabnext<CR>", { desc = "Next tab", silent = true })
-vim.keymap.set("n", "[t", ":tabprevious<CR>", { desc = "Previous tab", silent = true })
+set("n", "]t", ":tabnext<CR>", { desc = "Next tab", silent = true })
+set("n", "[t", ":tabprevious<CR>", { desc = "Previous tab", silent = true })
 
-vim.keymap.set("n", "<leader>U", "<cmd>Undotree<cr>", { desc = "Toggle UndoTree" })
+set("n", "<leader>U", "<cmd>Undotree<cr>", { desc = "Toggle UndoTree" })
 
-vim.keymap.set("n", "<End>", "<cmd>restart<cr>")
+set("n", "<End>", "<cmd>restart<cr>")
 
 set("n", "grl", function()
    vim.lsp.buf.document_link({ loclist = false })
@@ -103,34 +137,11 @@ set("n", "<C-S-C>", function()
    end)
 end)
 
--- mini version controls
-set("n", "ycc", function()
-   return "yy" .. vim.v.count1 .. "gcc']p"
-end, { remap = true, expr = true })
-
--- fix previous spell error
-set("i", "<C-l>", "<Esc>[s1z=`]a")
-
 --search within visual selection - this is magic
 set("x", "/", "<Esc>/\\%V")
 
 -- better J: keep cursor in place
 set("n", "J", "mzJ`z:delmarks z<cr>")
-
-set("i", "jk", "<esc>")
-
-set("n", "<leader><leader>x", function()
-   local base = vim.fs.basename(vim.fn.expand("%"))
-   if vim.startswith(base, "test_") then
-      return "<cmd>lua MiniTest.run_file()<cr>"
-   elseif vim.endswith(base, "_spec.lua") then
-      return "<cmd>PlenaryBustedFile %<cr>"
-   else
-      return "<cmd>w<cr><cmd>so %<cr>"
-   end
-end, { expr = true })
-
-set({ "n", "t" }, "<C-/>", "<cmd>FloatermToggle<cr>", { desc = "Terminal" })
 
 nmap_leader("/", function()
    Snacks.picker.grep()
@@ -191,11 +202,6 @@ set("n", "<leader>P", function()
    Snacks.picker()
 end, { desc = "All pickers" })
 
-set("n", "<leader>oS", "<cmd>Obsidian search<cr>")
-set("n", "<leader>os", "<cmd>Obsidian quick_switch<cr>")
-set("n", "<leader>on", "<cmd>Obsidian new<cr>")
-set("n", "<leader>O", "<cmd>Obsidian<cr>")
-
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 set("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
 set("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
@@ -211,35 +217,12 @@ set("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result
 -- map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 -- map("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
 -- map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
---
--- -- buffers
-set("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
--- map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
--- map("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
--- map("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
-
--- Clear search, diff update and redraw
--- taken from runtime/lua/_editor.lua
-set(
-   "n",
-   "<leader>ur",
-   "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
-   { desc = "Redraw / Clear hlsearch / Diff Update" }
-)
 
 -- Add undo break-points
 set("i", ",", ",<c-g>u")
 set("i", ".", ".<c-g>u")
 set("i", ";", ";<c-g>u")
 
--- keywordprg
-set("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
-
 -- better indenting
 set("v", "<", "<gv")
 set("v", ">", ">gv")
-
--- highlights under cursor
-set("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
-set("n", "<leader>uI", "<cmd>InspectTree<cr>", { desc = "Inspect Tree" })
