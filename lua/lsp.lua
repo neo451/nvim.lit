@@ -6,6 +6,7 @@ local servers = {
    "rime_ls",
    "zls",
    "ts_ls",
+   -- "emmylua_ls",
 }
 
 for name in vim.iter(servers) do

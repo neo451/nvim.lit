@@ -4,6 +4,18 @@ vim.g.lit = {
    init = "~/Vaults/Notes/nvim.md",
 }
 
+_G.Config = {} -- Define config table to be able to pass data between scripts
+
+_G.Config.new_autocmd = function(event, pattern, desc, callback)
+   local opts = {
+      group = vim.api.nvim_create_augroup("custom-config", {}),
+      pattern = pattern,
+      callback = callback,
+      desc = desc,
+   }
+   vim.api.nvim_create_autocmd(event, opts)
+end
+
 require("options")
 require("lsp")
 require("autocmds")
@@ -19,8 +31,11 @@ pcall(function()
    vim.cmd("packadd nvim-cmp")
    vim.cmd("packadd mini.icons")
    vim.cmd("packadd mini.pick")
-   vim.cmd("packadd coop.nvim")
 end)
+
+vim.cmd("packadd coop.nvim")
+vim.cmd("packadd nvim.undotree")
+vim.cmd("packadd nvim.difftool")
 
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
 vim.opt.rtp:append("~/Plugins/diy.nvim/")
@@ -42,5 +57,3 @@ require("_obsidian")
 -- })
 --
 require("babel").enable(true)
-
-vim.g.node_host_prog = vim.fn.exepath("neovim-node-host")

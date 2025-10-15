@@ -1,6 +1,7 @@
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
+vim.g.node_host_prog = vim.fn.exepath("neovim-node-host")
 
 vim.g.node_host_prog = vim.fn.exepath("neovim-node-host")
 vim.g.mapleader = " "
@@ -23,6 +24,12 @@ opt.listchars = {
    trail = "·",
    nbsp = "␣",
 }
+
+o.iskeyword = "@,48-57,_,192-255,-" -- Treat dash as `word` textobject part
+
+-- builtin completion
+o.complete = ".,w,b,kspell" -- Use less sources
+o.completeopt = "menuone,noselect,fuzzy,nosort" -- Use custom behavior
 
 -- search
 o.ignorecase = true
@@ -58,9 +65,24 @@ o.formatoptions = "jcroqlnt" -- Format options
 o.spelllang = "en,cjk"
 
 -- diagnostic
-vim.diagnostic.config({
-   -- virtual_text = true,
-   virtual_lines = {
+
+-- See `:h vim.diagnostic` and `:h vim.diagnostic.config()`.
+local diagnostic_opts = {
+   -- -- Show signs on top of any other sign, but only for warnings and errors
+   -- signs = { priority = 9999, severity = { min = "WARN", max = "ERROR" } },
+   --
+   -- -- Show all diagnostics as underline (for their messages type `<Leader>ld`)
+   -- underline = { severity = { min = "HINT", max = "ERROR" } },
+
+   -- Show more details immediately for errors on the current line
+   virtual_lines = false,
+   virtual_text = {
       current_line = true,
+      severity = { min = "ERROR", max = "ERROR" },
    },
-})
+
+   -- Don't update diagnostics when typing
+   update_in_insert = false,
+}
+
+vim.diagnostic.config(diagnostic_opts)

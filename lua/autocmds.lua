@@ -146,23 +146,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
    end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-   group = augroup("ts-hl"),
-   callback = function(ev)
-      pcall(vim.treesitter.start, ev.buf)
-   end,
-})
+_G.Config.new_autocmd("FileType", nil, "Start treesitter", function(ev)
+   pcall(vim.treesitter.start, ev.buf)
+end)
 
-vim.api.nvim_create_autocmd("BufReadPre", {
-   group = augroup("ts-install"),
-   callback = function(args)
-      require("nvim-treesitter").install({ vim.treesitter.language.get_lang(vim.bo.filetype) })
-   end,
-})
+_G.Config.new_autocmd("BufReadPre", nil, "Install missing parser", function()
+   require("nvim-treesitter").install({ vim.treesitter.language.get_lang(vim.bo.filetype) })
+end)
 
--- vim.api.nvim_create_autocmd("User", {
---   pattern = "FeedShowIndex",
---   callback = function(ev)
---     vim.keymap.del("n", "<cr>", { buffer = ev.buf })
---   end
--- })
+_G.Config.new_autocmd("User", "ObsidianNoteWritePre", "Note metadata", function(ev)
+   local note = require("obsidian.note").from_buffer(ev.buf)
+   note:add_field("modified", os.date("%Y-%m-%d %H:%M"))
+end)

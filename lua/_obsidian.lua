@@ -39,13 +39,32 @@ for dir, t in vim.fs.dir(VAULTS) do
 end
 
 require("obsidian").setup({
+   preferred_link_style = "markdown",
+
+   log_level = vim.log.levels.WARN,
+
+   ---@param opts { path: string, label: string, id: string|integer|?, anchor: obsidian.note.HeaderAnchor|?, block: obsidian.note.Block|? }
+   ---@return string
+   markdown_link_func = function(opts)
+      local util = require("obsidian.util")
+      local anchor = ""
+      local header = ""
+      if opts.anchor then
+         anchor = opts.anchor.anchor
+         header = util.format_anchor_label(opts.anchor)
+      elseif opts.block then
+         anchor = "#" .. opts.block.id
+         header = "#" .. opts.block.id
+      end
+
+      local path = util.urlencode(vim.fs.basename(opts.path), { keep_path_sep = true })
+      return string.format("[%s%s](%s%s)", opts.label, header, path, anchor)
+   end,
    frontmatter = {
       sort = false,
       func = function(note)
-         local out = { id = note.id, tags = note.tags }
-         for k, v in pairs(note.metadata or {}) do
-            out[k] = v
-         end
+         local out = require("obsidian.builtin").frontmatter(note)
+         out.modified = os.date("%Y-%m-%d %H:%M")
          return out
       end,
       enabled = function()
