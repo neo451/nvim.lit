@@ -16,6 +16,20 @@ local workspaces = {
    --       disable_frontmatter = true,
    --    },
    -- },
+   {
+      name = "auto",
+      path = function()
+         local path = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+         local prev = ""
+         while path ~= "" and path ~= prev do
+            if vim.uv.fs_stat(path .. "/.obsidian") then
+               return path
+            end
+            prev, path = path, vim.fs.dirname(path)
+         end
+         return nil
+      end,
+   },
 }
 
 local VAULTS = "~/Vaults/"
@@ -183,6 +197,5 @@ require("obsidian").setup({
          },
       },
    },
-
    workspaces = workspaces,
 })
