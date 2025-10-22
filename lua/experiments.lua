@@ -1,3 +1,5 @@
+require("qol.search")
+
 vim.filetype.add({
    extension = {
       base = "yaml",
@@ -17,10 +19,15 @@ end, { nargs = 1, bang = true, range = true })
 
 vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})
 
-require("search").setup({})
 require("vim._extui").enable({})
+
 require("ui.statusline")
 require("ui.tabline")
+-- require("diy.fuzzy").enable(false)
+
+-- require("ob_git").setup({
+--    pull_on_startup = false,
+-- })
+require("babel").enable(true)
 
 -- require("quickfix")
--- require("babel").enable(true)

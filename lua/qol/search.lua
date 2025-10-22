@@ -1,0 +1,55 @@
+local M = {}
+
+--- TODO: a complete function for prefix
+local config = {
+   trigger = "<C-S-;>",
+   default_engine = "bing",
+   query_map = {
+      google = "https://www.google.com/search?q=%s",
+      bing = "https://cn.bing.com/search?q=%s",
+      duckduckgo = "https://duckduckgo.com/?q=%s",
+      wikipedia = "https://en.wikipedia.org/w/index.php?search=%s",
+   },
+}
+
+_G.Config.search = vim.tbl_deep_extend("keep", _G.Config.search or {}, config)
+
+local function looks_like_url(input)
+   local pat = "[%w%.%-_]+%.[%w%.%-_/]+"
+   return input:match(pat) ~= nil
+end
+
+local function extract_prefix(input)
+   local pat = "@(%w+)"
+   local prefix = input:match(pat)
+   if not prefix or not config.query_map[prefix] then
+      return vim.trim(input), config.default_engine
+   end
+   local query = input:gsub("@" .. prefix, "")
+   return vim.trim(query), prefix
+end
+
+local function _query_browser(input)
+   local q, prefix = extract_prefix(input)
+   if not looks_like_url(input) then
+      local format = config.query_map[prefix]
+      q = format:format(vim.uri_encode(q))
+   end
+   vim.ui.open(q)
+end
+
+local function query_browser(input)
+   if not input then
+      vim.ui.input({ prompt = "Search: " }, function(i)
+         if i then
+            _query_browser(i)
+         else
+            vim.notify("Aborted")
+         end
+      end)
+   else
+      return _query_browser(input)
+   end
+end
+
+_G.Config.query_browser = query_browser

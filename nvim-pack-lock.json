@@ -18,15 +18,15 @@
       "src": "https://github.com/bullets-vim/bullets.vim.git"
     },
     "checkmate.nvim": {
-      "rev": "5ffa4af",
+      "rev": "e23e2a6",
       "src": "https://github.com/bngarren/checkmate.nvim.git"
     },
     "codecompanion.nvim": {
-      "rev": "f8d5175",
+      "rev": "9c350d1",
       "src": "https://github.com/olimorris/codecompanion.nvim.git"
     },
     "conform.nvim": {
-      "rev": "fbcb4fa",
+      "rev": "235dd79",
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "coop.nvim": {
@@ -54,7 +54,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets.git"
     },
     "fzf-lua": {
-      "rev": "58ebb27",
+      "rev": "c102a4e",
       "src": "https://github.com/ibhagwan/fzf-lua.git"
     },
     "gitsigns.nvim": {
@@ -62,7 +62,7 @@
       "src": "https://github.com/lewis6991/gitsigns.nvim.git"
     },
     "grug-far.nvim": {
-      "rev": "2e99108",
+      "rev": "3e72397",
       "src": "https://github.com/MagicDuck/grug-far.nvim.git"
     },
     "inc-rename.nvim": {
@@ -70,7 +70,7 @@
       "src": "https://github.com/smjonas/inc-rename.nvim.git"
     },
     "kulala.nvim": {
-      "rev": "0d50e9c",
+      "rev": "183bf44",
       "src": "https://github.com/mistweaverco/kulala.nvim.git"
     },
     "lazydev.nvim": {
@@ -82,27 +82,36 @@
       "src": "https://github.com/oribarilan/lensline.nvim.git"
     },
     "live-preview.nvim": {
-      "rev": "bd099b7",
+      "rev": "a1bb1b3",
       "src": "https://github.com/brianhuster/live-preview.nvim.git"
     },
     "lz.n": {
-      "rev": "f1a9dd3",
+      "rev": "01d9202",
       "src": "https://github.com/nvim-neorocks/lz.n.git"
     },
     "lzn-auto-require": {
       "rev": "ef746af",
       "src": "https://github.com/horriblename/lzn-auto-require.git"
     },
+    "markdoc.nvim": {
+      "rev": "fb3bb01",
+      "src": "https://github.com/OXY2DEV/markdoc.nvim.git"
+    },
     "markdown-preview.nvim": {
       "rev": "a923f5f",
       "src": "https://github.com/iamcco/markdown-preview.nvim.git"
+    },
+    "markdown-toggle.nvim": {
+      "rev": "90cf1da",
+      "src": "https://github.com/roodolv/markdown-toggle.nvim.git"
     },
     "markdowny.nvim": {
       "rev": "8ff18e8",
       "src": "https://github.com/antonk52/markdowny.nvim.git"
     },
     "markview.nvim": {
-      "rev": "c93ea99"
+      "rev": "c93ea99",
+      "src": "https://github.com/OXY2DEV/markview.nvim.git"
     },
     "mcphub.nvim": {
       "rev": "8ff40b5",
@@ -129,7 +138,7 @@
       "src": "https://github.com/nvim-mini/mini.icons.git"
     },
     "mini.pick": {
-      "rev": "96ee37d",
+      "rev": "bb764a5",
       "src": "https://github.com/nvim-mini/mini.pick.git"
     },
     "mini.surround": {
@@ -161,20 +170,20 @@
       "src": "https://github.com/asmodeus812/nvim-fuzzymatch.git"
     },
     "nvim-treesitter": {
-      "rev": "0606c7a9",
+      "rev": "30c466ad",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter.git",
       "version": "'main'"
     },
     "nvim-treesitter-context": {
-      "rev": "41847d3",
+      "rev": "ec308c7",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-context.git"
     },
     "octo.nvim": {
-      "rev": "fded716",
+      "rev": "c17e562",
       "src": "https://github.com/pwntester/octo.nvim.git"
     },
     "oil.nvim": {
-      "rev": "919e155",
+      "rev": "7e1cd77",
       "src": "https://github.com/stevearc/oil.nvim.git"
     },
     "org-list.nvim": {
@@ -206,11 +215,11 @@
       "src": "https://github.com/davidgranstrom/scnvim.git"
     },
     "snacks.nvim": {
-      "rev": "8390223",
+      "rev": "f27b8b3",
       "src": "https://github.com/folke/snacks.nvim.git"
     },
     "store.nvim": {
-      "rev": "ff6c30a",
+      "rev": "df43071",
       "src": "https://github.com/alex-popov-tech/store.nvim.git"
     },
     "telescope.nvim": {

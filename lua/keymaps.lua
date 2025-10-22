@@ -1,5 +1,20 @@
 local set = vim.keymap.set
 
+-- TODO: not working
+set("n", "<C-S-;>", _G.Config.query_browser, {
+   remap = true,
+})
+
+-- TODO: for now
+set("n", "<leader><leader>s", _G.Config.query_browser, {
+   remap = true,
+})
+
+local nmap_leader = function(suffix, rhs, desc, opts)
+   opts = opts or {}
+   vim.keymap.set("n", "<Leader>" .. suffix, rhs, vim.tbl_extend("keep", { desc = desc }, opts))
+end
+
 -- mini version control!
 set("n", "ycc", function()
    return "yy" .. vim.v.count1 .. "gcc']p"
@@ -10,7 +25,7 @@ set("i", "<C-l>", "<Esc>[s1z=`]a")
 
 set("i", "jk", "<esc>")
 
-set("n", "<leader><leader>x", function()
+nmap_leader("<leader>x", function()
    local base = vim.fs.basename(vim.fn.expand("%"))
    if vim.startswith(base, "test_") then
       return "<cmd>lua MiniTest.run_file()<cr>"
@@ -19,7 +34,10 @@ set("n", "<leader><leader>x", function()
    else
       return "<cmd>w<cr><cmd>so %<cr>"
    end
-end, { expr = true })
+end, "", { expr = true })
+
+--- zen mode (no neck pain)
+nmap_leader("<leader>z", "<cmd>NoNeckPain<cr>")
 
 -- Copy/paste with system clipboard
 set({ "n", "x" }, "gy", '"+y', { desc = "Copy to system clipboard" })
@@ -39,10 +57,6 @@ _G.Config.leader_group_clues = {
    { mode = "n", keys = "<Leader><Leader>", desc = "+Other" },
 }
 
-local nmap_leader = function(suffix, rhs, desc)
-   vim.keymap.set("n", "<Leader>" .. suffix, rhs, { desc = desc })
-end
-
 nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
@@ -53,6 +67,7 @@ nmap_leader("ui", vim.show_pos, "Inspect Pos")
 nmap_leader("uI", "<cmd>InspectTree<cr>", "Inspect Tree")
 
 nmap_leader("go", function()
+   ---@diagnostic disable-next-line: undefined-global
    MiniDiff.toggle_overlay()
 end)
 
@@ -79,7 +94,6 @@ set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 -- nmap_leader("bW", "<Cmd>lua MiniBufremove.wipeout(0, true)<CR>", "Wipeout!")
 
 -- e is for 'Explore' and 'Edit'
-local explore_at_file = "<Cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<CR>"
 
 local explore_quickfix = function()
    for _, win_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do

@@ -1,3 +1,12 @@
+-- vim.api.nvim_create_autocmd("User", {
+--    pattern = "ObsidianNoteEnter",
+--    callback = function(ev)
+--       local file = vim.api.nvim_buf_get_name(ev.buf)
+--       if vim.fs.basename(file) == "albums 2025.md" then
+--       end
+--    end,
+-- })
+
 local workspaces = {
    {
       path = "~/this-dont-exist",
@@ -34,11 +43,7 @@ local workspaces = {
 
 local VAULTS = "~/Vaults/"
 
-local overrides = {
-   -- ["obsidian.wiki"] = {
-   --    disable_frontmatter = true,
-   -- },
-}
+local overrides = {}
 
 for dir, t in vim.fs.dir(VAULTS) do
    if t == "directory" then
@@ -52,10 +57,18 @@ for dir, t in vim.fs.dir(VAULTS) do
    end
 end
 
-require("obsidian").setup({
-   preferred_link_style = "markdown",
+local function count_list_items(buf)
+   local parser = vim.treesitter.get_parser(buf)
+   local tree = parser:parse()[1]:root()
+   for i, k in tree:iter_children() do
+      print(i, k)
+   end
+end
 
-   log_level = vim.log.levels.WARN,
+require("obsidian").setup({
+
+   -- log_level = vim.log.levels.WARN,
+   -- open_notes_in = "vsplit",
 
    ---@param opts { path: string, label: string, id: string|integer|?, anchor: obsidian.note.HeaderAnchor|?, block: obsidian.note.Block|? }
    ---@return string
@@ -75,10 +88,22 @@ require("obsidian").setup({
       return string.format("[%s%s](%s%s)", opts.label, header, path, anchor)
    end,
    frontmatter = {
-      sort = false,
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
          out.modified = os.date("%Y-%m-%d %H:%M")
+         if note.id == "albums 2025" then
+            note:load_contents()
+            local count = 0
+            for _, line in ipairs(note.contents) do
+               if line:match("^%s*%- ") then
+                  count = count + 1
+               end
+            end
+            out.count = count
+         end
+         if vim.tbl_isempty(note.aliases) then
+            out.aliases = nil
+         end
          return out
       end,
       enabled = function()
@@ -103,7 +128,12 @@ require("obsidian").setup({
    },
 
    callbacks = {
-      enter_note = function()
+      enter_note = function(note)
+         if vim.endswith(tostring(note.path), "todo.md") then
+            vim.keymap.del("n", "<CR>", { buffer = true })
+            vim.keymap.set("n", "<CR>", "<cmd>Checkmate toggle<cr>", { buffer = true })
+         end
+
          vim.keymap.set("n", "<leader>cb", require("obsidian.api").set_checkbox)
       end,
    },
@@ -120,25 +150,10 @@ require("obsidian").setup({
       enabled = false,
    },
 
-   -- note_frontmatter_func = function(note)
-   --    local out = { id = note.id, tags = note.tags }
-   --    for k, v in pairs(note.metadata or {}) do
-   --       out[k] = v
-   --    end
-   --    return out
-   -- end,
-   --
    note_id_func = function(title, path)
       return title
    end,
 
-   -- disable_frontmatter = function()
-   --    if Obsidian.workspace.name == "obsidian.nvim.wiki" then
-   --       return true
-   --    end
-   --    return false
-   -- end,
-   --
    comment = { enabled = false },
 
    ui = { enable = false },
@@ -167,6 +182,8 @@ require("obsidian").setup({
    },
 
    picker = {
+      -- enabled = false,
+      -- name = false,
       name = "telescope.nvim",
    },
 
