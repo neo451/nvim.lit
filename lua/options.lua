@@ -85,4 +85,4 @@ local diagnostic_opts = {
    update_in_insert = false,
 }
 
-vim.diagnostic.config(diagnostic_opts)
+-- vim.diagnostic.config(diagnostic_opts)

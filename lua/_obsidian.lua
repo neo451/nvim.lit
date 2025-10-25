@@ -184,7 +184,7 @@ require("obsidian").setup({
    picker = {
       -- enabled = false,
       -- name = false,
-      name = "telescope.nvim",
+      name = "snacks.pick",
    },
 
    attachments = {

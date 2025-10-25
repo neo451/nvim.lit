@@ -60,6 +60,7 @@ _G.Config.leader_group_clues = {
 nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
+nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
 nmap_leader("O", "<cmd>Obsidian<cr>")
 
 -- u for "Neovim UI and highlights"

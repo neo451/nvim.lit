@@ -226,6 +226,10 @@
       "rev": "b4da76b",
       "src": "https://github.com/nvim-telescope/telescope.nvim.git"
     },
+    "tiny-inline-diagnostic.nvim": {
+      "rev": "7925ecd",
+      "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim.git"
+    },
     "todo-comments.nvim": {
       "rev": "19d461d",
       "src": "https://github.com/folke/todo-comments.nvim.git"
