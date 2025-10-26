@@ -40,11 +40,11 @@ require("obsidian").setup({
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
          out.modified = os.date("%Y-%m-%d %H:%M")
-         if note.id == "albums 2025" then
+         if note.id == "albums2025" then
             note:load_contents()
             local count = 0
             for _, line in ipairs(note.contents) do
-               if line:match("^%s*%- ") then
+               if line:match("^%d*%. ") then
                   count = count + 1
                end
             end

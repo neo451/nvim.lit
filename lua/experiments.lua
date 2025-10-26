@@ -17,6 +17,10 @@ vim.api.nvim_create_user_command("Sort", function(opts)
    vim.cmd(pattern)
 end, { nargs = 1, bang = true, range = true })
 
+vim.api.nvim_create_user_command("Mkspell", function(opts)
+   vim.cmd("mkspell! " .. vim.o.spellfile)
+end, {})
+
 vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})
 
 require("vim._extui").enable({})

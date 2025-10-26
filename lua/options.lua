@@ -63,6 +63,7 @@ o.formatoptions = "jcroqlnt" -- Format options
 
 -- writing
 o.spelllang = "en,cjk"
+o.spellfile = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.add")
 
 -- diagnostic
 
