@@ -1,30 +1,4 @@
--- vim.api.nvim_create_autocmd("User", {
---    pattern = "ObsidianNoteEnter",
---    callback = function(ev)
---       local file = vim.api.nvim_buf_get_name(ev.buf)
---       if vim.fs.basename(file) == "albums 2025.md" then
---       end
---    end,
--- })
-
 local workspaces = {
-   {
-      path = "~/this-dont-exist",
-   },
-   -- {
-   --    name = "no-vault",
-   --    path = function()
-   --       -- alternatively use the CWD:
-   --       -- return assert(vim.fn.getcwd())
-   --       return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
-   --    end,
-   --    overrides = {
-   --       notes_subdir = vim.NIL, -- have to use 'vim.NIL' instead of 'nil'
-   --       new_notes_location = "current_dir",
-   --       templates = { folder = vim.NIL },
-   --       disable_frontmatter = true,
-   --    },
-   -- },
    {
       name = "auto",
       path = function()
@@ -57,36 +31,11 @@ for dir, t in vim.fs.dir(VAULTS) do
    end
 end
 
-local function count_list_items(buf)
-   local parser = vim.treesitter.get_parser(buf)
-   local tree = parser:parse()[1]:root()
-   for i, k in tree:iter_children() do
-      print(i, k)
-   end
-end
-
 require("obsidian").setup({
 
    -- log_level = vim.log.levels.WARN,
    -- open_notes_in = "vsplit",
 
-   ---@param opts { path: string, label: string, id: string|integer|?, anchor: obsidian.note.HeaderAnchor|?, block: obsidian.note.Block|? }
-   ---@return string
-   markdown_link_func = function(opts)
-      local util = require("obsidian.util")
-      local anchor = ""
-      local header = ""
-      if opts.anchor then
-         anchor = opts.anchor.anchor
-         header = util.format_anchor_label(opts.anchor)
-      elseif opts.block then
-         anchor = "#" .. opts.block.id
-         header = "#" .. opts.block.id
-      end
-
-      local path = util.urlencode(vim.fs.basename(opts.path), { keep_path_sep = true })
-      return string.format("[%s%s](%s%s)", opts.label, header, path, anchor)
-   end,
    frontmatter = {
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
@@ -96,6 +45,15 @@ require("obsidian").setup({
             local count = 0
             for _, line in ipairs(note.contents) do
                if line:match("^%s*%- ") then
+                  count = count + 1
+               end
+            end
+            out.count = count
+         elseif note.id == "nvim" then
+            note:load_contents()
+            local count = 0
+            for _, line in ipairs(note.contents) do
+               if line:match("#* %w*/%w*") then
                   count = count + 1
                end
             end
@@ -174,11 +132,6 @@ require("obsidian").setup({
       date_format = "%Y-%m-%d",
       -- template = "journaling-daily-note.md",
       folder = "daily_notes",
-   },
-
-   calendar = {
-      cmd = "CalendarT",
-      close_after = true,
    },
 
    picker = {

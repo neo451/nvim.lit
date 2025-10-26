@@ -1,7 +1,7 @@
 vim.opt.rtp:append("~/Plugins/lit.nvim/")
 
 vim.g.lit = {
-   init = "~/Vaults/Notes/nvim.md",
+   init = "~/Vaults/1 Notes/nvim.md",
 }
 
 _G.Config = {} -- Define config table to be able to pass data between scripts

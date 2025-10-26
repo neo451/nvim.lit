@@ -1,4 +1,4 @@
-vim.wo.conceallevel = 2
+vim.wo.conceallevel = 1
 vim.bo.shiftwidth = 2
 vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
 
