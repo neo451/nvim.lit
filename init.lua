@@ -16,8 +16,9 @@ _G.Config.new_autocmd = function(event, pattern, desc, callback)
    vim.api.nvim_create_autocmd(event, opts)
 end
 
-require("experiments")
 require("options")
+require("experiments")
+
 require("lsp")
 require("autocmds")
 require("keymaps")
