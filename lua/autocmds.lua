@@ -128,23 +128,18 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
    end,
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-   group = augroup("lsp"),
-   callback = function(args)
-      local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+_G.Config.new_autocmd("LspAttach", nil, "Attach lsp stuff", function(ev)
+   local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
 
-      if not pcall(require, "blink.cmp") then
-         if client:supports_method("textDocument/completion") then
-            -- local chars = {}
-            -- for i = 32, 126 do
-            --   table.insert(chars, string.char(i))
-            -- end
-            -- client.server_capabilities.completionProvider.triggerCharacters = chars
-            -- vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-         end
+   if client:supports_method("textDocument/completion") then
+      local chars = {}
+      for i = 32, 126 do
+         table.insert(chars, string.char(i))
       end
-   end,
-})
+      client.server_capabilities.completionProvider.triggerCharacters = chars
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+   end
+end)
 
 _G.Config.new_autocmd("FileType", nil, "Start treesitter", function(ev)
    pcall(vim.treesitter.start, ev.buf)

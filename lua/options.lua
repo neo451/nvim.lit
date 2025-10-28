@@ -65,25 +65,4 @@ o.formatoptions = "jcroqlnt" -- Format options
 o.spelllang = "en,cjk"
 o.spellfile = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.add")
 
--- diagnostic
-
--- See `:h vim.diagnostic` and `:h vim.diagnostic.config()`.
-local diagnostic_opts = {
-   -- -- Show signs on top of any other sign, but only for warnings and errors
-   -- signs = { priority = 9999, severity = { min = "WARN", max = "ERROR" } },
-   --
-   -- -- Show all diagnostics as underline (for their messages type `<Leader>ld`)
-   -- underline = { severity = { min = "HINT", max = "ERROR" } },
-
-   -- Show more details immediately for errors on the current line
-   virtual_lines = false,
-   virtual_text = {
-      current_line = true,
-      severity = { min = "ERROR", max = "ERROR" },
-   },
-
-   -- Don't update diagnostics when typing
-   update_in_insert = false,
-}
-
--- vim.diagnostic.config(diagnostic_opts)
+vim.cmd([[set completeopt+=menuone,noselect,popup]])

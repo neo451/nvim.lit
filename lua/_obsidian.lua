@@ -42,7 +42,10 @@ local id_c = 1
 vim.api.nvim_create_autocmd("User", {
    pattern = "ObsidianNoteEnter",
    callback = function(ev)
-      local note = obsidian.Note.from_buffer(ev.buf)
+      local ok, note = pcall(obsidian.Note.from_buffer, ev.buf)
+      if not ok then
+         return
+      end
       for _, link_match in ipairs(note:links()) do
          local line = link_match.line - 1
          local loc = obsidian.util.parse_link(link_match.link)

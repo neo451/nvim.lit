@@ -6,6 +6,7 @@ local servers = {
    "rime_ls",
    "zls",
    "ts_ls",
+   "dummy_ls",
    -- "emmylua_ls",
 }
 

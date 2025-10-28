@@ -97,6 +97,10 @@
       "rev": "fb3bb01",
       "src": "https://github.com/OXY2DEV/markdoc.nvim.git"
     },
+    "markdown-plus.nvim": {
+      "rev": "8fb6f94",
+      "src": "https://github.com/YousefHadder/markdown-plus.nvim.git"
+    },
     "markdown-preview.nvim": {
       "rev": "a923f5f",
       "src": "https://github.com/iamcco/markdown-preview.nvim.git"
