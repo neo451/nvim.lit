@@ -1,3 +1,8 @@
+Config.snippet_add("dt", function()
+   ---@diagnostic disable-next-line: return-type-mismatch
+   return os.date("%Y-%m-%d %H:%M:%S")
+end, { buffer = 0 })
+
 vim.wo.conceallevel = 1
 vim.bo.shiftwidth = 2
 vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })

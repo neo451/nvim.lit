@@ -1,5 +1,29 @@
 require("qol.search")
 
+---Refer to <https://microsoft.github.io/language-server-protocol/specification/#snippet_syntax>
+
+---for the specification of valid body.
+
+---@param trigger string trigger string for snippet
+---@param body string | fun(): string snippet text that will be expanded
+---@param opts? vim.keymap.set.Opts
+function _G.Config.snippet_add(trigger, body, opts)
+   vim.keymap.set("ia", trigger, function()
+      -- If abbrev is expanded with keys like "(", ")", "<cr>", "<space>",
+      -- don't expand the snippet. Only accept "<c-]>" as trigger key.
+      local c = vim.fn.nr2char(vim.fn.getchar(0))
+
+      if c ~= "" then
+         vim.api.nvim_feedkeys(trigger .. c, "i", true)
+         return
+      end
+      if type(body) == "function" then
+         body = body()
+      end
+      vim.snippet.expand(body)
+   end, opts)
+end
+
 vim.filetype.add({
    extension = {
       base = "yaml",
