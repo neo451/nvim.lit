@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "Recover.vim": {
+      "rev": "e61319b",
+      "src": "https://github.com/chrisbra/Recover.vim.git"
+    },
     "blink-cmp-words": {
       "rev": "d6a56f5",
       "src": "https://github.com/archie-judd/blink-cmp-words.git"

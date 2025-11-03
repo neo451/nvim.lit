@@ -59,7 +59,7 @@ vim.api.nvim_create_autocmd("User", {
                   id_c = id_c + 1
                end
             else
-               obsidian.log.info("failed to resolve note link")
+               -- obsidian.log.info("failed to resolve note link")
             end
          end
       end
@@ -188,7 +188,10 @@ obsidian.setup({
    picker = {
       -- enabled = false,
       -- name = false,
-      name = "snacks.pick",
+      -- name = "mini.pick",
+      -- name = "snacks.pick",
+      name = "fzf-lua",
+      -- name = "telescope.nvim",
    },
 
    attachments = {
