@@ -1,12 +1,12 @@
 local servers = {
    "lua_ls",
    "gopls",
-   "harper_ls",
    "nixd",
-   "rime_ls",
    "zls",
    "ts_ls",
    "dummy_ls",
+   -- "rime_ls",
+   -- "harper_ls",
    -- "emmylua_ls",
 }
 

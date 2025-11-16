@@ -1,5 +1,14 @@
 local set = vim.keymap.set
 
+vim.keymap.set("n", "gra", function()
+   local ok, tiny = pcall(require, "tiny-code-action")
+   if ok then
+      tiny.code_action({})
+   else
+      vim.lsp.buf.code_action()
+   end
+end)
+
 -- set("n", "[A", "<cmd>first<bar>args<cr><esc>")
 -- set("n", "]A", "<cmd>last<bar>args<cr><esc>")
 --
@@ -89,6 +98,9 @@ _G.Config.leader_group_clues = {
    { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
    { mode = "n", keys = "<Leader><Leader>", desc = "+Other" },
 }
+
+nmap_leader("qc", "<cmd>cclose<cr>")
+nmap_leader("qo", "<cmd>copen<cr>")
 
 nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")

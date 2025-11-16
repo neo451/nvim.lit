@@ -50,7 +50,10 @@ vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})
 require("vim._extui").enable({})
 require("ui.statusline")
 require("ui.tabline")
+-- require("ui.indent")
+
 require("ui.argpoon").setup({})
+
 -- require("diy.fuzzy").enable(false)
 
 -- require("ob_git").setup({

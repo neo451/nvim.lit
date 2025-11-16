@@ -1,7 +1,7 @@
-Config.snippet_add("dt", function()
-   ---@diagnostic disable-next-line: return-type-mismatch
-   return os.date("%Y-%m-%d %H:%M:%S")
-end, { buffer = 0 })
+pcall(function()
+   local indent = require("blink.indent")
+   indent.enable(false)
+end)
 
 vim.wo.conceallevel = 1
 vim.bo.shiftwidth = 2
@@ -11,6 +11,12 @@ vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.wo.foldmethod = "expr"
 vim.wo.foldlevel = 99
 vim.cmd("norm zx")
+
+vim.b.pandoc_compiler_args = "--bibliography=/mnt/c/Users/lenovo/Documents/bib.bib --citeproc"
+vim.cmd("compiler pandoc")
+
+-- vim.bo.makeprg =
+--    "pandoc % -f markdown -t docx -o %.docx --bibliography=/mnt/c/Users/lenovo/Documents/bib.bib --citeproc"
 
 vim.keymap.set("n", "j", "gj", { buffer = true })
 vim.keymap.set("n", "k", "gk", { buffer = true })
@@ -33,10 +39,10 @@ pcall(function()
    end)
 end)
 
-pcall(function()
-   vim.keymap.del("i", "<leader>f", { buffer = true })
-   vim.keymap.del("i", "<leader>r", { buffer = true })
-end)
+-- pcall(function()
+--    vim.keymap.del("i", "<leader>f", { buffer = true })
+--    vim.keymap.del("i", "<leader>r", { buffer = true })
+-- end)
 
 vim.keymap.set("i", "<localleader>f", "<Plug>AddVimFootnote", { buffer = true })
 vim.keymap.set("i", "<localleader>r", "<Plug>ReturnFromFootnote", { buffer = true })
@@ -147,14 +153,18 @@ end
 
 vim.keymap.set("x", "zg", spell_all_good)
 
--- -- Enable spelling and wrap for window
--- vim.cmd("setlocal spell wrap")
---
--- -- Fold with tree-sitter
--- vim.cmd("setlocal foldmethod=expr foldexpr=v:lua.vim.treesitter.foldexpr()")
+local function enhanced_spell_good()
+   local cword = vim.fn.expand("<cword>")
+   vim.ui.input({ default = cword:lower(), prompt = "spell good" }, function(input)
+      if not input then
+         return vim.notify("Aborted")
+      end
+      input = vim.trim(input)
+      vim.cmd.spellgood(input)
+   end)
+end
 
--- Disable built-in `gO` mapping in favor of 'mini.basics'
-vim.keymap.del("n", "gO", { buffer = 0 })
+vim.keymap.set("n", "zg", enhanced_spell_good)
 
 -- Set markdown-specific surrounding in 'mini.surround'
 vim.b.minisurround_config = {
@@ -179,3 +189,43 @@ vim.b.minisurround_config = {
       },
    },
 }
+
+local function is_dot(path)
+   return vim.startswith(path, "...")
+end
+
+local function absolute(path)
+   -- local base = vim.fs.basename(path):sub(1, -5)
+   path = path:gsub("%.%.%./", "")
+   local mods = vim.loader.find(path, { all = true })
+   if #mods ~= 0 then
+      return mods[1].modpath
+   else
+      return path
+   end
+end
+
+local function rtp(path)
+   local paths = vim.split(vim.o.rtp, ",")
+   -- path = path:gsub("%.%.%./", "")
+   path = vim.fs.basename(path)
+
+   -- print(path)
+
+   for _, dir in ipairs(paths) do
+      local res = vim.fs.find({ path }, { path = dir })
+      if not vim.tbl_isempty(res) then
+         vim.print(res)
+      end
+   end
+end
+
+-- rtp(".../obsidian/version.lua")
+
+-- _G.pager_includeexpr = function()
+--    local word = vim.api.nvim_get_current_line() -- TODO:
+--    local resolved_path = absolute(word)
+--    return absolute(word)
+-- end
+--
+-- vim.bo.includeexpr = "v:lua.pager_includeexpr()"

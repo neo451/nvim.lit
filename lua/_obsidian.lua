@@ -1,4 +1,76 @@
 local obsidian = require("obsidian")
+
+---@return string[]
+local list_tags = function()
+   local tag_locations = obsidian.search.find_tags("")
+   local tags = {}
+   for _, tag_loc in ipairs(tag_locations) do
+      local tag = tag_loc.tag
+      if not tags[tag] then
+         tags[tag] = true
+      end
+   end
+   return vim.tbl_keys(tags)
+end
+
+local handlers = {
+   tags = function()
+      local tags = list_tags()
+
+      local list = {}
+
+      for _, tag in ipairs(tags) do
+         list[#list + 1] = string.format("'%s'", tag)
+      end
+
+      local list_str = table.concat(list, ", ")
+
+      local format = [[
+function! ObsidianTagsComplete(A, L, P)
+  return [%s]
+endfunction
+   ]]
+
+      local func_str = string.format(format, list_str)
+      vim.cmd(func_str)
+   end,
+}
+
+local function add_property()
+   local note = assert(obsidian.api.current_note(0))
+
+   vim.cmd([[
+function! ObsidianPropertyComplete(A, L, P)
+  return ['aliases', 'tags', 'id']
+endfunction
+   ]])
+
+   local key = obsidian.api.input("key: ", {
+      completion = "customlist,ObsidianPropertyComplete",
+   })
+   local opts = {}
+
+   if handlers[key] then
+      handlers[key]()
+      opts.completion = "customlist,ObsidianTagsComplete"
+   end
+
+   local value = obsidian.api.input("value: ", opts)
+
+   if not key or not value then
+      return obsidian.log.info("Aborted")
+   end
+
+   if key == "tags" then
+      note:add_tag(value)
+      note:update_frontmatter(0)
+      return
+   end
+
+   note:add_field(key, value)
+   note:update_frontmatter(0)
+end
+
 local workspaces = {
    {
       name = "auto",
@@ -15,6 +87,22 @@ local workspaces = {
       end,
    },
 }
+
+local VAULTS = "~/Vaults/"
+
+local overrides = {}
+
+for dir, t in vim.fs.dir(VAULTS) do
+   if t == "directory" then
+      local spec = {
+         path = vim.fs.joinpath(VAULTS, dir),
+      }
+      if overrides[dir] then
+         spec.overrides = overrides[dir]
+      end
+      workspaces[#workspaces + 1] = spec
+   end
+end
 
 local api = vim.api
 
@@ -42,6 +130,10 @@ local id_c = 1
 vim.api.nvim_create_autocmd("User", {
    pattern = "ObsidianNoteEnter",
    callback = function(ev)
+      local path = vim.api.nvim_buf_get_name(ev.buf)
+      if not vim.endswith(path, "todo.md") then
+         return
+      end
       local ok, note = pcall(obsidian.Note.from_buffer, ev.buf)
       if not ok then
          return
@@ -66,23 +158,11 @@ vim.api.nvim_create_autocmd("User", {
    end,
 })
 
-local VAULTS = "~/Vaults/"
-
-local overrides = {}
-
-for dir, t in vim.fs.dir(VAULTS) do
-   if t == "directory" then
-      local spec = {
-         path = vim.fs.joinpath(VAULTS, dir),
-      }
-      if overrides[dir] then
-         spec.overrides = overrides[dir]
-      end
-      workspaces[#workspaces + 1] = spec
-   end
-end
-
 obsidian.setup({
+
+   completion = {
+      min_chars = 2,
+   },
 
    -- log_level = vim.log.levels.WARN,
    -- open_notes_in = "vsplit",
@@ -116,7 +196,7 @@ obsidian.setup({
          return out
       end,
       enabled = function()
-         if Obsidian.workspace.name == "obsidian.nvim.wiki" then
+         if Obsidian.workspace.name == "2 obsidian.nvim.wiki" then
             return false
          end
          return true
@@ -143,11 +223,20 @@ obsidian.setup({
             vim.keymap.set("n", "<CR>", "<cmd>Checkmate toggle<cr>", { buffer = true })
          end
 
+         vim.keymap.set("n", "<leader>;", add_property)
+
          vim.keymap.set("n", "<leader>cb", require("obsidian.api").set_checkbox)
       end,
    },
    legacy_commands = false,
    -- prefer_config_from_obsidian_app = true,
+
+   link = {
+      -- format = "shortest",
+      format = "relative",
+      -- style = "markdown",
+      style = "wiki",
+   },
 
    templater = {
       commands = {
@@ -172,6 +261,9 @@ obsidian.setup({
       create_new = true,
    },
 
+   follow_img_func = function(uri)
+      return vim.ui.open(uri, { cmd = { "wsl-open" } })
+   end,
    open = {
       use_advanced_uri = true,
       func = function(uri)
@@ -181,7 +273,7 @@ obsidian.setup({
 
    daily_notes = {
       date_format = "%Y-%m-%d",
-      -- template = "journaling-daily-note.md",
+      template = "daily.md",
       folder = "daily_notes",
    },
 
@@ -200,6 +292,7 @@ obsidian.setup({
       end,
       confirm_img_paste = false,
       folder = "./attachments",
+      -- img_folder = "./attachments",
       img_folder = "./attachments",
    },
 

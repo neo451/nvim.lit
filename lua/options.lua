@@ -24,6 +24,7 @@ opt.listchars = {
    trail = "·",
    nbsp = "␣",
 }
+o.updatetime = 300
 
 o.iskeyword = "@,48-57,_,192-255,-" -- Treat dash as `word` textobject part
 
@@ -66,3 +67,13 @@ o.spelllang = "en,cjk"
 o.spellfile = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.add")
 
 vim.cmd([[set completeopt+=menuone,noselect,popup]])
+
+vim.diagnostic.config({
+   signs = {
+      text = {
+         [vim.diagnostic.severity.ERROR] = " ",
+         [vim.diagnostic.severity.WARN] = " ",
+         [vim.diagnostic.severity.INFO] = "󰌶 ",
+      },
+   },
+})

@@ -31,6 +31,7 @@ local ORDER = {
    "ro",
    "sep",
    "arglist",
+   "rime",
    "diag",
    "fileinfo",
    "pad",
@@ -100,26 +101,26 @@ local function path_widget(root, fname)
 end
 
 -- diagnostics ---------------------------------------------
-local function diagnostics_widget()
-   if not tools.diagnostics_available() then
-      return ""
-   end
-   local diag_count = vim.diagnostic.count()
-   local counts = {
-      error = diag_count[1] or 0,
-      warn = diag_count[2] or 0,
-      info = diag_count[3] or 0,
-   }
-   local buf = {}
-
-   for _, kind in ipairs({ "error", "warn", "info" }) do
-      if counts[kind] and counts[kind] > 0 then
-         buf[#buf + 1] = ICON[kind] .. string.format("%-2d", counts[kind])
-      end
-   end
-
-   return table.concat(buf)
-end
+-- local function diagnostics_widget()
+--    if not tools.diagnostics_available() then
+--       return ""
+--    end
+--    local diag_count = vim.diagnostic.count()
+--    local counts = {
+--       error = diag_count[1] or 0,
+--       warn = diag_count[2] or 0,
+--       info = diag_count[3] or 0,
+--    }
+--    local buf = {}
+--
+--    for _, kind in ipairs({ "error", "warn", "info" }) do
+--       if counts[kind] and counts[kind] > 0 then
+--          buf[#buf + 1] = ICON[kind] .. string.format("%-2d", counts[kind])
+--       end
+--    end
+--
+--    return table.concat(buf)
+-- end
 
 -- file/selection info -------------------------------------
 local function fileinfo_widget()
@@ -130,6 +131,15 @@ local function fileinfo_widget()
    if not tools.nonprog_modes[ft] then
       return str .. string.format("%3s lines", lines)
    end
+
+   -- if vim.b.obsidian_buffer then
+   --    local note = require("obsidian").api.current_note()
+   --    local stat = note:status()
+   --    if not stat then
+   --       return str
+   --    end
+   --    return str .. string.format("%3s backlinks %3s words %3s chars", stat.backlinks, stat.words, stat.chars)
+   -- end
 
    local wc = fn.wordcount()
    if not wc.visual_words then
@@ -155,6 +165,14 @@ local function scrollbar_widget()
    return tools.hl_str("Substitute", SBAR[idx]:rep(2))
 end
 
+local function rime_status()
+   if vim.g.rime_enabled then
+      return "ㄓ"
+   else
+      return ""
+   end
+end
+
 -- render ---------------------------------------------
 function M.render()
    local fname = api.nvim_buf_get_name(0)
@@ -174,7 +192,8 @@ function M.render()
       ro = get_opt("readonly", { buf = buf }) and ICON.readonly or "",
       sep = SEP,
       arglist = "%-13a",
-      diag = diagnostics_widget(),
+      diag = vim.diagnostic.status(),
+      rime = rime_status(),
       fileinfo = fileinfo_widget(),
       scrollbar = scrollbar_widget(),
    }

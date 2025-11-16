@@ -12,14 +12,14 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
    end,
 })
 
--- Highlight on yank
-vim.api.nvim_create_autocmd("TextYankPost", {
-   group = augroup("highlight_yank"),
-   callback = function()
-      (vim.hl or vim.highlight).on_yank()
-   end,
-})
-
+-- -- Highlight on yank
+-- vim.api.nvim_create_autocmd("TextYankPost", {
+--    group = augroup("highlight_yank"),
+--    callback = function()
+--       (vim.hl or vim.highlight).on_yank()
+--    end,
+-- })
+--
 -- resize splits if window got resized
 vim.api.nvim_create_autocmd({ "VimResized" }, {
    group = augroup("resize_splits"),
@@ -130,7 +130,16 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 
 _G.Config.new_autocmd("LspAttach", nil, "Attach lsp stuff", function(ev)
    local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+   -- if client:supports_method("textDocument/code_a"k) then
 
+   vim.keymap.set("n", "gra", function()
+      local ok, tiny = pcall(require, "tiny-code-action")
+      if ok then
+         tiny.code_action({})
+      else
+         vim.lsp.buf.code_action()
+      end
+   end, { buffer = ev.buf })
    if client:supports_method("textDocument/completion") then
       -- local chars = {}
       -- for i = 32, 126 do
@@ -153,3 +162,49 @@ _G.Config.new_autocmd("User", "ObsidianNoteWritePre", "Note metadata", function(
    local note = require("obsidian.note").from_buffer(ev.buf)
    note:add_field("modified", os.date("%Y-%m-%d %H:%M"))
 end)
+
+_G.Config.new_autocmd("CursorMoved", nil, "Highlight references under cursor", function(ev)
+   if vim.bo.filetype == "markdown" then
+      return
+   end
+
+   if vim.fn.mode == "i" then
+      return
+   end
+
+   local current_word = vim.fn.expand("<cword>")
+   if vim.b.current_word and vim.b.current_word == current_word then
+      return
+   end
+
+   vim.b.current_word = current_word
+
+   local clients = vim.lsp.get_clients({ buffer = ev.buf, method = "textDocument/documentHighlight" })
+   if #clients == 0 then
+      return
+   end
+
+   vim.lsp.buf.clear_references()
+   vim.lsp.buf.document_highlight()
+end)
+
+-- -- highlight references when the cursor is idle (stops/holds)
+-- vim.api.nvim_create_autocmd("CursorHold", {
+--    group = vim.api.nvim_create_augroup("LspReferenceHighlight", { clear = true }),
+--    desc = "Highlight references when cursor stops",
+--    callback = function()
+--       -- Only run in normal mode and if a server supports it
+--       if vim.fn.mode() == "n" and vim.lsp.buf.document_highlight then
+--          vim.lsp.buf.document_highlight()
+--       end
+--    end,
+-- })
+--
+-- -- clear highlights when the cursor moves again
+-- vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+--    group = "LspReferenceHighlight",
+--    desc = "Clear references when cursor moves",
+--    callback = function()
+--       vim.lsp.buf.clear_references()
+--    end,
+-- })
