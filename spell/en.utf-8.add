@@ -18,3 +18,5 @@ neovim
 config
 todo
 GDPR
+whitespace
+Callouts
