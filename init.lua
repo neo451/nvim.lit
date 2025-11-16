@@ -42,9 +42,6 @@ local ok, err = pcall(function()
    vim.opt.rtp:append("~/Plugins/feed.nvim/")
    require("_feed")
 
-   vim.opt.rtp:append("~/Plugins/kanban.nvim/")
-   require("kanban").setup({})
-
    vim.opt.rtp:append("~/Plugins/diy.nvim/")
    vim.opt.rtp:append("~/Plugins/nldates.nvim/")
    vim.opt.rtp:append("~/Plugins/templater.nvim/")

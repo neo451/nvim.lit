@@ -1,0 +1,45 @@
+{
+  "plugins": {
+    "Recover.vim": [],
+    "blink.cmp": {
+      "version": "1.0.0 - 2.0.0"
+    },
+    "bullets.vim": [],
+    "coerce.nvim": [],
+    "conform.nvim": [],
+    "coop.nvim": [],
+    "dial.nvim": [],
+    "friendly-snippets": [],
+    "fyler.nvim": [],
+    "fzf-lua": [],
+    "grug-far.nvim": [],
+    "inc-rename.nvim": [],
+    "kulala.nvim": [],
+    "lazydev.nvim": [],
+    "live-preview.nvim": [],
+    "lz.n": [],
+    "lzn-auto-require": [],
+    "markdown-plus.nvim": [],
+    "markview.nvim": [],
+    "mini.clue": [],
+    "mini.icons": [],
+    "mini.pick": [],
+    "neogit": [],
+    "nightfox.nvim": [],
+    "no-neck-pain.nvim": [],
+    "nvim": [],
+    "nvim-treesitter": {
+      "version": "'main'"
+    },
+    "oil.nvim": [],
+    "org-list.nvim": [],
+    "otter.nvim": [],
+    "plenary.nvim": [],
+    "scnvim": [],
+    "snacks.nvim": [],
+    "telescope.nvim": [],
+    "tiny-inline-diagnostic.nvim": [],
+    "vim-lion": [],
+    "vim-table-mode": []
+  }
+}
