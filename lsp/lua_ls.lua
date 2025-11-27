@@ -30,7 +30,13 @@ return {
             -- Don't analyze code from submodules
             -- ignoreSubmodules = true,
             -- Add Neovim's methods for easier code writing
-            library = { vim.env.VIMRUNTIME },
+            library = {
+               vim.env.VIMRUNTIME,
+               vim.fs.joinpath(vim.fn.stdpath"data", "/site/pack/core/opt", "mini.nvim"),
+               vim.fs.joinpath(vim.fn.stdpath"data", "/site/pack/core/opt", "snacks.nvim"),
+               "~/Plugins/obsidian.nvim/",
+            },
+            -- library = vim.api.nvim_get_runtime_file("", true)
          },
       },
    },

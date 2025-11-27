@@ -1,4 +1,5 @@
 local obsidian = require("obsidian")
+---@module 'obsidian'
 
 ---@return string[]
 local list_tags = function()
@@ -158,6 +159,18 @@ vim.api.nvim_create_autocmd("User", {
    end,
 })
 
+vim.api.nvim_create_autocmd("User", {
+   pattern = "ObsidianNoteEnter",
+   callback = function()
+      local note = obsidian.api.current_note()
+      local spellfile = Obsidian.workspace.root / ".en.utf-8.add"
+      if not spellfile:exists() then
+         vim.fn.writefile({}, tostring(spellfile))
+      end
+      vim.bo[note.bufnr].spellfile = tostring(spellfile)
+   end,
+})
+
 obsidian.setup({
 
    completion = {
@@ -196,7 +209,7 @@ obsidian.setup({
          return out
       end,
       enabled = function()
-         if Obsidian.workspace.name == "2 obsidian.nvim.wiki" then
+         if string.find(Obsidian.workspace.name, "obsidian.nvim.wiki", 1, true) then
             return false
          end
          return true
@@ -218,6 +231,33 @@ obsidian.setup({
 
    callbacks = {
       enter_note = function(note)
+         vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
+         vim.keymap.set("n", "<leader>p", "<cmd>Obsidian paste_img<cr>", { buffer = true })
+
+         vim.keymap.set("v", "<leader>nd", function()
+            require("nldates").parse({
+               callback = function(datestring)
+                  return "[[" .. datestring .. "]]"
+               end,
+            })
+         end)
+
+         pcall(function()
+            vim.keymap.set("v", "<leader>nd", function()
+               require("nldates").parse({
+                  callback = function(datestring)
+                     return "[[" .. datestring .. "]]"
+                  end,
+               })
+            end)
+         end)
+
+         vim.keymap.set("n", "fl", function()
+            require("flash").jump({
+               search = { mode = "search" },
+               pattern = "\\[\\[.\\{-}\\]\\]",
+            })
+         end, { noremap = true, silent = true, buffer = true, desc = "Show wiki-links hints" })
          if vim.endswith(tostring(note.path), "todo.md") then
             vim.keymap.del("n", "<CR>", { buffer = true })
             vim.keymap.set("n", "<CR>", "<cmd>Checkmate toggle<cr>", { buffer = true })
@@ -249,6 +289,7 @@ obsidian.setup({
    },
 
    note_id_func = function(title, path)
+      title = title:lower()
       return title
    end,
 

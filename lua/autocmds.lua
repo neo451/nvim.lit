@@ -188,6 +188,13 @@ _G.Config.new_autocmd("CursorMoved", nil, "Highlight references under cursor", f
    vim.lsp.buf.document_highlight()
 end)
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function(args)
+    require("conform").format({ bufnr = args.buf })
+  end,
+})
+
 -- -- highlight references when the cursor is idle (stops/holds)
 -- vim.api.nvim_create_autocmd("CursorHold", {
 --    group = vim.api.nvim_create_augroup("LspReferenceHighlight", { clear = true }),

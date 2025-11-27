@@ -41,8 +41,16 @@ vim.api.nvim_create_user_command("Sort", function(opts)
    vim.cmd(pattern)
 end, { nargs = 1, bang = true, range = true })
 
+
+-- TODO: one command
 vim.api.nvim_create_user_command("Mkspell", function(opts)
-   vim.cmd("mkspell! " .. vim.o.spellfile)
+   local spellfile =vim.bo.spellfile:gsub(" ", "\\ ")
+   vim.cmd("mkspell! " .. spellfile)
+end, {})
+
+vim.api.nvim_create_user_command("Edspell", function(opts)
+   local spellfile =vim.bo.spellfile:gsub(" ", "\\ ")
+   vim.cmd("edit " .. spellfile)
 end, {})
 
 vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})

@@ -68,11 +68,18 @@ set("i", "<C-l>", "<Esc>[s1z=`]a")
 set("i", "jk", "<esc>")
 
 nmap_leader("<leader>x", function()
-   local base = vim.fs.basename(vim.fn.expand("%"))
+   local file = vim.fn.expand("%")
+   local base = vim.fs.basename(file)
    if vim.startswith(base, "test_") then
       return "<cmd>lua MiniTest.run_file()<cr>"
    elseif vim.endswith(base, "_spec.lua") then
-      return "<cmd>PlenaryBustedFile %<cr>"
+      local has_neotest, neotest = pcall(require, "neotest")
+      if has_neotest then
+         neotest.run.run(file)
+         return "<cmd>Neotest output-panel<cr>"
+      else
+         return "<cmd>!busted %<cr>"
+      end
    else
       return "<cmd>w<cr><cmd>so %<cr>"
    end
@@ -82,6 +89,7 @@ end, "", { expr = true })
 nmap_leader("<leader>z", "<cmd>NoNeckPain<cr>")
 
 -- Copy/paste with system clipboard
+set({ "n", "x" }, "gY", '"+Y', { desc = "Copy to system clipboard" })
 set({ "n", "x" }, "gy", '"+y', { desc = "Copy to system clipboard" })
 set("n", "gp", '"+p', { desc = "Paste from system clipboard" })
 -- - Paste in Visual with `P` to not copy selected text (`:h v_P`)
