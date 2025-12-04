@@ -163,55 +163,34 @@ _G.Config.new_autocmd("User", "ObsidianNoteWritePre", "Note metadata", function(
    note:add_field("modified", os.date("%Y-%m-%d %H:%M"))
 end)
 
-_G.Config.new_autocmd("CursorMoved", nil, "Highlight references under cursor", function(ev)
-   if vim.bo.filetype == "markdown" then
-      return
-   end
-
-   if vim.fn.mode == "i" then
-      return
-   end
-
-   local current_word = vim.fn.expand("<cword>")
-   if vim.b.current_word and vim.b.current_word == current_word then
-      return
-   end
-
-   vim.b.current_word = current_word
-
-   local clients = vim.lsp.get_clients({ buffer = ev.buf, method = "textDocument/documentHighlight" })
-   if #clients == 0 then
-      return
-   end
-
-   vim.lsp.buf.clear_references()
-   vim.lsp.buf.document_highlight()
-end)
+-- _G.Config.new_autocmd("CursorMoved", nil, "Highlight references under cursor", function(ev)
+--    if vim.bo.filetype == "markdown" then
+--       return
+--    end
+--
+--    if vim.fn.mode == "i" then
+--       return
+--    end
+--
+--    local current_word = vim.fn.expand("<cword>")
+--    if vim.b.current_word and vim.b.current_word == current_word then
+--       return
+--    end
+--
+--    vim.b.current_word = current_word
+--
+--    local clients = vim.lsp.get_clients({ buffer = ev.buf, method = "textDocument/documentHighlight" })
+--    if #clients == 0 then
+--       return
+--    end
+--
+--    vim.lsp.buf.clear_references()
+--    vim.lsp.buf.document_highlight()
+-- end)
 
 vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*",
-  callback = function(args)
-    require("conform").format({ bufnr = args.buf })
-  end,
+   pattern = "*",
+   callback = function(args)
+      require("conform").format({ bufnr = args.buf })
+   end,
 })
-
--- -- highlight references when the cursor is idle (stops/holds)
--- vim.api.nvim_create_autocmd("CursorHold", {
---    group = vim.api.nvim_create_augroup("LspReferenceHighlight", { clear = true }),
---    desc = "Highlight references when cursor stops",
---    callback = function()
---       -- Only run in normal mode and if a server supports it
---       if vim.fn.mode() == "n" and vim.lsp.buf.document_highlight then
---          vim.lsp.buf.document_highlight()
---       end
---    end,
--- })
---
--- -- clear highlights when the cursor moves again
--- vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
---    group = "LspReferenceHighlight",
---    desc = "Clear references when cursor moves",
---    callback = function()
---       vim.lsp.buf.clear_references()
---    end,
--- })

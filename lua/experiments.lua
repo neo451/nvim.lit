@@ -1,34 +1,13 @@
 require("qol.search")
+require("qol.easymotion")
+require("spell")
 
----Refer to <https://microsoft.github.io/language-server-protocol/specification/#snippet_syntax>
+-- require("quickfix")
+-- require("diy.fuzzy").enable(false)
 
----for the specification of valid body.
-
----@param trigger string trigger string for snippet
----@param body string | fun(): string snippet text that will be expanded
----@param opts? vim.keymap.set.Opts
-function _G.Config.snippet_add(trigger, body, opts)
-   vim.keymap.set("ia", trigger, function()
-      -- If abbrev is expanded with keys like "(", ")", "<cr>", "<space>",
-      -- don't expand the snippet. Only accept "<c-]>" as trigger key.
-      local c = vim.fn.nr2char(vim.fn.getchar(0))
-
-      if c ~= "" then
-         vim.api.nvim_feedkeys(trigger .. c, "i", true)
-         return
-      end
-      if type(body) == "function" then
-         body = body()
-      end
-      vim.snippet.expand(body)
-   end, opts)
-end
-
-vim.filetype.add({
-   extension = {
-      base = "yaml",
-   },
-})
+-- require("ob_git").setup({
+--    pull_on_startup = false,
+-- })
 
 vim.api.nvim_create_user_command("Sort", function(opts)
    if not tonumber(opts.args) then
@@ -41,32 +20,41 @@ vim.api.nvim_create_user_command("Sort", function(opts)
    vim.cmd(pattern)
 end, { nargs = 1, bang = true, range = true })
 
-
--- TODO: one command
-vim.api.nvim_create_user_command("Mkspell", function(opts)
-   local spellfile =vim.bo.spellfile:gsub(" ", "\\ ")
-   vim.cmd("mkspell! " .. spellfile)
-end, {})
-
-vim.api.nvim_create_user_command("Edspell", function(opts)
-   local spellfile =vim.bo.spellfile:gsub(" ", "\\ ")
-   vim.cmd("edit " .. spellfile)
-end, {})
-
 vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})
 
 require("vim._extui").enable({})
 require("ui.statusline")
 require("ui.tabline")
--- require("ui.indent")
 
 require("ui.argpoon").setup({})
 
--- require("diy.fuzzy").enable(false)
-
--- require("ob_git").setup({
---    pull_on_startup = false,
--- })
 require("babel").enable(true)
 
--- require("quickfix")
+local ok, err = pcall(function()
+   vim.cmd("packadd fzf-lua")
+   vim.cmd("packadd plenary.nvim")
+   vim.cmd("packadd snacks.nvim")
+   vim.cmd("packadd telescope.nvim")
+   vim.cmd("packadd blink.cmp")
+   vim.cmd("packadd mini.nvim")
+   vim.cmd("packadd coop.nvim")
+   vim.cmd("packadd nvim.undotree")
+   vim.cmd("packadd nvim.difftool")
+
+   vim.opt.rtp:append("~/Plugins/obsidian.nvim")
+   require("_obsidian")
+
+   vim.opt.rtp:append("~/Plugins/feed.nvim/")
+   require("_feed")
+
+   vim.opt.rtp:append("~/Plugins/diy.nvim/")
+   vim.opt.rtp:append("~/Plugins/dict-lsp.nvim/")
+   vim.opt.rtp:append("~/Plugins/nldates.nvim/")
+   vim.opt.rtp:append("~/Plugins/templater.nvim/")
+end)
+
+if not ok then
+   print(err)
+end
+
+-- require("dict-lsp")

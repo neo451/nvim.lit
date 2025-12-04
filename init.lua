@@ -3,7 +3,7 @@ vim.opt.rtp:append("~/Plugins/lit.nvim/")
 vim.g.lit = {
    init = {
       "~/Vaults/1 Notes/nvim.md",
-      "~/Vaults/1 Notes/nvim_try.md",
+      "~/Vaults/1 Notes/nvim/try.md",
    },
 }
 
@@ -57,29 +57,6 @@ require("lsp")
 require("autocmds")
 require("keymaps")
 
-local ok, err = pcall(function()
-   vim.cmd("packadd fzf-lua")
-   vim.cmd("packadd plenary.nvim")
-   vim.cmd("packadd snacks.nvim")
-   vim.cmd("packadd telescope.nvim")
-   vim.cmd("packadd blink.cmp")
-   vim.cmd("packadd mini.nvim")
-   vim.cmd("packadd coop.nvim")
-   vim.cmd("packadd nvim.undotree")
-   vim.cmd("packadd nvim.difftool")
-
-   vim.opt.rtp:append("~/Plugins/obsidian.nvim")
-   require("_obsidian")
-
-   vim.opt.rtp:append("~/Plugins/feed.nvim/")
-   require("_feed")
-
-   vim.opt.rtp:append("~/Plugins/diy.nvim/")
-   vim.opt.rtp:append("~/Plugins/dict-lsp.nvim/")
-   vim.opt.rtp:append("~/Plugins/nldates.nvim/")
-   vim.opt.rtp:append("~/Plugins/templater.nvim/")
-end)
-
 vim.cmd.packadd("conform.nvim")
 require("conform").setup({
    -- format_on_save = {
@@ -90,13 +67,10 @@ require("conform").setup({
       nix = { "alejandra" },
       lua = { "stylua", lsp_format = "fallback" },
       markdown = { "prettier", "injected" },
+      quarto = { "prettier" },
       -- html = { "prettier" },
       -- javascript = { "prettier" },
       -- typescript = { "prettier" },
       -- json = { "jq" },
    },
 })
-
-if not ok then
-   print(err)
-end

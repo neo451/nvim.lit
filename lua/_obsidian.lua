@@ -1,3 +1,9 @@
+vim.filetype.add({
+   extension = {
+      base = "yaml",
+   },
+})
+
 local obsidian = require("obsidian")
 ---@module 'obsidian'
 
@@ -159,17 +165,17 @@ vim.api.nvim_create_autocmd("User", {
    end,
 })
 
-vim.api.nvim_create_autocmd("User", {
-   pattern = "ObsidianNoteEnter",
-   callback = function()
-      local note = obsidian.api.current_note()
-      local spellfile = Obsidian.workspace.root / ".en.utf-8.add"
-      if not spellfile:exists() then
-         vim.fn.writefile({}, tostring(spellfile))
-      end
-      vim.bo[note.bufnr].spellfile = tostring(spellfile)
-   end,
-})
+-- vim.api.nvim_create_autocmd("User", {
+--    pattern = "ObsidianNoteEnter",
+--    callback = function()
+--       local note = obsidian.api.current_note()
+--       local spellfile = Obsidian.workspace.root / ".en.utf-8.add"
+--       if not spellfile:exists() then
+--          vim.fn.writefile({}, tostring(spellfile))
+--       end
+--       vim.bo[note.bufnr].spellfile = tostring(spellfile)
+--    end,
+-- })
 
 obsidian.setup({
 
@@ -185,7 +191,6 @@ obsidian.setup({
          local out = require("obsidian.builtin").frontmatter(note)
          out.modified = os.date("%Y-%m-%d %H:%M")
          if note.id == "albums2025" then
-            note:load_contents()
             local count = 0
             for _, line in ipairs(note.contents) do
                if line:match("^%d*%. ") then
@@ -194,7 +199,6 @@ obsidian.setup({
             end
             out.count = count
          elseif note.id == "nvim" then
-            note:load_contents()
             local count = 0
             for _, line in ipairs(note.contents) do
                if line:match("#* %w*/%w*") then
@@ -219,7 +223,6 @@ obsidian.setup({
    lsp = {
       hover = {
          note_preview_callback = function(note)
-            note:load_contents()
             local contents = {}
             for i = 1, 20 do
                contents[i] = note.contents[i]
@@ -322,8 +325,8 @@ obsidian.setup({
       -- enabled = false,
       -- name = false,
       -- name = "mini.pick",
-      -- name = "snacks.pick",
-      name = "fzf-lua",
+      name = "snacks.pick",
+      -- name = "fzf-lua",
       -- name = "telescope.nvim",
    },
 
@@ -331,7 +334,7 @@ obsidian.setup({
       func = function(uri)
          vim.ui.open(uri)
       end,
-      confirm_img_paste = false,
+      confirm_img_paste = true,
       folder = "./attachments",
       -- img_folder = "./attachments",
       img_folder = "./attachments",

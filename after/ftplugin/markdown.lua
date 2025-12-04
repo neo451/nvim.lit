@@ -6,11 +6,10 @@ vim.wo.foldmethod = "expr"
 vim.wo.foldlevel = 99
 vim.cmd("norm zx")
 
-vim.b.pandoc_compiler_args = "--bibliography=/mnt/c/Users/lenovo/Documents/bib.bib --citeproc"
+vim.b.pandoc_compiler_args = "--bibliography=$REF --citeproc"
 vim.cmd("compiler pandoc")
 
-vim.keymap.set("n", "j", "gj", { buffer = true })
-vim.keymap.set("n", "k", "gk", { buffer = true })
+-- vim.keymap.set("n", "k", "gk", { buffer = true })
 
 vim.keymap.set({ "i", "n" }, "<Tab>", function()
    if _G.Config.in_node("list_item") then
