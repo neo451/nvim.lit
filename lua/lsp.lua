@@ -5,6 +5,7 @@ local servers = {
    "zls",
    "ts_ls",
    "dummy_ls",
+   -- "mpls",
    -- "rime_ls",
    -- "harper_ls",
    -- "emmylua_ls",

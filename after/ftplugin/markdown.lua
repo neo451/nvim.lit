@@ -6,6 +6,10 @@ vim.wo.foldmethod = "expr"
 vim.wo.foldlevel = 99
 vim.cmd("norm zx")
 
+vim.keymap.set("n", "<leader>pp", function()
+   vim.fn.jobstart({ "tatum", "serve", "--open", vim.fn.expand("%") })
+end, { buffer = true, silent = true })
+
 vim.b.pandoc_compiler_args = "--bibliography=$REF --citeproc"
 vim.cmd("compiler pandoc")
 

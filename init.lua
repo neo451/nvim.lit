@@ -9,15 +9,15 @@ vim.g.lit = {
 
 _G.Config = {} -- Define config table to be able to pass data between scripts
 
-_G.Config.new_autocmd = function(event, pattern, desc, callback)
-   local opts = {
-      group = vim.api.nvim_create_augroup("custom-config", {}),
-      pattern = pattern,
-      callback = callback,
-      desc = desc,
-   }
-   vim.api.nvim_create_autocmd(event, opts)
-end
+-- _G.Config.new_autocmd = function(event, pattern, desc, callback)
+--    local opts = {
+--       group = vim.api.nvim_create_augroup("custom-config", {}),
+--       pattern = pattern,
+--       callback = callback,
+--       desc = desc,
+--    }
+--    vim.api.nvim_create_autocmd(event, opts)
+-- end
 
 local ts = vim.treesitter
 

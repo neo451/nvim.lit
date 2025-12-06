@@ -22,7 +22,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "bullets.vim": {
-      "rev": "1c13e510e11d08b0259e8e627f128359c5521962",
+      "rev": "455fc88626b7b42d53a8cc29fedea2f7e476e5fe",
       "src": "https://github.com/bullets-vim/bullets.vim.git"
     },
     "checkmate.nvim": {
@@ -58,12 +58,20 @@
       "src": "https://github.com/rafamadriz/friendly-snippets.git"
     },
     "fyler.nvim": {
-      "rev": "16176d6aacd4673f041832fac8ae857c537666c7",
+      "rev": "c4b4add189502e3ef49e5f5f2314b989ffcb21ba",
       "src": "https://github.com/A7Lavinraj/fyler.nvim.git"
     },
     "fzf-lua": {
-      "rev": "cae96b04f6cad98a3ad24349731df5e56b384c3c",
+      "rev": "0284d640fd88c56f100a43f41103c5b564699e15",
       "src": "https://github.com/ibhagwan/fzf-lua.git"
+    },
+    "fzf-org.nvim": {
+      "rev": "d45bb52774232d7e30836173313acc7eb2b5fe2e",
+      "src": "https://github.com/0xzhzh/fzf-org.nvim.git"
+    },
+    "gh-actions-lsp.nvim": {
+      "rev": "421f87563ffd2c491437f2743dfd3481a9af12af",
+      "src": "https://github.com/tamerlang/gh-actions-lsp.nvim.git"
     },
     "gist.nvim": {
       "rev": "fabafb01dc6a710bec3417c83980cfdefd72d9e6",
@@ -82,7 +90,7 @@
       "src": "https://github.com/mistweaverco/kulala.nvim.git"
     },
     "live-preview.nvim": {
-      "rev": "774964d8c220e563dc4bbae79dd127c7e0a8ed1a",
+      "rev": "3e0eb9ea48a6cf8b091c0031830721eeff0efe19",
       "src": "https://github.com/brianhuster/live-preview.nvim.git"
     },
     "lualine.nvim": {
@@ -130,11 +138,11 @@
       "src": "https://github.com/MisanthropicBit/neotest-busted.git"
     },
     "no-neck-pain.nvim": {
-      "rev": "d871043474c06995c062413c91c987d0cb602632",
+      "rev": "718f30f547ca36bb4d0619e8ea11f5af4ee813cc",
       "src": "https://github.com/shortcuts/no-neck-pain.nvim.git"
     },
     "nvim": {
-      "rev": "ce4a8e0d5267e67056f9f4dcf6cb1d0933c8ca00",
+      "rev": "193e123cdbc4dd3e86db883d55349e9587f0ded6",
       "src": "https://github.com/catppuccin/nvim.git"
     },
     "nvim-nio": {
@@ -142,7 +150,7 @@
       "src": "https://github.com/nvim-neotest/nvim-nio.git"
     },
     "nvim-treesitter": {
-      "rev": "75797cdd8ac125c7ace065b17788b439dcf89a71",
+      "rev": "9d47b2558b29fc8c0bce5f54b8424c5f8e2c80c7",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter.git",
       "version": "'main'"
     },

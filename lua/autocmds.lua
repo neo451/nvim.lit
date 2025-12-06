@@ -12,14 +12,14 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
    end,
 })
 
--- -- Highlight on yank
--- vim.api.nvim_create_autocmd("TextYankPost", {
---    group = augroup("highlight_yank"),
---    callback = function()
---       (vim.hl or vim.highlight).on_yank()
---    end,
--- })
---
+-- Highlight on yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+   group = augroup("highlight_yank"),
+   callback = function()
+      (vim.hl or vim.highlight).on_yank()
+   end,
+})
+
 -- resize splits if window got resized
 vim.api.nvim_create_autocmd({ "VimResized" }, {
    group = augroup("resize_splits"),
@@ -97,16 +97,6 @@ vim.api.nvim_create_autocmd("FileType", {
    end,
 })
 
--- wrap and check for spell in text filetypes
-vim.api.nvim_create_autocmd("FileType", {
-   group = augroup("wrap_spell"),
-   pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
-   callback = function()
-      vim.opt_local.wrap = true
-      vim.opt_local.spell = true
-   end,
-})
-
 -- Fix conceallevel for json files
 vim.api.nvim_create_autocmd({ "FileType" }, {
    group = augroup("json_conceal"),
@@ -128,40 +118,34 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
    end,
 })
 
-_G.Config.new_autocmd("LspAttach", nil, "Attach lsp stuff", function(ev)
-   local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
-   -- if client:supports_method("textDocument/code_a"k) then
+vim.api.nvim_create_autocmd("LspAttach", {
+   desc = "Attach lsp stuff",
+   callback = function(ev)
+      local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
 
-   vim.keymap.set("n", "gra", function()
-      local ok, tiny = pcall(require, "tiny-code-action")
-      if ok then
-         tiny.code_action({})
-      else
-         vim.lsp.buf.code_action()
-      end
-   end, { buffer = ev.buf })
-   if client:supports_method("textDocument/completion") then
-      -- local chars = {}
-      -- for i = 32, 126 do
-      --    table.insert(chars, string.char(i))
-      -- end
-      -- client.server_capabilities.completionProvider.triggerCharacters = chars
-      -- vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-   end
-end)
+      vim.keymap.set("n", "gra", function()
+         local ok, tiny = pcall(require, "tiny-code-action")
+         if ok then
+            tiny.code_action({})
+         else
+            vim.lsp.buf.code_action()
+         end
+      end, { buffer = ev.buf })
+   end,
+})
 
-_G.Config.new_autocmd("FileType", nil, "Start treesitter", function(ev)
-   pcall(vim.treesitter.start, ev.buf)
-end)
-
-_G.Config.new_autocmd("BufReadPre", nil, "Install missing parser", function()
-   require("nvim-treesitter").install({ vim.treesitter.language.get_lang(vim.bo.filetype) })
-end)
-
-_G.Config.new_autocmd("User", "ObsidianNoteWritePre", "Note metadata", function(ev)
-   local note = require("obsidian.note").from_buffer(ev.buf)
-   note:add_field("modified", os.date("%Y-%m-%d %H:%M"))
-end)
+-- _G.Config.new_autocmd("FileType", nil, "Start treesitter", function(ev)
+--    pcall(vim.treesitter.start, ev.buf)
+-- end)
+--
+-- _G.Config.new_autocmd("BufReadPre", nil, "Install missing parser", function()
+--    require("nvim-treesitter").install({ vim.treesitter.language.get_lang(vim.bo.filetype) })
+-- end)
+--
+-- _G.Config.new_autocmd("User", "ObsidianNoteWritePre", "Note metadata", function(ev)
+--    local note = require("obsidian.note").from_buffer(ev.buf)
+--    note:add_field("modified", os.date("%Y-%m-%d %H:%M"))
+-- end)
 
 -- _G.Config.new_autocmd("CursorMoved", nil, "Highlight references under cursor", function(ev)
 --    if vim.bo.filetype == "markdown" then
@@ -193,4 +177,64 @@ vim.api.nvim_create_autocmd("BufWritePre", {
    callback = function(args)
       require("conform").format({ bufnr = args.buf })
    end,
+})
+
+--- MPLS Focus Handler
+local function create_debounced_mpls_sender(delay)
+   delay = delay or 300
+   local timer = nil
+
+   return function()
+      if timer then
+         timer:close()
+         timer = nil
+      end
+
+      ---@diagnostic disable-next-line: undefined-field
+      timer = vim.uv.new_timer()
+      if not timer then
+         vim.notify("Failed to create timer for MPLS focus", vim.log.levels.ERROR)
+         return
+      end
+
+      timer:start(
+         delay,
+         0,
+         vim.schedule_wrap(function()
+            local bufnr = vim.api.nvim_get_current_buf()
+
+            local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+            if filetype ~= "markdown" then
+               return
+            end
+
+            local clients = vim.lsp.get_clients({ name = "mpls" })
+
+            if #clients == 0 then
+               return
+            end
+
+            local client = clients[1]
+            local params = { uri = vim.uri_from_bufnr(bufnr) }
+
+            ---@diagnostic disable-next-line: param-type-mismatch
+            client:notify("mpls/editorDidChangeFocus", params)
+
+            if timer then
+               timer:close()
+               timer = nil
+            end
+         end)
+      )
+   end
+end
+
+local send_mpls_focus = create_debounced_mpls_sender(300)
+
+local group = vim.api.nvim_create_augroup("MplsFocus", { clear = true })
+vim.api.nvim_create_autocmd("BufEnter", {
+   pattern = "*.md",
+   callback = send_mpls_focus,
+   group = group,
+   desc = "Notify MPLS of buffer focus changes",
 })
