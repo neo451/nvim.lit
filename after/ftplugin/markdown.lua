@@ -1,6 +1,8 @@
 vim.wo.conceallevel = 1
 vim.bo.shiftwidth = 2
 
+vim.treesitter.start()
+
 vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.wo.foldmethod = "expr"
 vim.wo.foldlevel = 99
@@ -12,8 +14,6 @@ end, { buffer = true, silent = true })
 
 vim.b.pandoc_compiler_args = "--bibliography=$REF --citeproc"
 vim.cmd("compiler pandoc")
-
--- vim.keymap.set("n", "k", "gk", { buffer = true })
 
 vim.keymap.set({ "i", "n" }, "<Tab>", function()
    if _G.Config.in_node("list_item") then
@@ -64,13 +64,12 @@ end
 vim.keymap.set("x", "zg", H.spell_all_good, { buffer = true })
 vim.keymap.set("n", "zg", H.enhanced_spell_good, { buffer = true })
 
--- Set markdown-specific surrounding in 'mini.surround'
+-- Markdown link. Common usage:
+-- `saiwL` + [type/paste link] + <CR> - add link
+-- `sdL` - delete link
+-- `srLL` + [type/paste link] + <CR> - replace link
 vim.b.minisurround_config = {
    custom_surroundings = {
-      -- Markdown link. Common usage:
-      -- `saiwL` + [type/paste link] + <CR> - add link
-      -- `sdL` - delete link
-      -- `srLL` + [type/paste link] + <CR> - replace link
       L = {
          input = { "%[().-()%]%(.-%)" },
          output = function()

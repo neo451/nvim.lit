@@ -1,4 +1,3 @@
-; extends
 (function_call
   name: (dot_index_expression
     table: (identifier) @_table

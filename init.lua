@@ -68,6 +68,7 @@ require("conform").setup({
       lua = { "stylua", lsp_format = "fallback" },
       markdown = { "prettier", "injected" },
       quarto = { "prettier" },
+      qml = { "qmlformat" },
       -- html = { "prettier" },
       -- javascript = { "prettier" },
       -- typescript = { "prettier" },

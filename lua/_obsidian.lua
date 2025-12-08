@@ -189,7 +189,6 @@ obsidian.setup({
    frontmatter = {
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
-         out.modified = os.date("%Y-%m-%d %H:%M")
          if note.id == "albums2025" then
             local count = 0
             for _, line in ipairs(note.contents) do
@@ -269,6 +268,10 @@ obsidian.setup({
          vim.keymap.set("n", "<leader>;", add_property)
 
          vim.keymap.set("n", "<leader>cb", require("obsidian.api").set_checkbox)
+         -- vim.keymap.set("x", "<cr>", require("obsidian.api").toggle_checkbox)
+         vim.keymap.set("x", "<cr>", function()
+            return "<cmd>Obsidian toggle_checkbox<cr>"
+         end, { expr = true })
       end,
    },
    legacy_commands = false,

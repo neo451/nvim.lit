@@ -75,7 +75,9 @@ set("i", "jk", "<esc>")
 nmap_leader("<leader>x", function()
    local file = vim.fn.expand("%")
    local base = vim.fs.basename(file)
-   if vim.startswith(base, "test_") then
+   if vim.endswith(base, ".qml") then
+      vim.system({ "qs" })
+   elseif vim.startswith(base, "test_") then
       return "<cmd>lua MiniTest.run_file()<cr>"
    elseif vim.endswith(base, "_spec.lua") then
       local has_neotest, neotest = pcall(require, "neotest")

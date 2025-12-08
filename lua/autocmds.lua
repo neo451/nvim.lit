@@ -123,7 +123,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
    callback = function(ev)
       local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
 
-      vim.keymap.set("n", "gra", function()
+      vim.keymap.set({ "n", "x" }, "gra", function()
          local ok, tiny = pcall(require, "tiny-code-action")
          if ok then
             tiny.code_action({})
