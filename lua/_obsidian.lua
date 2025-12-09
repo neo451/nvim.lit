@@ -178,6 +178,9 @@ vim.api.nvim_create_autocmd("User", {
 -- })
 
 obsidian.setup({
+   bookmarks = {
+      group = true,
+   },
 
    completion = {
       min_chars = 2,
@@ -234,7 +237,7 @@ obsidian.setup({
    callbacks = {
       enter_note = function(note)
          vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
-         vim.keymap.set("n", "<leader>p", "<cmd>Obsidian paste_img<cr>", { buffer = true })
+         vim.keymap.set("n", "<leader>p", "<cmd>Obsidian paste<cr>", { buffer = true })
 
          vim.keymap.set("v", "<leader>nd", function()
             require("nldates").parse({

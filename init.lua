@@ -9,16 +9,6 @@ vim.g.lit = {
 
 _G.Config = {} -- Define config table to be able to pass data between scripts
 
--- _G.Config.new_autocmd = function(event, pattern, desc, callback)
---    local opts = {
---       group = vim.api.nvim_create_augroup("custom-config", {}),
---       pattern = pattern,
---       callback = callback,
---       desc = desc,
---    }
---    vim.api.nvim_create_autocmd(event, opts)
--- end
-
 local ts = vim.treesitter
 
 ---@param node_type string | string[]
@@ -56,22 +46,3 @@ require("experiments")
 require("lsp")
 require("autocmds")
 require("keymaps")
-
-vim.cmd.packadd("conform.nvim")
-require("conform").setup({
-   -- format_on_save = {
-   --    timeout_ms = 500,
-   --    lsp_format = "fallback",
-   -- },
-   formatters_by_ft = {
-      nix = { "alejandra" },
-      lua = { "stylua", lsp_format = "fallback" },
-      markdown = { "prettier", "injected" },
-      quarto = { "prettier" },
-      qml = { "qmlformat" },
-      -- html = { "prettier" },
-      -- javascript = { "prettier" },
-      -- typescript = { "prettier" },
-      -- json = { "jq" },
-   },
-})

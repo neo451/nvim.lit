@@ -1,4 +1,4 @@
---- @type vim.lsp.ClientConfig
+--- @type vim.lsp.Config
 return {
    name = "copilot-language-server",
    cmd = { "copilot-language-server" },

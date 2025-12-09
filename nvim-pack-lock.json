@@ -58,11 +58,11 @@
       "src": "https://github.com/rafamadriz/friendly-snippets.git"
     },
     "fyler.nvim": {
-      "rev": "c4b4add189502e3ef49e5f5f2314b989ffcb21ba",
+      "rev": "cd84fc2d0c4e921ee2a6bf37ba474e46f2f57689",
       "src": "https://github.com/A7Lavinraj/fyler.nvim.git"
     },
     "fzf-lua": {
-      "rev": "0284d640fd88c56f100a43f41103c5b564699e15",
+      "rev": "95dcadd8f4381c8407cb1e532a732397ce2194fe",
       "src": "https://github.com/ibhagwan/fzf-lua.git"
     },
     "fzf-org.nvim": {
@@ -82,7 +82,7 @@
       "src": "https://github.com/smjonas/inc-rename.nvim.git"
     },
     "kulala.nvim": {
-      "rev": "5d3916195a97928b8f9b79d96029f37d19ba866d",
+      "rev": "b36aff673915391e415d4acc7c90ca6ca6891750",
       "src": "https://github.com/mistweaverco/kulala.nvim.git"
     },
     "lualine.nvim": {
@@ -102,7 +102,7 @@
       "src": "https://github.com/OXY2DEV/markdoc.nvim.git"
     },
     "markdown-plus.nvim": {
-      "rev": "89fa84dd9619906befa976d54c15642a5993ccff",
+      "rev": "2f5529983a5ad0513124b624456941bb36769299",
       "src": "https://github.com/YousefHadder/markdown-plus.nvim.git"
     },
     "mega.cmdparse": {
@@ -114,11 +114,11 @@
       "src": "https://github.com/ColinKennedy/mega.logging.git"
     },
     "mini.nvim": {
-      "rev": "dca98843fab66d080779cd973e7139e258ff164c",
+      "rev": "6f11e41a137590e4a5f13624a2a9a845686e719f",
       "src": "https://github.com/nvim-mini/mini.nvim.git"
     },
     "neogit": {
-      "rev": "300949af63fa48cb6bc8d93822b78cb9dbb4fd75",
+      "rev": "8c75d6d010a5b6d28bc50f2976fe9f341cf268bc",
       "src": "https://github.com/NeogitOrg/neogit.git"
     },
     "neotest": {
@@ -142,7 +142,7 @@
       "src": "https://github.com/nvim-neotest/nvim-nio.git"
     },
     "nvim-treesitter": {
-      "rev": "20db421f5fba0c23f6a7629af96ba6d4fc531677",
+      "rev": "b6271b678e035a5cbf62d637364f3eeca0890171",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter.git",
       "version": "'main'"
     },
@@ -171,7 +171,7 @@
       "src": "https://github.com/stevearc/overseer.nvim.git"
     },
     "penview.nvim": {
-      "rev": "3ae3382e71339cbdcf0b74cfbe8f3bda3deb8538",
+      "rev": "a94fa6effacfc8f531f85d63ad80b923db8333ae",
       "src": "https://github.com/vihu/penview.nvim.git"
     },
     "plenary.nvim": {
@@ -215,7 +215,7 @@
       "src": "https://github.com/rachartier/tiny-code-action.nvim.git"
     },
     "tiny-inline-diagnostic.nvim": {
-      "rev": "38b06435305c30966b7ceb0a43e460dc43acaada",
+      "rev": "9b55d36b797875b6e513f6bcc526e17cb9fe31f4",
       "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim.git"
     },
     "todo-comments.nvim": {

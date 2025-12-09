@@ -1,4 +1,4 @@
 return {
-  cmd = { "zls" },
-  filetypes = { "zig" },
+   cmd = { "zls" },
+   filetypes = { "zig" },
 }
