@@ -3,6 +3,8 @@ vim.bo.shiftwidth = 2
 
 vim.treesitter.start()
 
+vim.cmd("set spell")
+
 vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.wo.foldmethod = "expr"
 vim.wo.foldlevel = 99

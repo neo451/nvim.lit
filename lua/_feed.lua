@@ -112,7 +112,12 @@ end
 --    end,
 -- })
 
+vim.keymap.set("n", "<leader>F", "<cmd>Feed<cr>")
+
 require("feed").setup({
+   search = {
+      default_query = "@6-months-ago",
+   },
    web = {
       open_browser = true,
    },

@@ -25,9 +25,9 @@ end, { nargs = 1, bang = true, range = true })
 vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})
 
 require("vim._extui").enable({})
-require("ui.statusline")
-require("ui.tabline")
 
+-- require("ui.statusline")
+require("ui.tabline")
 require("ui.argpoon").setup({})
 
 require("babel").enable(true)
@@ -40,8 +40,6 @@ local ok, err = pcall(function()
    vim.cmd("packadd blink.cmp")
    vim.cmd("packadd mini.nvim")
    vim.cmd("packadd coop.nvim")
-   vim.cmd("packadd nvim.undotree")
-   vim.cmd("packadd nvim.difftool")
 
    vim.opt.rtp:append("~/Plugins/obsidian.nvim")
    require("_obsidian")
@@ -50,9 +48,12 @@ local ok, err = pcall(function()
    require("_feed")
 
    vim.opt.rtp:append("~/Plugins/diy.nvim/")
-   vim.opt.rtp:append("~/Plugins/dict-lsp.nvim/")
    vim.opt.rtp:append("~/Plugins/nldates.nvim/")
    vim.opt.rtp:append("~/Plugins/templater.nvim/")
+   vim.opt.rtp:append("~/Plugins/dict-lsp.nvim/")
+   require("dict-lsp")
+   vim.opt.rtp:append("~/Plugins/obpilot/")
+   require("obpilot")
 end)
 
 if not ok then

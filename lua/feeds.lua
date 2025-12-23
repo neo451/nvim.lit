@@ -18,6 +18,7 @@ return {
          "https://ziglang.org/news/index.xml",
       },
       "https://obsidian.md/changelog.xml",
+      "https://pawelgrzybek.com/feed.xml",
       -- "https://hnrss.org/frontpage",
       -- "rsshub://caixinglobal/latest",
    },
@@ -25,6 +26,7 @@ return {
       zig = {
          "https://andrewkelley.me/rss.xml",
       },
+      "https://neo451.github.io/blog/index.xml",
       "https://feeds.feedburner.com/ruanyifeng",
       "https://www.openmymind.net/atom.xml",
       "https://pawelgrzybek.com/feed.xml",

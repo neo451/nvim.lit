@@ -80,36 +80,60 @@ end
 
 local workspaces = {
    {
-      name = "auto",
-      path = function()
-         local path = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-         local prev = ""
-         while path ~= "" and path ~= prev do
-            if vim.uv.fs_stat(path .. "/.obsidian") then
-               return path
-            end
-            prev, path = path, vim.fs.dirname(path)
-         end
-         return nil
-      end,
+      name = "notes",
+      path = "~/Documents/Notes/",
    },
+   {
+      name = "wiki",
+      path = "~/Documents/obsidian.nvim.wiki/",
+      overrides = {
+         daily_notes = { enabled = false },
+         templates = { enabled = false },
+      },
+   },
+   {
+      name = "blog",
+      path = "~/quarto-blog/posts/",
+   },
+   -- {
+   --    name = "test",
+   --    path = "~/Vaults/test/",
+   --    overrides = {
+   --       daily_notes = { enabled = false },
+   --       templates = { enabled = false },
+   --    },
+   -- },
+   -- {
+   --    name = "auto",
+   --    path = function()
+   --       local path = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+   --       local prev = ""
+   --       while path ~= "" and path ~= prev do
+   --          if vim.uv.fs_stat(path .. "/.obsidian") then
+   --             return path
+   --          end
+   --          prev, path = path, vim.fs.dirname(path)
+   --       end
+   --       return nil
+   --    end,
+   -- },
 }
 
 local VAULTS = "~/Vaults/"
 
 local overrides = {}
 
-for dir, t in vim.fs.dir(VAULTS) do
-   if t == "directory" then
-      local spec = {
-         path = vim.fs.joinpath(VAULTS, dir),
-      }
-      if overrides[dir] then
-         spec.overrides = overrides[dir]
-      end
-      workspaces[#workspaces + 1] = spec
-   end
-end
+-- for dir, t in vim.fs.dir(VAULTS) do
+--    if t == "directory" then
+--       local spec = {
+--          path = vim.fs.joinpath(VAULTS, dir),
+--       }
+--       if overrides[dir] then
+--          spec.overrides = overrides[dir]
+--       end
+--       workspaces[#workspaces + 1] = spec
+--    end
+-- end
 
 local api = vim.api
 
@@ -214,10 +238,15 @@ obsidian.setup({
          end
          return out
       end,
-      enabled = function()
-         if string.find(Obsidian.workspace.name, "obsidian.nvim.wiki", 1, true) then
+      enabled = function(path)
+         if vim.endswith(tostring(path), ".qmd") then
             return false
          end
+
+         if Obsidian.workspace.name == "wiki" then
+            return false
+         end
+
          return true
       end,
    },
@@ -236,6 +265,17 @@ obsidian.setup({
 
    callbacks = {
       enter_note = function(note)
+         vim.keymap.set("n", "<S-CR>", function()
+            require("chatml.llm").chat_completion(vim.api.nvim_get_current_buf())
+         end)
+
+         vim.keymap.set("n", "<C-CR>", function()
+            require("chatml.parse").md_buf_to_json_buf(0, 0)
+            vim.cmd("LspRestart")
+            -- 2 space indentation for JSON in LazyVim:
+            -- LazyVim.format({ force = true })
+         end)
+
          vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
          vim.keymap.set("n", "<leader>p", "<cmd>Obsidian paste<cr>", { buffer = true })
 
@@ -257,12 +297,12 @@ obsidian.setup({
             end)
          end)
 
-         vim.keymap.set("n", "fl", function()
-            require("flash").jump({
-               search = { mode = "search" },
-               pattern = "\\[\\[.\\{-}\\]\\]",
-            })
-         end, { noremap = true, silent = true, buffer = true, desc = "Show wiki-links hints" })
+         -- vim.keymap.set("n", "fl", function()
+         --    require("flash").jump({
+         --       search = { mode = "search" },
+         --       pattern = "\\[\\[.\\{-}\\]\\]",
+         --    })
+         -- end, { noremap = true, silent = true, buffer = true, desc = "Show wiki-links hints" })
          if vim.endswith(tostring(note.path), "todo.md") then
             vim.keymap.del("n", "<CR>", { buffer = true })
             vim.keymap.set("n", "<CR>", "<cmd>Checkmate toggle<cr>", { buffer = true })
@@ -270,7 +310,7 @@ obsidian.setup({
 
          vim.keymap.set("n", "<leader>;", add_property)
 
-         vim.keymap.set("n", "<leader>cb", require("obsidian.api").set_checkbox)
+         vim.keymap.set("n", "<leader>cb", obsidian.api.set_checkbox)
          -- vim.keymap.set("x", "<cr>", require("obsidian.api").toggle_checkbox)
          vim.keymap.set("x", "<cr>", function()
             return "<cmd>Obsidian toggle_checkbox<cr>"
@@ -281,8 +321,8 @@ obsidian.setup({
    -- prefer_config_from_obsidian_app = true,
 
    link = {
-      -- format = "shortest",
-      format = "relative",
+      format = "shortest",
+      -- format = "relative",
       -- style = "markdown",
       style = "wiki",
    },
@@ -298,7 +338,6 @@ obsidian.setup({
    },
 
    note_id_func = function(title, path)
-      title = title:lower()
       return title
    end,
 
@@ -322,6 +361,7 @@ obsidian.setup({
    },
 
    daily_notes = {
+      -- enabled = false,
       date_format = "%Y-%m-%d",
       template = "daily.md",
       folder = "daily_notes",

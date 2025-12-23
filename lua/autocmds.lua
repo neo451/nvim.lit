@@ -131,12 +131,28 @@ vim.api.nvim_create_autocmd("LspAttach", {
             vim.lsp.buf.code_action()
          end
       end, { buffer = ev.buf })
+
+      vim.keymap.set({ "n", "x" }, "grn", function()
+         local ok, inc = pcall(require, "inc_rename")
+         if ok and inc then
+            return ":IncRename " .. vim.fn.expand("<cword>")
+         else
+            return ":lua vim.lsp.buf.rename()"
+         end
+      end, { buffer = ev.buf, expr = true })
+
+      vim.keymap.set("n", "<leader>D", function()
+         vim.lsp.buf.workspace_diagnostics()
+      end, { buffer = ev.buf })
    end,
 })
 
--- _G.Config.new_autocmd("FileType", nil, "Start treesitter", function(ev)
---    pcall(vim.treesitter.start, ev.buf)
--- end)
+vim.api.nvim_create_autocmd("FileType", {
+   desc = "Start treesitter",
+   callback = function(ev)
+      pcall(vim.treesitter.start, ev.buf)
+   end,
+})
 --
 -- _G.Config.new_autocmd("BufReadPre", nil, "Install missing parser", function()
 --    require("nvim-treesitter").install({ vim.treesitter.language.get_lang(vim.bo.filetype) })
@@ -175,7 +191,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.api.nvim_create_autocmd("BufWritePre", {
    pattern = "*",
    callback = function(args)
-      require("conform").format({ bufnr = args.buf })
+      if pcall(require, "conform") then
+         require("conform").format({ bufnr = args.buf })
+      end
    end,
 })
 

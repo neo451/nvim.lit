@@ -1,15 +1,17 @@
 local servers = {
    "lua_ls",
+   -- "emmylua_ls",
    "gopls",
    "nixd",
    "zls",
    "ts_ls",
    "dummy_ls",
    "qmlls",
+   "pyright",
+   "ts_ls",
    -- "mpls",
    -- "rime_ls",
    -- "harper_ls",
-   -- "emmylua_ls",
 }
 
 for name in vim.iter(servers) do

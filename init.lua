@@ -2,8 +2,9 @@ vim.opt.rtp:append("~/Plugins/lit.nvim/")
 
 vim.g.lit = {
    init = {
-      "~/Vaults/1 Notes/nvim.md",
-      "~/Vaults/1 Notes/nvim/try.md",
+      "~/Documents/Notes/nvim/lib.md",
+      "~/Documents/Notes/nvim.md",
+      "~/Documents/Notes/nvim/try.md",
    },
 }
 
@@ -39,6 +40,9 @@ _G.Config.in_node = function(node_type)
    end
    return false
 end
+
+vim.cmd("packadd nvim.undotree")
+vim.cmd("packadd nvim.difftool")
 
 require("options")
 require("experiments")

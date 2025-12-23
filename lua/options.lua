@@ -19,11 +19,24 @@ o.breakindent = true
 o.showmode = false
 o.cursorline = true
 o.list = true
-opt.listchars = {
-   tab = "  ",
-   trail = "·",
-   nbsp = "␣",
+-- opt.listchars = {
+--    tab = "  ",
+--    trail = "·",
+--    nbsp = "␣",
+-- }
+
+opt.fillchars = {
+   foldopen = "",
+   foldclose = "",
+   fold = " ",
+   foldsep = " ",
+   diff = "╱",
+   eob = " ",
 }
+
+-- o.foldtext = ""
+-- opt.formatoptions = "jcroqlnt" -- tcqj
+
 o.updatetime = 300
 
 o.iskeyword = "@,48-57,_,192-255,-" -- Treat dash as `word` textobject part
