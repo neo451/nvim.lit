@@ -54,6 +54,7 @@ local ok, err = pcall(function()
    require("dict-lsp")
    vim.opt.rtp:append("~/Plugins/obpilot/")
    require("obpilot")
+   vim.opt.rtp:append("~/Plugins/calendar.nvim/")
 end)
 
 if not ok then

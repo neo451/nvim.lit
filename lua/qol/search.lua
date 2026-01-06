@@ -3,7 +3,7 @@ local M = {}
 --- TODO: a complete function for prefix
 local config = {
    trigger = "<C-S-;>",
-   default_engine = "bing",
+   default_engine = "google",
    query_map = {
       google = "https://www.google.com/search?q=%s",
       bing = "https://cn.bing.com/search?q=%s",
@@ -12,7 +12,7 @@ local config = {
    },
 }
 
-_G.Config.search = vim.tbl_deep_extend("keep", _G.Config.search or {}, config)
+-- _G.Config.search = vim.tbl_deep_extend("keep", _G.Config.search or {}, config)
 
 local function looks_like_url(input)
    local pat = "[%w%.%-_]+%.[%w%.%-_/]+"
@@ -40,7 +40,10 @@ end
 
 local function query_browser(input)
    if not input then
-      vim.ui.input({ prompt = "Search: " }, function(i)
+      vim.ui.input({
+         prompt = "Search: ",
+         default = vim.fn.expand("<cWORD>"),
+      }, function(i)
          if i then
             _query_browser(i)
          else
@@ -52,4 +55,6 @@ local function query_browser(input)
    end
 end
 
-_G.Config.query_browser = query_browser
+return {
+   query_browser = query_browser,
+}

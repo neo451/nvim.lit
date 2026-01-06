@@ -1,3 +1,15 @@
+vim.ui.open = (function(overridden)
+   return function(uri, opt)
+      if vim.endswith(uri, ".png") then
+         vim.cmd("edit " .. uri) -- early return to just open in neovim
+         return
+      elseif vim.endswith(uri, ".pdf") then
+         opt = { cmd = { "zathura" } } -- override open app
+      end
+      return overridden(uri, opt)
+   end
+end)(vim.ui.open)
+
 vim.filetype.add({
    extension = {
       base = "yaml",
@@ -43,53 +55,10 @@ endfunction
    end,
 }
 
-local function add_property()
-   local note = assert(obsidian.api.current_note(0))
-
-   vim.cmd([[
-function! ObsidianPropertyComplete(A, L, P)
-  return ['aliases', 'tags', 'id']
-endfunction
-   ]])
-
-   local key = obsidian.api.input("key: ", {
-      completion = "customlist,ObsidianPropertyComplete",
-   })
-   local opts = {}
-
-   if handlers[key] then
-      handlers[key]()
-      opts.completion = "customlist,ObsidianTagsComplete"
-   end
-
-   local value = obsidian.api.input("value: ", opts)
-
-   if not key or not value then
-      return obsidian.log.info("Aborted")
-   end
-
-   if key == "tags" then
-      note:add_tag(value)
-      note:update_frontmatter(0)
-      return
-   end
-
-   note:add_field(key, value)
-   note:update_frontmatter(0)
-end
-
 local workspaces = {
    {
       name = "notes",
       path = "~/Documents/Notes/",
-   },
-   {
-      name = "wiki",
-      path = "~/Documents/obsidian.nvim.wiki/",
-      overrides = {
-         daily_notes = { enabled = false },
-         templates = { enabled = false },
-      },
    },
    {
       name = "blog",
@@ -189,17 +158,25 @@ vim.api.nvim_create_autocmd("User", {
    end,
 })
 
--- vim.api.nvim_create_autocmd("User", {
---    pattern = "ObsidianNoteEnter",
---    callback = function()
---       local note = obsidian.api.current_note()
---       local spellfile = Obsidian.workspace.root / ".en.utf-8.add"
---       if not spellfile:exists() then
---          vim.fn.writefile({}, tostring(spellfile))
---       end
---       vim.bo[note.bufnr].spellfile = tostring(spellfile)
---    end,
--- })
+vim.api.nvim_create_autocmd("User", {
+   pattern = "ObsidianNoteEnter",
+   callback = function()
+      local note = obsidian.api.current_note()
+      if not note then
+         return
+      end
+      if vim.tbl_isempty(note.metadata) then
+         return
+      end
+      local options = note.metadata.nvim
+      if not options or vim.tbl_isempty(options) then
+         return
+      end
+      for k, v in pairs(note.metadata.nvim) do
+         vim.o[k] = v
+      end
+   end,
+})
 
 obsidian.setup({
    bookmarks = {
@@ -209,9 +186,6 @@ obsidian.setup({
    completion = {
       min_chars = 2,
    },
-
-   -- log_level = vim.log.levels.WARN,
-   -- open_notes_in = "vsplit",
 
    frontmatter = {
       func = function(note)
@@ -264,28 +238,14 @@ obsidian.setup({
    },
 
    callbacks = {
+      ---@param note obsidian.Note
       enter_note = function(note)
-         vim.keymap.set("n", "<S-CR>", function()
-            require("chatml.llm").chat_completion(vim.api.nvim_get_current_buf())
-         end)
-
-         vim.keymap.set("n", "<C-CR>", function()
-            require("chatml.parse").md_buf_to_json_buf(0, 0)
-            vim.cmd("LspRestart")
-            -- 2 space indentation for JSON in LazyVim:
-            -- LazyVim.format({ force = true })
-         end)
+         if vim.b[note.bufnr].obsidian_help then
+            vim.bo[note.bufnr].readonly = false
+         end
 
          vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
          vim.keymap.set("n", "<leader>p", "<cmd>Obsidian paste<cr>", { buffer = true })
-
-         vim.keymap.set("v", "<leader>nd", function()
-            require("nldates").parse({
-               callback = function(datestring)
-                  return "[[" .. datestring .. "]]"
-               end,
-            })
-         end)
 
          pcall(function()
             vim.keymap.set("v", "<leader>nd", function()
@@ -297,24 +257,20 @@ obsidian.setup({
             end)
          end)
 
-         -- vim.keymap.set("n", "fl", function()
-         --    require("flash").jump({
-         --       search = { mode = "search" },
-         --       pattern = "\\[\\[.\\{-}\\]\\]",
-         --    })
-         -- end, { noremap = true, silent = true, buffer = true, desc = "Show wiki-links hints" })
          if vim.endswith(tostring(note.path), "todo.md") then
             vim.keymap.del("n", "<CR>", { buffer = true })
             vim.keymap.set("n", "<CR>", "<cmd>Checkmate toggle<cr>", { buffer = true })
          end
 
-         vim.keymap.set("n", "<leader>;", add_property)
+         vim.keymap.set("n", "<leader>;", obsidian.api.add_property, { buffer = true })
 
-         vim.keymap.set("n", "<leader>cb", obsidian.api.set_checkbox)
+         vim.keymap.set("n", "<leader>cb", obsidian.api.set_checkbox, { buffer = true })
          -- vim.keymap.set("x", "<cr>", require("obsidian.api").toggle_checkbox)
-         vim.keymap.set("x", "<cr>", function()
-            return "<cmd>Obsidian toggle_checkbox<cr>"
-         end, { expr = true })
+
+         vim.keymap.set({ "n", "x" }, "<leader>cc", obsidian.api.toggle_checkbox, { buffer = true })
+         -- vim.keymap.set("x", "<cr>", function()
+         --    return "<cmd>Obsidian toggle_checkbox<cr>"
+         -- end, { expr = true })
       end,
    },
    legacy_commands = false,
@@ -337,8 +293,11 @@ obsidian.setup({
       enabled = false,
    },
 
-   note_id_func = function(title, path)
-      return title
+   ---@param id string
+   ---@param dir obsidian.Path
+   ---@return string
+   note_id_func = function(id, dir)
+      return id
    end,
 
    comment = { enabled = false },
@@ -350,18 +309,12 @@ obsidian.setup({
       create_new = true,
    },
 
-   follow_img_func = function(uri)
-      return vim.ui.open(uri, { cmd = { "wsl-open" } })
-   end,
    open = {
       use_advanced_uri = true,
-      func = function(uri)
-         return vim.ui.open(uri, { cmd = { "wsl-open" } })
-      end,
    },
 
    daily_notes = {
-      -- enabled = false,
+      enabled = false,
       date_format = "%Y-%m-%d",
       template = "daily.md",
       folder = "daily_notes",
@@ -382,11 +335,10 @@ obsidian.setup({
       end,
       confirm_img_paste = true,
       folder = "./attachments",
-      -- img_folder = "./attachments",
-      img_folder = "./attachments",
    },
 
    templates = {
+      enabled = false,
       folder = "templates",
       date_format = "%Y-%m-%d",
       time_format = "%H:%M",

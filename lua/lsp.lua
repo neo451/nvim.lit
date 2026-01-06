@@ -9,6 +9,7 @@ local servers = {
    "qmlls",
    "pyright",
    "ts_ls",
+   -- "marksman",
    -- "mpls",
    -- "rime_ls",
    -- "harper_ls",

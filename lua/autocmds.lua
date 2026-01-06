@@ -132,14 +132,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
          end
       end, { buffer = ev.buf })
 
-      vim.keymap.set({ "n", "x" }, "grn", function()
-         local ok, inc = pcall(require, "inc_rename")
-         if ok and inc then
-            return ":IncRename " .. vim.fn.expand("<cword>")
-         else
-            return ":lua vim.lsp.buf.rename()"
-         end
-      end, { buffer = ev.buf, expr = true })
+      -- vim.keymap.set({ "n", "x" }, "grn", function()
+      --    local ok, inc = pcall(require, "inc_rename")
+      --    if ok and inc then
+      --       return ":IncRename " .. vim.fn.expand("<cword>")
+      --    else
+      --       return ":lua vim.lsp.buf.rename()"
+      --    end
+      -- end, { buffer = ev.buf, expr = true })
 
       vim.keymap.set("n", "<leader>D", function()
          vim.lsp.buf.workspace_diagnostics()

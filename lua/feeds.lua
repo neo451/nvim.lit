@@ -26,6 +26,7 @@ return {
       zig = {
          "https://andrewkelley.me/rss.xml",
       },
+      "https://www.jeffquast.com/index.xml",
       "https://neo451.github.io/blog/index.xml",
       "https://feeds.feedburner.com/ruanyifeng",
       "https://www.openmymind.net/atom.xml",

@@ -1,9 +1,11 @@
 vim.wo.conceallevel = 1
 vim.bo.shiftwidth = 2
 
+local smart_url = require("qol.smart_paste")
+
 vim.treesitter.start()
 
-vim.cmd("set spell")
+vim.cmd("setlocal spell")
 
 vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.wo.foldmethod = "expr"
@@ -17,8 +19,10 @@ end, { buffer = true, silent = true })
 vim.b.pandoc_compiler_args = "--bibliography=$REF --citeproc"
 vim.cmd("compiler pandoc")
 
+local h = require("helpers")
+
 vim.keymap.set({ "i", "n" }, "<Tab>", function()
-   if _G.Config.in_node("list_item") then
+   if h.in_node("list_item") then
       return "<C-t>"
    else
       return "<Tab>"
@@ -26,7 +30,7 @@ vim.keymap.set({ "i", "n" }, "<Tab>", function()
 end, { expr = true })
 
 vim.keymap.set({ "i", "n" }, "<S-Tab>", function()
-   if _G.Config.in_node("list_item") then
+   if h.in_node("list_item") then
       return "<C-d>"
    else
       return "<S-Tab>"

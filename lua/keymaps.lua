@@ -1,5 +1,7 @@
 local set = vim.keymap.set
 
+set("i", "jk", "<esc>")
+
 vim.keymap.set("n", "gra", function()
    local ok, tiny = pcall(require, "tiny-code-action")
    if ok then
@@ -14,53 +16,7 @@ set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr =
 set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 set({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 
--- set("n", "[A", "<cmd>first<bar>args<cr><esc>")
--- set("n", "]A", "<cmd>last<bar>args<cr><esc>")
---
--- set("n", "ga", function()
---    return ":<C-U>" .. (vim.v.count > 0 and vim.v.count or "") .. "argu|args<cr><esc>"
--- end, { expr = true })
---
--- set("n", "<leader>aa", "<cmd>$arge %<bar>argded<bar>args<cr>")
---
--- set("n", "<leader>ad", "<cmd>argd %<bar>args<cr>")
--- set("n", "<leader>ac", "<cmd>%argd<cr><C-L>")
--- set("n", "<leader>ap", "<C-L><cmd>args<cr>")
---
--- vim.cmd([[
--- function! NavArglist(count)
---     let arglen = argc()
---     if arglen == 0
---         return
---     endif
---     let next = fmod(argidx() + a:count, arglen)
---     if next < 0
---         let next += arglen
---     endif
---     exe float2nr(next + 1) .. 'argu'
--- endfunction
---
--- "autocmd TabNewEntered * argl|%argd -- TODO:
--- ]])
-
-vim.api.nvim_create_autocmd("TabNewEntered", {
-   command = "argl|%argd",
-})
-
--- TODO: not working
-set("n", "<C-S-;>", _G.Config.query_browser, {
-   remap = true,
-})
-
--- TODO: for now
-set("n", "<leader><leader>s", _G.Config.query_browser, {
-   remap = true,
-})
-
-local nmap_leader = function(suffix, rhs, desc, opts)
-   opts = opts or {}
-   vim.keymap.set("n", "<Leader>" .. suffix, rhs, vim.tbl_extend("keep", { desc = desc }, opts))
-end
+set("n", "<C-S-;>", require("qol.search").query_browser, { remap = true })
 
 -- mini version control!
 set("n", "ycc", function()
@@ -70,7 +26,60 @@ end, { remap = true, expr = true })
 -- fix previous spell error
 set("i", "<C-l>", "<Esc>[s1z=`]a")
 
-set("i", "jk", "<esc>")
+-- Copy/paste with system clipboard
+set({ "n", "x" }, "gY", '"+Y', { desc = "Copy to system clipboard" })
+set({ "n", "x" }, "gy", '"+y', { desc = "Copy to system clipboard" })
+set("n", "gp", '"+p', { desc = "Paste from system clipboard" })
+-- - Paste in Visual with `P` to not copy selected text (`:h v_P`)
+set("x", "gp", '"+P', { desc = "Paste from system clipboard" })
+
+set("n", "<leader>U", "<cmd>Undotree<cr>", { desc = "Toggle UndoTree" })
+
+set("n", "<End>", "<cmd>restart<cr>")
+
+set("n", "grl", function()
+   vim.lsp.buf.document_link({ loclist = false })
+end)
+
+set("n", "<C-S-C>", function()
+   local buf = vim.api.nvim_get_current_buf()
+   local file = vim.api.nvim_buf_get_name(buf)
+
+   vim.ui.input({ prompt = "To copy: ", default = file }, function(input)
+      if input then
+         vim.fn.setreg("+", input)
+         vim.notify("Copied filename to clipboard", 2)
+      end
+   end)
+end)
+
+--search within visual selection - this is magic
+set("x", "/", "<Esc>/\\%V")
+
+-- better J: keep cursor in place
+set("n", "J", "mzJ`z:delmarks z<cr>")
+
+-- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
+set("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
+set("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
+set("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
+set("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev Search Result" })
+set("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
+set("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
+
+-- Add undo break-points
+set("i", ",", ",<c-g>u")
+set("i", ".", ".<c-g>u")
+set("i", ";", ";<c-g>u")
+
+-- better indenting
+set("v", "<", "<gv")
+set("v", ">", ">gv")
+
+local nmap_leader = function(suffix, rhs, desc, opts)
+   opts = opts or {}
+   vim.keymap.set("n", "<Leader>" .. suffix, rhs, vim.tbl_extend("keep", { desc = desc }, opts))
+end
 
 nmap_leader("<leader>x", function()
    local file = vim.fn.expand("%")
@@ -95,24 +104,17 @@ end, "", { expr = true })
 --- zen mode (no neck pain)
 nmap_leader("<leader>z", "<cmd>NoNeckPain<cr>")
 
--- Copy/paste with system clipboard
-set({ "n", "x" }, "gY", '"+Y', { desc = "Copy to system clipboard" })
-set({ "n", "x" }, "gy", '"+y', { desc = "Copy to system clipboard" })
-set("n", "gp", '"+p', { desc = "Paste from system clipboard" })
--- - Paste in Visual with `P` to not copy selected text (`:h v_P`)
-set("x", "gp", '"+P', { desc = "Paste from system clipboard" })
-
 -- For 'mini.clue'
-_G.Config.leader_group_clues = {
-   { mode = "n", keys = "<Leader>b", desc = "+Buffer" },
-   { mode = "n", keys = "<Leader>e", desc = "+Explore/Edit" },
-   { mode = "n", keys = "<Leader>f", desc = "+Find" },
-   { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
-   { mode = "n", keys = "<Leader>g", desc = "+Git" },
-   { mode = "n", keys = "<Leader>u", desc = "+UI" },
-   { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
-   { mode = "n", keys = "<Leader><Leader>", desc = "+Other" },
-}
+-- _G.Config.leader_group_clues = {
+--    { mode = "n", keys = "<Leader>b", desc = "+Buffer" },
+--    { mode = "n", keys = "<Leader>e", desc = "+Explore/Edit" },
+--    { mode = "n", keys = "<Leader>f", desc = "+Find" },
+--    { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
+--    { mode = "n", keys = "<Leader>g", desc = "+Git" },
+--    { mode = "n", keys = "<Leader>u", desc = "+UI" },
+--    { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
+--    { mode = "n", keys = "<Leader><Leader>", desc = "+Other" },
+-- }
 
 nmap_leader("qc", "<cmd>cclose<cr>")
 nmap_leader("qo", "<cmd>copen<cr>")
@@ -128,17 +130,12 @@ nmap_leader("ui", vim.show_pos, "Inspect Pos")
 nmap_leader("uI", "<cmd>InspectTree<cr>", "Inspect Tree")
 
 nmap_leader("go", function()
-   ---@diagnostic disable-next-line: undefined-global
-   MiniDiff.toggle_overlay()
-end)
+   MiniDiff.toggle_overlay(0)
+end, "Toggle Minidiff Overlay")
 
 -- t is for 'Terminal'
 nmap_leader("tT", "<Cmd>horizontal term<CR>", "Terminal (horizontal)")
 nmap_leader("tt", "<Cmd>vertical term<CR>", "Terminal (vertical)")
-
-local xmap_leader = function(suffix, rhs, desc)
-   vim.keymap.set("x", "<Leader>" .. suffix, rhs, { desc = desc })
-end
 
 -- b is for 'Buffer'
 local new_scratch_buffer = function()
@@ -192,32 +189,6 @@ end, "Toggle [t]abs")
 set("n", "]t", ":tabnext<CR>", { desc = "Next tab", silent = true })
 set("n", "[t", ":tabprevious<CR>", { desc = "Previous tab", silent = true })
 
-set("n", "<leader>U", "<cmd>Undotree<cr>", { desc = "Toggle UndoTree" })
-
-set("n", "<End>", "<cmd>restart<cr>")
-
-set("n", "grl", function()
-   vim.lsp.buf.document_link({ loclist = false })
-end)
-
-set("n", "<C-S-C>", function()
-   local buf = vim.api.nvim_get_current_buf()
-   local file = vim.api.nvim_buf_get_name(buf)
-
-   vim.ui.input({ prompt = "To copy: ", default = file }, function(input)
-      if input then
-         vim.fn.setreg("+", input)
-         vim.notify("Copied filename to clipboard", 2)
-      end
-   end)
-end)
-
---search within visual selection - this is magic
-set("x", "/", "<Esc>/\\%V")
-
--- better J: keep cursor in place
-set("n", "J", "mzJ`z:delmarks z<cr>")
-
 nmap_leader("/", function()
    Snacks.picker.grep()
 end, "Grep")
@@ -235,7 +206,7 @@ nmap_leader(",", function()
    Snacks.picker.buffers()
 end, "Buffers")
 
-nmap_leader("n", function()
+nmap_leader("N", function()
    Snacks.notifier.show_history()
 end, "Notification History")
 
@@ -277,28 +248,3 @@ end, { desc = "Git branches" })
 set("n", "<leader>P", function()
    Snacks.picker()
 end, { desc = "All pickers" })
-
--- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-set("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
-set("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-set("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-set("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev Search Result" })
-set("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
-set("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
-
--- -- Move Lines
--- map("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
--- map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
--- map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
--- map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
--- map("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
--- map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
-
--- Add undo break-points
-set("i", ",", ",<c-g>u")
-set("i", ".", ".<c-g>u")
-set("i", ";", ";<c-g>u")
-
--- better indenting
-set("v", "<", "<gv")
-set("v", ">", ">gv")
