@@ -26,13 +26,10 @@ vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})
 
 require("vim._extui").enable({})
 
--- require("ui.statusline")
-require("ui.tabline")
-require("ui.argpoon").setup({})
-
 require("babel").enable(true)
 
 local ok, err = pcall(function()
+   vim.cmd("packadd nvim-treesitter")
    vim.cmd("packadd fzf-lua")
    vim.cmd("packadd plenary.nvim")
    vim.cmd("packadd snacks.nvim")
@@ -55,6 +52,7 @@ local ok, err = pcall(function()
    vim.opt.rtp:append("~/Plugins/obpilot/")
    require("obpilot")
    vim.opt.rtp:append("~/Plugins/calendar.nvim/")
+   vim.opt.rtp:append("~/Plugins/nvim-treesitter/")
 end)
 
 if not ok then

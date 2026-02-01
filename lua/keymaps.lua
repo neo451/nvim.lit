@@ -1,6 +1,11 @@
 local set = vim.keymap.set
 
-set("i", "jk", "<esc>")
+vim.keymap.set("i", "jk", "<esc>l")
+
+vim.keymap.set("n", "<leader>H", function()
+   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
+   vim.notify(vim.lsp.inlay_hint.is_enabled() and "Inlay Hint Enabled" or "Inlay Hint Disabled")
+end)
 
 vim.keymap.set("n", "gra", function()
    local ok, tiny = pcall(require, "tiny-code-action")
@@ -99,6 +104,10 @@ nmap_leader("<leader>x", function()
    else
       return "<cmd>w<cr><cmd>so %<cr>"
    end
+end, "", { expr = true })
+
+nmap_leader("<leader>X", function()
+   return "<cmd>lua MiniTest.run_at_location()<cr>"
 end, "", { expr = true })
 
 --- zen mode (no neck pain)

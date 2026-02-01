@@ -31,8 +31,6 @@ end
 
 local function dial(inc)
    return function()
-      print("called")
-      -- local word = vim.fn.expand("<cWORD>")
       local cword = vim.fn.expand("<cword>")
       local cWORD = vim.fn.expand("<cWORD>")
 
@@ -45,6 +43,7 @@ local function dial(inc)
       end
 
       local index, match
+      vim.print(items)
 
       for i, value in ipairs(items) do
          if value.label == cword then
@@ -56,7 +55,6 @@ local function dial(inc)
             break
          end
       end
-      print(index, match)
 
       if not index then
          return

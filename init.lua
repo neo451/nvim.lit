@@ -2,9 +2,9 @@ vim.opt.rtp:append("~/Plugins/lit.nvim/")
 
 vim.g.lit = {
    init = {
-      "~/Documents/Notes/nvim/lib.md",
-      "~/Documents/Notes/nvim.md",
-      "~/Documents/Notes/nvim/try.md",
+      "~/Documents/Notes/Projects/nvim/lib.md",
+      "~/Documents/Notes/Projects/nvim/nvim.md",
+      "~/Documents/Notes/Projects/nvim/try.md",
    },
 }
 

@@ -1,20 +1,12 @@
-vim.wo.conceallevel = 1
-vim.bo.shiftwidth = 2
-
-local smart_url = require("qol.smart_paste")
-
-vim.treesitter.start()
-
-vim.cmd("setlocal spell")
+vim.wo.conceallevel = 2
+vim.wo.spell = true
 
 vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.wo.foldmethod = "expr"
 vim.wo.foldlevel = 99
 vim.cmd("norm zx")
 
-vim.keymap.set("n", "<leader>pp", function()
-   vim.fn.jobstart({ "tatum", "serve", "--open", vim.fn.expand("%") })
-end, { buffer = true, silent = true })
+vim.bo.shiftwidth = 2
 
 vim.b.pandoc_compiler_args = "--bibliography=$REF --citeproc"
 vim.cmd("compiler pandoc")

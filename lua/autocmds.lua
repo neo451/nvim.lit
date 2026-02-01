@@ -247,12 +247,69 @@ local function create_debounced_mpls_sender(delay)
    end
 end
 
-local send_mpls_focus = create_debounced_mpls_sender(300)
+-- -- CodeLens: auto-refresh + keymaps
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--    group = vim.api.nvim_create_augroup("my-lsp-codelens", { clear = true }),
+--    callback = function(args)
+--       local bufnr = args.buf
+--       local client = vim.lsp.get_client_by_id(args.data.client_id)
+--       if not client or not client.server_capabilities.codeLensProvider then
+--          return
+--       end
+--
+--       -- Refresh once on attach (async request -> will display when it returns)
+--       vim.lsp.codelens.refresh({ bufnr = bufnr })
+--
+--       -- Keep lenses updated
+--       local aug = vim.api.nvim_create_augroup("my-lsp-codelens-" .. bufnr, { clear = true })
+--       vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave", "BufWritePost" }, {
+--          group = aug,
+--          buffer = bufnr,
+--          callback = function()
+--             -- Important: pass bufnr so Neovim doesn't try other buffers/clients.
+--             vim.lsp.codelens.refresh({ bufnr = bufnr })
+--          end,
+--       })
+--
+--       -- Keymaps
+--       vim.keymap.set("n", "<leader>cl", function()
+--          vim.lsp.codelens.refresh({ bufnr = bufnr })
+--       end, { buffer = bufnr, desc = "LSP CodeLens: refresh" })
+--
+--       vim.keymap.set("n", "<leader>cr", function()
+--          vim.lsp.codelens.run()
+--       end, { buffer = bufnr, desc = "LSP CodeLens: run on line" })
+--    end,
+-- })
 
-local group = vim.api.nvim_create_augroup("MplsFocus", { clear = true })
-vim.api.nvim_create_autocmd("BufEnter", {
-   pattern = "*.md",
-   callback = send_mpls_focus,
-   group = group,
-   desc = "Notify MPLS of buffer focus changes",
+-- -- Enable LSP inlay hints when the server supports them.
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--    group = vim.api.nvim_create_augroup("my-lsp-inlayhints", { clear = true }),
+--    callback = function(args)
+--       local bufnr = args.buf
+--       local client = vim.lsp.get_client_by_id(args.data.client_id)
+--       if not client then
+--          return
+--       end
+--
+--       -- Capability guard (different servers/ft)
+--       if not client.server_capabilities.inlayHintProvider then
+--          return
+--       end
+--
+--       -- Neovim API has changed names across versions; handle both.
+--       local ih = vim.lsp.inlay_hint
+--       ih.enable(true, { bufnr = bufnr })
+--    end,
+-- })
+
+vim.api.nvim_create_autocmd("User", {
+   pattern = "TSUpdate",
+   callback = function()
+      vim.fn.setenv("EXTENSION_TAGS", "1")
+      vim.fn.setenv("EXTENSION_WIKI_LINK", "1")
+      local p = require("nvim-treesitter.parsers")
+      p.markdown_inline.install_info.generate = true
+      p.markdown_inline.install_info.generate_from_json = false
+   end,
 })
