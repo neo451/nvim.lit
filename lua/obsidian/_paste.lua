@@ -13,10 +13,6 @@ local function html_unescape(s)
    return s
 end
 
-local function is_url(s)
-   return type(s) == "string" and s:match("^https?://")
-end
-
 local function parse_title(html)
    if not html or html == "" then
       return nil
@@ -252,17 +248,22 @@ local function handle_link(url, callback, phase)
    end
 end
 
+local function paste(lines, overridden, phase)
+   local line = lines[1]
+   local is_uri, scheme = util.is_uri(line)
+   -- TODO: check clipboard is image
+   if is_uri and (scheme == "http" or scheme == "https") then
+      return handle_link(line, overridden, phase)
+   elseif looks_like_path(line) then
+      return handle_path(line, overridden, phase)
+   end
+end
+
 return function()
    vim.paste = (function(overridden)
       return function(lines, phase)
          if vim.b.obsidian_buffer then
-            -- TODO: check clipboard is image
-            local line = lines[1]
-            if is_url(line) then
-               return handle_link(line, overridden, phase)
-            elseif looks_like_path(line) then
-               return handle_path(line, overridden, phase)
-            end
+            paste(lines, overridden, phase)
          end
          return overridden(lines, phase)
       end

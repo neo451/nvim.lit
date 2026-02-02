@@ -1,1 +1,1 @@
--- vim.cmd("SCNvimStart")
+vim.cmd("SCNvimStart")

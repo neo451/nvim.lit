@@ -64,7 +64,7 @@ obsidian.setup({
    callbacks = {
       ---@param note obsidian.Note
       enter_note = function(note)
-         require("smart_paste")() -- override paste handler
+         require("obsidian._paste")() -- override paste handler
 
          local actions = require("obsidian.actions")
 

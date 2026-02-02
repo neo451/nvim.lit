@@ -2,8 +2,6 @@ require("qol.search")
 require("qol.easymotion")
 require("spell")
 
-require("experiments.md_live_ls")
-
 -- require("quickfix")
 -- require("diy.fuzzy").enable(false)
 

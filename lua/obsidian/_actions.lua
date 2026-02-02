@@ -55,4 +55,10 @@ pcall(function()
    })
    -- obsidian.code_action.del("rename")
    -- obsidian.code_action.del("add_property")
+   --
+   require("obsidian").code_action.add({
+      name = "insert tag",
+      title = "Insert an existing tag",
+      fn = require("obsidian.actions").insert_tag,
+   })
 end)
