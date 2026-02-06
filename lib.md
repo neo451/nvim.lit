@@ -25,6 +25,8 @@ tags: []
 
 ## nvim-treesitter/nvim-treesitter
 
+- version: `main`
+
 ```lua
 local nts = require("nvim-treesitter")
 nts.install({

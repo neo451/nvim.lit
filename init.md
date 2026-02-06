@@ -69,9 +69,7 @@ require("neogit").setup({})
 vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>")
 ```
 
-## Files
-
-### stevearc/oil.nvim
+## stevearc/oil.nvim
 
 ```lua
 require("oil").setup({
@@ -103,37 +101,13 @@ vim.cmd.colorscheme("tokyonight")
 
 - event: `LspAttach`
 
-### shortcuts/no-neck-pain.nvim
-
-- keys: `<leader><leader>z`
-
 ### folke/todo-comments.nvim
 
 ```lua
 require("todo-comments").setup({})
 ```
 
-### mcauley-penney/visual-whitespace.nvim!
-
-- event: `ModeChanged *:[vV\22]`
-
-### MeanderingProgrammer/treesitter-modules.nvim
-
-```lua
-require("treesitter-modules").setup({
-   incremental_selection = {
-      enable = true,
-      keymaps = {
-         init_selection = "<A-o>",
-         node_incremental = "<A-o>",
-         scope_incremental = "<A-O>",
-         node_decremental = "<A-i>",
-      },
-   },
-})
-```
-
-### mistweaverco/kulala.nvim
+## mistweaverco/kulala.nvim
 
 - ft: `{ "http", "rest" }`
 - keys: `{ "<leader>Rs", "<leader>Ra", "<leader>Rb" }`
@@ -191,10 +165,6 @@ require("markdown-plus").setup({})
 - ft: `markdown`
 
 works for `todo.md` `TODO.md`
-
-### hamidi-dev/org-list.nvim
-
-- ft: `markdown`
 
 ### numEricL/table.vim
 
@@ -263,10 +233,13 @@ require("blink.cmp").setup({
          "path",
          "snippets",
          "buffer",
-         "bibtex",
       },
       per_filetype = {
-         markdown = { "bibtex", "obsidian", "dictionary" },
+         markdown = {
+            "bibtex",
+            "obsidian",
+            "dictionary",
+         },
       },
       providers = {
          bibtex = {
@@ -313,10 +286,8 @@ require("blink.cmp").setup({
                -- The number of characters required to trigger completion.
                -- Set this higher if completion is slow, 3 is default.
                dictionary_search_threshold = 3,
-
                -- See above
                score_offset = 0,
-
                -- See above
                definition_pointers = { "!", "&", "^" },
             },

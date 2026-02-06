@@ -77,25 +77,18 @@
       "rev": "73870229977fdd8747025820e15e98cfde787b9c",
       "src": "https://github.com/NeogitOrg/neogit.git"
     },
-    "no-neck-pain.nvim": {
-      "rev": "4bc52782524fd50c5658685d584df6fa48fe49f9",
-      "src": "https://github.com/shortcuts/no-neck-pain.nvim.git"
-    },
     "nui.nvim": {
       "rev": "de740991c12411b663994b2860f1a4fd0937c130",
       "src": "https://github.com/MunifTanjim/nui.nvim.git"
     },
     "nvim-treesitter": {
-      "rev": "70a9fecaf5aeae70c765d4c51a8038165a91aa06",
-      "src": "https://github.com/nvim-treesitter/nvim-treesitter.git"
+      "rev": "92c9b016d16473dabd2bf3760196cf2d928edacc",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter.git",
+      "version": "'main'"
     },
     "oil.nvim": {
       "rev": "f55b25e493a7df76371cfadd0ded5004cb9cd48a",
       "src": "https://github.com/stevearc/oil.nvim.git"
-    },
-    "org-list.nvim": {
-      "rev": "2d6f2985e0312daabb6d06725746f5b8c2e5a002",
-      "src": "https://github.com/hamidi-dev/org-list.nvim.git"
     },
     "otter.nvim": {
       "rev": "8cf628c4d7531de3d8dd4e78f5ce6f9519d432b2",
@@ -144,14 +137,6 @@
     "tokyonight.nvim": {
       "rev": "5da1b76e64daf4c5d410f06bcb6b9cb640da7dfd",
       "src": "https://github.com/folke/tokyonight.nvim.git"
-    },
-    "treesitter-modules.nvim": {
-      "rev": "7efc486c933a361568855b10e0829aa2cda4b6b0",
-      "src": "https://github.com/MeanderingProgrammer/treesitter-modules.nvim.git"
-    },
-    "visual-whitespace.nvim": {
-      "rev": "2eefcbcbe294ea6610868755db7ddb8f92f68a1c",
-      "src": "https://github.com/mcauley-penney/visual-whitespace.nvim.git"
     },
     "vscode-diff.nvim": {
       "rev": "648610cb97c40640bc25e4c1bcbe6bf8c76ff826",
