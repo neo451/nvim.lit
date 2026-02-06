@@ -1,5 +1,4 @@
 local obsidian = require("obsidian")
----@module 'obsidian'
 
 vim.ui.open = (function(overridden)
    return function(uri, opt)
@@ -58,7 +57,7 @@ obsidian.setup({
    },
 
    note = {
-      template = vim.NIL,
+      template = "default.md",
    },
 
    callbacks = {
@@ -213,8 +212,7 @@ obsidian.setup({
    },
 
    daily_notes = {
-      enabled = false,
-      date_format = "%Y-%m-%d",
+      enabled = true,
       template = "daily.md",
       folder = "Daily",
    },
@@ -223,9 +221,9 @@ obsidian.setup({
       -- enabled = false,
       -- name = false,
       -- name = "mini.pick",
-      -- name = "snacks.pick",
+      name = "snacks.pick",
       -- name = "fzf-lua",
-      name = "telescope.nvim",
+      -- name = "telescope.nvim",
    },
 
    attachments = {

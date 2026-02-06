@@ -2,8 +2,6 @@ local ts = vim.treesitter
 
 local M = {}
 
-_G.Config = {}
-
 ---@param node_type string | string[]
 ---@return boolean
 M.in_node = function(node_type)

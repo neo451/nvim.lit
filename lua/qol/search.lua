@@ -1,5 +1,3 @@
-local M = {}
-
 --- TODO: a complete function for prefix
 local config = {
    trigger = "<C-S-;>",
@@ -11,8 +9,6 @@ local config = {
       wikipedia = "https://en.wikipedia.org/w/index.php?search=%s",
    },
 }
-
--- _G.Config.search = vim.tbl_deep_extend("keep", _G.Config.search or {}, config)
 
 local function looks_like_url(input)
    local pat = "[%w%.%-_]+%.[%w%.%-_/]+"

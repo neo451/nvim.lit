@@ -113,18 +113,6 @@ end, "", { expr = true })
 --- zen mode (no neck pain)
 nmap_leader("<leader>z", "<cmd>NoNeckPain<cr>")
 
--- For 'mini.clue'
--- _G.Config.leader_group_clues = {
---    { mode = "n", keys = "<Leader>b", desc = "+Buffer" },
---    { mode = "n", keys = "<Leader>e", desc = "+Explore/Edit" },
---    { mode = "n", keys = "<Leader>f", desc = "+Find" },
---    { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
---    { mode = "n", keys = "<Leader>g", desc = "+Git" },
---    { mode = "n", keys = "<Leader>u", desc = "+UI" },
---    { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
---    { mode = "n", keys = "<Leader><Leader>", desc = "+Other" },
--- }
-
 nmap_leader("qc", "<cmd>cclose<cr>")
 nmap_leader("qo", "<cmd>copen<cr>")
 

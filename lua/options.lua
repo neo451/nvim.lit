@@ -19,11 +19,7 @@ o.breakindent = true
 o.showmode = false
 o.cursorline = true
 o.list = true
--- opt.listchars = {
---    tab = "  ",
---    trail = "·",
---    nbsp = "␣",
--- }
+o.winborder = "single"
 
 opt.fillchars = {
    foldopen = "",

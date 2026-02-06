@@ -1,3 +1,27 @@
+local my_popup_group = vim.api.nvim_create_augroup("my_popup_group", {})
+
+vim.api.nvim_create_autocmd("MenuPopup", {
+   pattern = "*",
+   group = my_popup_group,
+   desc = "Mouse popup menu",
+   -- nested = true,
+   callback = function()
+      vim.cmd([[
+    amenu disable PopUp.How-to\ disable\ mouse
+    amenu     PopUp.Correct\ word  1z=
+    amenu     PopUp.Add\ word  1z=
+
+    amenu disable PopUp.Correct\ word
+    amenu disable PopUp.Add\ word
+
+  ]])
+      if vim.fn.spellbadword(vim.fn.expand("<cword>"))[1] ~= "" then
+         vim.cmd([[ amenu enable PopUp.Correct\ word ]])
+         vim.cmd([[ amenu enable PopUp.Add\ word ]])
+      end
+   end,
+})
+
 vim.wo.conceallevel = 1
 vim.cmd("setlocal spell")
 

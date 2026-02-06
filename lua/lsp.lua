@@ -1,6 +1,6 @@
 local servers = {
-   "lua_ls",
-   -- "emmylua_ls",
+   -- "lua_ls",
+   "emmylua_ls",
    "gopls",
    "nixd",
    "zls",
