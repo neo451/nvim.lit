@@ -9,6 +9,7 @@ local servers = {
    "qmlls",
    "pyright",
    "ts_ls",
+   "copilot",
    -- "marksman",
    -- "mpls",
    -- "rime_ls",
@@ -18,3 +19,5 @@ local servers = {
 for name in vim.iter(servers) do
    pcall(vim.lsp.enable, name)
 end
+
+vim.lsp.inline_completion.enable()

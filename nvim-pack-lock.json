@@ -53,6 +53,10 @@
       "rev": "ca06d823e33cee109622e01b653952d50bb41b55",
       "src": "https://github.com/mistweaverco/kulala.nvim.git"
     },
+    "live-server.nvim": {
+      "rev": "bc02735905730072433c8e41284ff369cc235136",
+      "src": "https://github.com/selimacerbas/live-server.nvim.git"
+    },
     "lz.n": {
       "rev": "24b3d6e0b10d4f3d5d805b730ba03646b437b6d7",
       "src": "https://github.com/nvim-neorocks/lz.n.git"
@@ -65,9 +69,9 @@
       "rev": "098763d88bc34abe6430870e134e0a8156ba6165",
       "src": "https://github.com/YousefHadder/markdown-plus.nvim.git"
     },
-    "markview.nvim": {
-      "rev": "9e852c299351fc2110e763edc7fc899358ee112e",
-      "src": "https://github.com/OXY2DEV/markview.nvim.git"
+    "markdown-preview.nvim": {
+      "rev": "f9a0e7359d4086108d9c9c8ebc98d71b712dface",
+      "src": "https://github.com/selimacerbas/markdown-preview.nvim.git"
     },
     "mini.nvim": {
       "rev": "f28cd08c8be826355d64080400fab1764c9693dd",
@@ -102,6 +106,14 @@
       "rev": "fc041830fa7cf093786b0d5990d99cf3c7b0c129",
       "src": "https://github.com/stevearc/quicker.nvim.git"
     },
+    "recollect.nvim": {
+      "rev": "f8bdf365549e16db4b5fa7f3657f23fde1c7170d",
+      "src": "https://github.com/jbuck95/recollect.nvim.git"
+    },
+    "render-markdown.nvim": {
+      "rev": "48b4175dbca8439d30c1f52231cbe5a712c8f9d9",
+      "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim.git"
+    },
     "resolved.nvim": {
       "rev": "15fd72dc643b60b01c8763e56edc316ff3d5e26e",
       "src": "https://github.com/noamsto/resolved.nvim.git"
@@ -113,6 +125,10 @@
     "snacks.nvim": {
       "rev": "fe7cfe9800a182274d0f868a74b7263b8c0c020b",
       "src": "https://github.com/folke/snacks.nvim.git"
+    },
+    "spinner.nvim": {
+      "rev": "83ae139c715b9b89feaebf5b5e3e047b585781bf",
+      "src": "https://github.com/xieyonn/spinner.nvim.git"
     },
     "table.vim": {
       "rev": "744dc9fae1695aed869dd1503a3f4fc5cf0af640",

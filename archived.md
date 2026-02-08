@@ -3,6 +3,8 @@ id: nvim_archived
 tags: []
 ---
 
+### OXY2DEV/markview.nvim
+
 ### mrcjkb/haskell-tools.nvim
 
 ### samjwill/nvim-unception
@@ -23,18 +25,6 @@ vim.g.unception_block_while_host_edits = true
 
 ```lua
 vim.cmd.colorscheme("catppuccin-mocha")
-```
-
-### MeanderingProgrammer/render-markdown.nvim
-
-- ft: `markdown`
-
-```lua
-require("render-markdown").setup({
-   html = {
-      comment = { conceal = false },
-   },
-})
 ```
 
 ## neotest

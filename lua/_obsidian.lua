@@ -42,7 +42,7 @@ local workspaces = {
 
 require("obsidian.due_display")
 require("obsidian.yaml_vim_options")
-require("obsidian._actions")
+local _actions = require("obsidian._actions")
 local ut = require("obsidian._utils")
 
 vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
@@ -71,6 +71,10 @@ obsidian.setup({
             vim.bo[note.bufnr].readonly = false
          end
 
+         pcall(function()
+            vim.keymap.set("n", "<leader>xt", _actions.extract_text, { buffer = true })
+         end)
+
          vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
          vim.keymap.set("n", "<leader>p", function()
             if pcall(require, "obsidian.paste") then
@@ -92,7 +96,7 @@ obsidian.setup({
          end)
 
          pcall(function()
-            vim.keymap.set("n", "<leader>S", require("obsidian.slides").start_presentation, { buffer = true })
+            vim.keymap.set("n", "<leader>S", actions.start_presentation, { buffer = true })
          end)
 
          pcall(function()

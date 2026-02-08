@@ -9,6 +9,27 @@ tags: []
 - [[tey]]
 - [[lib]]
 
+## xieyonn/spinner.nvim
+
+```lua
+require("spinner").setup({})
+```
+
+## selimacerbas/live-server.nvim
+
+## selimacerbas/markdown-preview.nvim
+
+```lua
+require("markdown_preview").setup({
+   -- all optional; sane defaults shown
+   port = 8421,
+   open_browser = true,
+   debounce_ms = 300,
+})
+```
+
+## jbuck95/recollect.nvim
+
 ## juansalvatore/git-dashboard-nvim
 
 ## Vim Enhancement
@@ -150,6 +171,18 @@ end, {
 
 ## Markdown
 
+### MeanderingProgrammer/render-markdown.nvim
+
+- ft: `markdown`
+
+```lua
+require("render-markdown").setup({
+   html = {
+      comment = { conceal = false },
+   },
+})
+```
+
 ### YousefHadder/markdown-plus.nvim
 
 - ft: `markdown`
@@ -157,8 +190,6 @@ end, {
 ```lua
 require("markdown-plus").setup({})
 ```
-
-### OXY2DEV/markview.nvim
 
 ### bngarren/checkmate.nvim!
 
@@ -380,12 +411,13 @@ require("snacks").setup({
       resolve = function(path, src)
          local api = require("obsidian.api")
          if api.path_is_note(path) then
+            print(api.resolve_attachment_path(src))
             return api.resolve_attachment_path(src)
          end
       end,
-      wo = { winhighlight = "FloatBorder:WhichKeyBorder" },
+      -- wo = { winhighlight = "FloatBorder:WhichKeyBorder" },
       doc = {
-         inline = false,
+         inline = true,
          max_width = 45,
          max_height = 20,
       },

@@ -118,6 +118,8 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 vim.api.nvim_create_autocmd("LspAttach", {
    desc = "Attach lsp stuff",
    callback = function(ev)
+      local bufnr = ev.buf
+
       vim.keymap.set({ "n", "x" }, "gra", function()
          local ok, tiny = pcall(require, "tiny-code-action")
          if ok then
@@ -125,11 +127,29 @@ vim.api.nvim_create_autocmd("LspAttach", {
          else
             vim.lsp.buf.code_action()
          end
-      end, { buffer = ev.buf })
+      end, { buffer = bufnr })
 
-      -- vim.keymap.set("n", "<leader>D", function()
-      --    vim.lsp.buf.workspace_diagnostics()
-      -- end, { buffer = ev.buf })
+      -- vim.keymap.set("i", "<Tab>", function()
+      --    if not vim.lsp.inline_completion.get() then
+      --       return "<Tab>"
+      --    end
+      -- end, { expr = true, desc = "Accept the current inline completion" })
+      local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, bufnr) then
+         vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
+         vim.keymap.set("i", "<Tab>", function()
+            if not vim.lsp.inline_completion.get() then
+               return "<Tab>"
+            end
+         end, { desc = "LSP: accept inline completion", buffer = bufnr })
+         vim.keymap.set(
+            "i",
+            "<C-G>",
+            vim.lsp.inline_completion.select,
+            { desc = "LSP: switch inline completion", buffer = bufnr }
+         )
+      end
    end,
 })
 
