@@ -9,6 +9,57 @@ tags: []
 - [[tey]]
 - [[lib]]
 
+## nickjvandyke/opencode.nvim
+
+```lua
+-- vim.o.autoread = true -- Required for `opts.events.reload`
+
+-- Recommended/example keymaps
+vim.keymap.set({ "n", "x" }, "<leader>ao", function()
+   require("opencode").ask("@this: ", { submit = true })
+end, { desc = "Ask opencode…" })
+vim.keymap.set({ "n", "x" }, "<leader>A", function()
+   require("opencode").select()
+end, { desc = "Execute opencode action…" })
+vim.keymap.set({ "n", "t" }, "<C-.>", function()
+   require("opencode").toggle()
+end, { desc = "Toggle opencode" })
+
+vim.keymap.set({ "n", "x" }, "go", function()
+   return require("opencode").operator("@this ")
+end, { desc = "Add range to opencode", expr = true })
+vim.keymap.set("n", "goo", function()
+   return require("opencode").operator("@this ") .. "_"
+end, { desc = "Add line to opencode", expr = true })
+
+vim.keymap.set("n", "<S-C-u>", function()
+   require("opencode").command("session.half.page.up")
+end, { desc = "Scroll opencode up" })
+vim.keymap.set("n", "<S-C-d>", function()
+   require("opencode").command("session.half.page.down")
+end, { desc = "Scroll opencode down" })
+
+-- You may want these if you use the opinionated `<C-a>` and `<C-x>` keymaps above — otherwise consider `<leader>o…` (and remove terminal mode from the `toggle` keymap)
+vim.keymap.set("n", "+", "<C-a>", { desc = "Increment under cursor", noremap = true })
+vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = true })
+```
+
+## lewis6991/gitsigns.nvim
+
+```lua
+require("gitsigns").setup({})
+```
+
+## dmtrKovalenko/fff.nvim
+
+```lua
+require("fff").setup({})
+```
+
+## shortcuts/no-neck-pain.nvim
+
+## quarto-dev/quarto-nvim
+
 ## xieyonn/spinner.nvim
 
 ```lua
@@ -32,7 +83,22 @@ require("markdown_preview").setup({
 
 ## juansalvatore/git-dashboard-nvim
 
+## DB
+
+### tpope/vim-dadbod
+
+### kristijanhusak/vim-dadbod-ui
+
+### kristijanhusak/vim-dadbod-completion
+
+### kkharji/sqlite.lua
+
 ## Vim Enhancement
+
+<!-- ### neo451/jieba-lua -->
+<!---->
+<!-- ### neo451/jieba.nvim -->
+<!---->
 
 ### stevearc/quicker.nvim!
 
@@ -50,6 +116,7 @@ require("dial.config").augends:register_group({
       augend.date.alias["%Y/%m/%d"], -- date (2022/02/19, etc.)
       augend.date.alias["%m/%d/%Y"], -- date (02/19/2022, etc.)
       augend.constant.alias.bool, -- boolean value (true <-> false)
+      augend.integer.alias.decimal, -- nonnegative decimal number (0, 1, 2, 3, ...)
    },
 })
 
@@ -197,7 +264,7 @@ require("markdown-plus").setup({})
 
 works for `todo.md` `TODO.md`
 
-### numEricL/table.vim
+<!-- ### numEricL/table.vim -->
 
 ## LSP
 
@@ -271,8 +338,13 @@ require("blink.cmp").setup({
             "obsidian",
             "dictionary",
          },
+         sql = { "snippets", "dadbod", "buffer" },
       },
       providers = {
+         dadbod = {
+            name = "Dadbod",
+            module = "vim_dadbod_completion.blink",
+         },
          bibtex = {
             module = "blink-cmp-bibtex",
             name = "BibTeX",
@@ -391,12 +463,13 @@ miniclue.setup({
 })
 require("mini.ai").setup({})
 require("mini.diff").setup({})
+require("mini.git").setup({})
 require("mini.icons").setup()
 MiniIcons.mock_nvim_web_devicons()
 require("mini.surround").setup({})
 require("mini.test").setup({})
 require("mini.cmdline").setup({
-   autocomplete = { enable = false },
+   -- autocomplete = { enable = false },
 })
 ```
 
@@ -404,6 +477,7 @@ require("mini.cmdline").setup({
 
 ```lua
 require("snacks").setup({
+   lazygit = {},
    gitbrowse = { enabled = true },
    scroll = { enabled = true },
    image = {

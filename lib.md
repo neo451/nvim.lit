@@ -3,6 +3,10 @@ id: lib
 tags: []
 ---
 
+## nvzone/volt
+
+- lazy: `true`
+
 ## gregorias/coop.nvim
 
 - lazy: `true`

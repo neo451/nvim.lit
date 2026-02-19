@@ -19,7 +19,6 @@ o.breakindent = true
 o.showmode = false
 o.cursorline = true
 o.list = true
-o.winborder = "single"
 
 opt.fillchars = {
    foldopen = "",
@@ -62,7 +61,8 @@ o.autowrite = true
 
 -- completion
 o.completeopt = "menu,menuone"
-o.wildmode = "longest:full,full" -- Command-line completion mode
+-- o.wildmode = "longest:full,full" -- Command-line completion mode
+vim.cmd([[set wildmode=noselect:lastused,full]])
 
 -- undo
 o.undofile = true
@@ -74,6 +74,7 @@ o.formatoptions = "jcroqlnt" -- Format options
 -- writing
 o.spelllang = "en,cjk"
 o.spellfile = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.add")
+vim.g.spell_aff = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.aff")
 
 vim.cmd([[set completeopt+=menuone,noselect,popup]])
 

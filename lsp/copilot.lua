@@ -65,6 +65,7 @@ return {
       "copilot-language-server",
       "--stdio",
    },
+   filetypes = { "python", "javascript", "typescript", "lua", "go", "rust" },
    root_markers = { ".git" },
    init_options = {
       editorInfo = {

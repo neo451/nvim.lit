@@ -1,7 +1,9 @@
 -- TODO: one command
 vim.api.nvim_create_user_command("Mkspell", function()
    local spellfile = vim.bo.spellfile:gsub(" ", "\\ ")
-   vim.cmd("mkspell! " .. spellfile)
+   local afffile = vim.g.spell_aff:gsub(" ", "\\ ")
+   local cmd = ("mkspell! " .. spellfile .. " " .. afffile)
+   print(cmd)
 end, {})
 
 vim.api.nvim_create_user_command("Edspell", function()

@@ -130,6 +130,10 @@ nmap_leader("go", function()
    MiniDiff.toggle_overlay(0)
 end, "Toggle Minidiff Overlay")
 
+nmap_leader("gl", function()
+   Snacks.lazygit()
+end, "Open Lazygit")
+
 -- t is for 'Terminal'
 nmap_leader("tT", "<Cmd>horizontal term<CR>", "Terminal (horizontal)")
 nmap_leader("tt", "<Cmd>vertical term<CR>", "Terminal (vertical)")

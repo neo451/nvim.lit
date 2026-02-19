@@ -3,6 +3,25 @@ id: nvim_archived
 tags: []
 ---
 
+## aikhe/wrapped.nvim
+
+```lua
+require("wrapped").setup({})
+```
+
+## nvim-orgmode/orgmode
+
+```lua
+-- Setup orgmode
+require("orgmode").setup({
+   org_agenda_files = "~/orgfiles/**/*",
+   org_default_notes_file = "~/orgfiles/refile.org",
+})
+
+-- Experimental LSP support
+vim.lsp.enable("org")
+```
+
 ### OXY2DEV/markview.nvim
 
 ### mrcjkb/haskell-tools.nvim

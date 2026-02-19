@@ -75,6 +75,8 @@ obsidian.setup({
             vim.keymap.set("n", "<leader>xt", _actions.extract_text, { buffer = true })
          end)
 
+         -- vim.keymap.set("n", "<Tab>", actions.cycal_global_headings, { buffer = true })
+
          vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
          vim.keymap.set("n", "<leader>p", function()
             if pcall(require, "obsidian.paste") then
@@ -124,6 +126,15 @@ obsidian.setup({
             obsidian.api.toggle_checkbox,
             { buffer = true, desc = "Obsidian toggle checkbox" }
          )
+      end,
+      post_setup = function()
+         local subcommands = require("obsidian._commands")
+         for name, command in pairs(subcommands) do
+            obsidian.register_command(name, command)
+         end
+
+         -- refresh tags
+         subcommands.refresh_tags.func()
       end,
    },
 
@@ -209,7 +220,7 @@ obsidian.setup({
    },
 
    open = {
-      use_advanced_uri = true,
+      use_advanced_uri = false,
       schemes = {
          "zotero",
       },
@@ -217,7 +228,7 @@ obsidian.setup({
 
    daily_notes = {
       enabled = true,
-      template = "daily.md",
+      -- template = "daily.md",
       folder = "Daily",
    },
 
@@ -239,7 +250,7 @@ obsidian.setup({
    },
 
    templates = {
-      folder = "Templates",
+      -- folder = "Templates",
       date_format = "%Y-%m-%d",
       time_format = "%H:%M",
       customizations = {
