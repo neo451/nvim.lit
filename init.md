@@ -9,6 +9,40 @@ tags: []
 - [[tey]]
 - [[lib]]
 
+## jbuck95/glossator-nvim
+
+```lua
+require("glossator-nvim").setup({
+   -- ── Highlight Tags (background color) ──────────────────────
+   hl_tags = {
+      { key = "r", tag = "[hr]", group = "ETRed", hl = { bg = "#a02b2b", fg = "#ffffff" } },
+      { key = "g", tag = "[hg]", group = "ETGreen", hl = { bg = "#0f700c", fg = "#ffffff" } },
+      { key = "b", tag = "[hb]", group = "ETBlue", hl = { bg = "#2b6ba0", fg = "#ffffff" } },
+      { key = "y", tag = "[hy]", group = "ETYellow", hl = { bg = "#b5a40c", fg = "#ffffff" } },
+      { key = "p", tag = "[hp]", group = "ETPurple", hl = { bg = "#25184c", fg = "#ffffff" } },
+   },
+   -- ── Underline Tags ──────────────────────────────────────────
+   ul_tags = {
+      { key = "R", tag = "[ur]", group = "ETRedUL", hl = { underline = true, sp = "#a02b2b" } },
+      { key = "G", tag = "[ug]", group = "ETGreenUL", hl = { underline = true, sp = "#0f700c" } },
+      { key = "B", tag = "[ub]", group = "ETBlueUL", hl = { underline = true, sp = "#2b6ba0" } },
+      { key = "Y", tag = "[uy]", group = "ETYellowUL", hl = { underline = true, sp = "#ddce23" } },
+      { key = "P", tag = "[up]", group = "ETPurpleUL", hl = { underline = true, sp = "#7c5cbf" } },
+      { key = "a", tag = "ANT", group = "ETAnnotate", hl = { underline = true, sp = "#00ffff" } },
+   },
+   -- ── Toolbar UI Colors ───────────────────────────────────────
+   toolbar_hl = {
+      ETHeader = { fg = "#7f849c", bold = true },
+      ETKey = { fg = "#cdd6f4", bold = true },
+      ETSep = { fg = "#45475a" },
+      ETAnnotateID = { fg = "#00ffff", bold = true },
+      ETComment = { fg = "#6c7086", italic = true },
+   },
+})
+```
+
+## itchyny/calendar.vim
+
 ## nickjvandyke/opencode.nvim
 
 ```lua
@@ -325,6 +359,10 @@ require("blink.cmp").setup({
       documentation = { auto_show = true },
    },
 
+   cmdline = {
+      enabled = false,
+   },
+
    sources = {
       default = {
          "lsp",
@@ -485,7 +523,6 @@ require("snacks").setup({
       resolve = function(path, src)
          local api = require("obsidian.api")
          if api.path_is_note(path) then
-            print(api.resolve_attachment_path(src))
             return api.resolve_attachment_path(src)
          end
       end,
@@ -530,6 +567,7 @@ require("conform").setup({
       markdown = { "prettier", "injected" },
       quarto = { "prettier" },
       qml = { "qmlformat" },
+      json = { "jq" },
    },
 })
 ```

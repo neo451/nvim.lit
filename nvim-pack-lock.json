@@ -13,6 +13,10 @@
       "src": "https://github.com/saghen/blink.cmp.git",
       "version": "1.0.0 - 2.0.0"
     },
+    "calendar.vim": {
+      "rev": "36d1a3a76e39b9d73ff964db2f75dacaf2d2bef3",
+      "src": "https://github.com/itchyny/calendar.vim.git"
+    },
     "checkmate.nvim": {
       "rev": "fc8edd6ecf8e4095ef878780e4bed83cc5c56c14",
       "src": "https://github.com/bngarren/checkmate.nvim.git"
@@ -34,7 +38,7 @@
       "src": "https://github.com/monaqa/dial.nvim.git"
     },
     "fff.nvim": {
-      "rev": "46e87e5928bbd94c3459227ba28c2878dad2fa56",
+      "rev": "8f69f987a4dd909fedf4c6a9a470f65317250ed4",
       "src": "https://github.com/dmtrKovalenko/fff.nvim.git"
     },
     "fidget.nvim": {
@@ -57,6 +61,10 @@
       "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
       "src": "https://github.com/lewis6991/gitsigns.nvim.git"
     },
+    "glossator-nvim": {
+      "rev": "77daa88ef57b3889de05f9504064020e25ffc176",
+      "src": "https://github.com/jbuck95/glossator-nvim.git"
+    },
     "kulala.nvim": {
       "rev": "6656c9d332735ca6a27725e0fb45a1715c4372d9",
       "src": "https://github.com/mistweaverco/kulala.nvim.git"
@@ -66,7 +74,7 @@
       "src": "https://github.com/selimacerbas/live-server.nvim.git"
     },
     "lz.n": {
-      "rev": "a81a4838862d4d2011f827f0e917553daeb2cedb",
+      "rev": "6c755b9b92caa8c92b2d9809bac8c74fafd98bfc",
       "src": "https://github.com/nvim-neorocks/lz.n.git"
     },
     "lzn-auto-require": {
@@ -82,11 +90,11 @@
       "src": "https://github.com/selimacerbas/markdown-preview.nvim.git"
     },
     "mini.nvim": {
-      "rev": "ca9adcfc4e796b292cc9072f4952318ef5a7f6c0",
+      "rev": "dbb073bd2ed4a7bb35daafc7989567f0ff1426ee",
       "src": "https://github.com/nvim-mini/mini.nvim.git"
     },
     "neogit": {
-      "rev": "22433eae87236c217e0810c836fa5e529c043d4c",
+      "rev": "2a47e1df95605b232fbdd5d369ab1bfaaf40fce4",
       "src": "https://github.com/NeogitOrg/neogit.git"
     },
     "no-neck-pain.nvim": {
@@ -98,7 +106,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim.git"
     },
     "nvim-treesitter": {
-      "rev": "ecdae44baefeffceade8b0c752d80ececad28e76",
+      "rev": "fcd51bbe9245aa9b79a3930ed9ac42e16e1cf33f",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter.git",
       "version": "'main'"
     },
@@ -107,7 +115,7 @@
       "src": "https://github.com/stevearc/oil.nvim.git"
     },
     "opencode.nvim": {
-      "rev": "a841138e056f337c6ee7ad0aad0cc18b36806deb",
+      "rev": "8d9523081e89dc1775a2ac91ae1c2922d8293bd8",
       "src": "https://github.com/nickjvandyke/opencode.nvim.git"
     },
     "otter.nvim": {

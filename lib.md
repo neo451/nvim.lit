@@ -34,6 +34,8 @@ tags: []
 ```lua
 local nts = require("nvim-treesitter")
 nts.install({
+   "lua",
+   "luadoc",
    "bash",
    "nix",
    "go",

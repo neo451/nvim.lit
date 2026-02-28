@@ -1,5 +1,11 @@
 local my_popup_group = vim.api.nvim_create_augroup("my_popup_group", {})
 
+pcall(function()
+   vim.keymap.set("v", "<leader>nd", function()
+      require("nldates").replace_selection({ format = "[[][[]YYYY-MM-DD[]][]]" })
+   end)
+end)
+
 vim.api.nvim_create_autocmd("MenuPopup", {
    pattern = "*",
    group = my_popup_group,

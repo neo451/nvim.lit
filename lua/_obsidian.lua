@@ -87,17 +87,7 @@ obsidian.setup({
          end, { buffer = true, expr = true })
 
          pcall(function()
-            vim.keymap.set("v", "<leader>nd", function()
-               require("nldates").parse({
-                  callback = function(datestring)
-                     return "[[" .. datestring .. "]]"
-                  end,
-               })
-            end)
             vim.keymap.set("n", "<leader>;", obsidian.api.add_property, { buffer = true })
-         end)
-
-         pcall(function()
             vim.keymap.set("n", "<leader>S", actions.start_presentation, { buffer = true })
          end)
 
@@ -127,15 +117,15 @@ obsidian.setup({
             { buffer = true, desc = "Obsidian toggle checkbox" }
          )
       end,
-      post_setup = function()
-         local subcommands = require("obsidian._commands")
-         for name, command in pairs(subcommands) do
-            obsidian.register_command(name, command)
-         end
-
-         -- refresh tags
-         subcommands.refresh_tags.func()
-      end,
+      -- post_setup = function()
+      --    local subcommands = require("obsidian._commands")
+      --    for name, command in pairs(subcommands) do
+      --       obsidian.register_command(name, command)
+      --    end
+      --
+      --    -- refresh tags
+      --    subcommands.refresh_tags.func()
+      -- end,
    },
 
    frontmatter = {
