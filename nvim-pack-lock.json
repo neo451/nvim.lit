@@ -22,7 +22,7 @@
       "src": "https://github.com/bngarren/checkmate.nvim.git"
     },
     "conform.nvim": {
-      "rev": "c2526f1cde528a66e086ab1668e996d162c75f4f",
+      "rev": "40dcec5555f960b0a04340d76eabdf4efe78599d",
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "coop.nvim": {
@@ -37,10 +37,6 @@
       "rev": "f2634758455cfa52a8acea6f142dcd6271a1bf57",
       "src": "https://github.com/monaqa/dial.nvim.git"
     },
-    "fff.nvim": {
-      "rev": "8f69f987a4dd909fedf4c6a9a470f65317250ed4",
-      "src": "https://github.com/dmtrKovalenko/fff.nvim.git"
-    },
     "fidget.nvim": {
       "rev": "7fa433a83118a70fe24c1ce88d5f0bd3453c0970",
       "src": "https://github.com/j-hui/fidget.nvim.git"
@@ -50,7 +46,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets.git"
     },
     "fzf-lua": {
-      "rev": "b2c0603216adb92c6bba81053bc996d7ae95b77a",
+      "rev": "1eba927866251bae1b61dffc5b673b8dbd0f3f48",
       "src": "https://github.com/ibhagwan/fzf-lua.git"
     },
     "git-dashboard-nvim": {
@@ -62,7 +58,7 @@
       "src": "https://github.com/lewis6991/gitsigns.nvim.git"
     },
     "glossator-nvim": {
-      "rev": "77daa88ef57b3889de05f9504064020e25ffc176",
+      "rev": "58df5d68d7fa7ff6c70c5e211c12c3937ad52a81",
       "src": "https://github.com/jbuck95/glossator-nvim.git"
     },
     "kulala.nvim": {
@@ -74,7 +70,7 @@
       "src": "https://github.com/selimacerbas/live-server.nvim.git"
     },
     "lz.n": {
-      "rev": "6c755b9b92caa8c92b2d9809bac8c74fafd98bfc",
+      "rev": "c756ce269ca00739541f601ae47ab269795df428",
       "src": "https://github.com/nvim-neorocks/lz.n.git"
     },
     "lzn-auto-require": {
@@ -82,20 +78,28 @@
       "src": "https://github.com/horriblename/lzn-auto-require.git"
     },
     "markdown-plus.nvim": {
-      "rev": "438ea474f8f12993244c195b883dc1924a709086",
+      "rev": "0e5deb2e62e732bf6a54d8d35c8f13b856de71ce",
       "src": "https://github.com/YousefHadder/markdown-plus.nvim.git"
     },
     "markdown-preview.nvim": {
-      "rev": "58ee5617fd9d5b8ed35681d215d9e0ffc7d954f3",
+      "rev": "858391a1d01dc0daa5233184b4600e1cc0d8d9fc",
       "src": "https://github.com/selimacerbas/markdown-preview.nvim.git"
     },
+    "midnight.nvim": {
+      "rev": "26fb9ca518cc0353bc1f967bfc34ebcc51e0d076",
+      "src": "https://github.com/barrettruth/midnight.nvim.git"
+    },
     "mini.nvim": {
-      "rev": "dbb073bd2ed4a7bb35daafc7989567f0ff1426ee",
+      "rev": "cad365c212fb1e332cb93fa8f72697125799d00a",
       "src": "https://github.com/nvim-mini/mini.nvim.git"
     },
     "neogit": {
-      "rev": "2a47e1df95605b232fbdd5d369ab1bfaaf40fce4",
+      "rev": "7073f3aafc9030d457838995106784a9d1873b3b",
       "src": "https://github.com/NeogitOrg/neogit.git"
+    },
+    "neojj": {
+      "rev": "690d4ec95e1808bab1a3b1f1d42f3d84fbdc7bd0",
+      "src": "https://github.com/NicholasZolton/neojj.git"
     },
     "no-neck-pain.nvim": {
       "rev": "4bc52782524fd50c5658685d584df6fa48fe49f9",
@@ -105,17 +109,21 @@
       "rev": "de740991c12411b663994b2860f1a4fd0937c130",
       "src": "https://github.com/MunifTanjim/nui.nvim.git"
     },
+    "nvim-cmp": {
+      "rev": "da88697d7f45d16852c6b2769dc52387d1ddc45f",
+      "src": "https://github.com/hrsh7th/nvim-cmp.git"
+    },
     "nvim-treesitter": {
-      "rev": "fcd51bbe9245aa9b79a3930ed9ac42e16e1cf33f",
+      "rev": "544320a9cf5d6bf539ec1cc54d393064015670c4",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter.git",
       "version": "'main'"
     },
     "oil.nvim": {
-      "rev": "f55b25e493a7df76371cfadd0ded5004cb9cd48a",
+      "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
       "src": "https://github.com/stevearc/oil.nvim.git"
     },
     "opencode.nvim": {
-      "rev": "8d9523081e89dc1775a2ac91ae1c2922d8293bd8",
+      "rev": "c451511a27d1a9c05bab173c919ef882cd6f72f3",
       "src": "https://github.com/nickjvandyke/opencode.nvim.git"
     },
     "otter.nvim": {
@@ -126,20 +134,24 @@
       "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
       "src": "https://github.com/nvim-lua/plenary.nvim.git"
     },
+    "preview.nvim": {
+      "rev": "1fbc307badcad1454d65694b673cc986c94cf697",
+      "src": "https://github.com/barrettruth/preview.nvim.git"
+    },
     "quarto-nvim": {
       "rev": "d923bb7cfc2bde41143e1c531c28190f0fade3a2",
       "src": "https://github.com/quarto-dev/quarto-nvim.git"
     },
     "quicker.nvim": {
-      "rev": "fc041830fa7cf093786b0d5990d99cf3c7b0c129",
+      "rev": "2d3f3276eab9352c7b212821c218aca986929f62",
       "src": "https://github.com/stevearc/quicker.nvim.git"
     },
     "recollect.nvim": {
-      "rev": "f8bdf365549e16db4b5fa7f3657f23fde1c7170d",
+      "rev": "43c021c03385faee3c176ed05e09760ec7402563",
       "src": "https://github.com/jbuck95/recollect.nvim.git"
     },
     "render-markdown.nvim": {
-      "rev": "48b4175dbca8439d30c1f52231cbe5a712c8f9d9",
+      "rev": "bd482f9a4827c9422231a7db1439c5cff1e69ae0",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim.git"
     },
     "resolved.nvim": {
@@ -151,11 +163,11 @@
       "src": "https://github.com/krissen/snacks-bibtex.nvim.git"
     },
     "snacks.nvim": {
-      "rev": "fe7cfe9800a182274d0f868a74b7263b8c0c020b",
+      "rev": "9912042fc8bca2209105526ac7534e9a0c2071b2",
       "src": "https://github.com/folke/snacks.nvim.git"
     },
     "spinner.nvim": {
-      "rev": "e65b1a37108e90b380defd9b7d2640086718fab5",
+      "rev": "ee6726f2abc1f4e42a7b6067e9a5f4326f4e1287",
       "src": "https://github.com/xieyonn/spinner.nvim.git"
     },
     "sqlite.lua": {
@@ -167,11 +179,11 @@
       "src": "https://github.com/nvim-telescope/telescope.nvim.git"
     },
     "tiny-code-action.nvim": {
-      "rev": "2215a7311b6eac9535695167c3a38d10c3eab444",
+      "rev": "8e72efa075ba3154bbc4c7d1db532b03b4e68373",
       "src": "https://github.com/rachartier/tiny-code-action.nvim.git"
     },
     "tiny-inline-diagnostic.nvim": {
-      "rev": "ecce93ff7db4461e942c03e0fcc64bd785df4057",
+      "rev": "ba133b3e932416e4b9507095731a6d7276878fe8",
       "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim.git"
     },
     "todo-comments.nvim": {
@@ -199,7 +211,7 @@
       "src": "https://github.com/nvzone/volt.git"
     },
     "vscode-diff.nvim": {
-      "rev": "8b6021e3272c30dcacc20a8326f2a744d43015d1",
+      "rev": "b2f8dc732f73a155306a7b7de2171a8d28208e79",
       "src": "https://github.com/esmuellert/vscode-diff.nvim.git"
     }
   }

@@ -3,6 +3,21 @@ id: lib
 tags: []
 ---
 
+## hrsh7th/nvim-cmp
+
+```lua
+-- if true then
+--    return
+-- end
+local cmp = require("cmp")
+cmp.setup({
+   mapping = cmp.mapping.preset.insert({
+      ["<C-e>"] = cmp.mapping.abort(),
+      ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+   }),
+})
+```
+
 ## nvzone/volt
 
 - lazy: `true`

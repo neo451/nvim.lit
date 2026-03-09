@@ -9,6 +9,17 @@ tags: []
 - [[tey]]
 - [[lib]]
 
+## NicholasZolton/neojj
+
+## barrettruth/preview.nvim
+
+## barrettruth/midnight.nvim
+
+```lua
+vim.cmd.colorscheme("midnight")
+-- vim.o.background = "light"
+```
+
 ## jbuck95/glossator-nvim
 
 ```lua
@@ -82,12 +93,6 @@ vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = t
 
 ```lua
 require("gitsigns").setup({})
-```
-
-## dmtrKovalenko/fff.nvim
-
-```lua
-require("fff").setup({})
 ```
 
 ## shortcuts/no-neck-pain.nvim
@@ -325,6 +330,9 @@ vim.diagnostic.config({ virtual_text = false })
 - version: `1.*`
 
 ```lua
+if true then
+   return
+end
 require("blink.cmp").setup({
    keymap = {
       preset = "default",

@@ -3,105 +3,6 @@ local log = require("obsidian.log")
 local api = require("obsidian.api")
 local spotify = require("spotify")
 
-local function html_unescape(s)
-   -- small, practical subset
-   s = s:gsub("&amp;", "&")
-   s = s:gsub("&lt;", "<")
-   s = s:gsub("&gt;", ">")
-   s = s:gsub("&quot;", '"')
-   s = s:gsub("&#39;", "'")
-   return s
-end
-
-local function parse_title(html)
-   if not html or html == "" then
-      return nil
-   end
-
-   -- Normalize newlines a bit for simpler patterns
-   local h = html:gsub("\r\n", "\n")
-
-   local function meta_content(pattern)
-      local content = h:match(pattern)
-      if content then
-         content = vim.trim(html_unescape(content))
-         if content ~= "" then
-            return content
-         end
-      end
-   end
-
-   -- og:title (property=) can appear in different attribute orders
-   local og = meta_content("<meta[^>]-property=[\"']og:title[\"'][^>]-content=[\"'](.-)[\"'][^>]->")
-      or meta_content("<meta[^>]-content=[\"'](.-)[\"'][^>]-property=[\"']og:title[\"'][^>]->")
-
-   if og then
-      return og
-   end
-
-   local tw = meta_content("<meta[^>]-name=[\"']twitter:title[\"'][^>]-content=[\"'](.-)[\"'][^>]->")
-      or meta_content("<meta[^>]-content=[\"'](.-)[\"'][^>]-name=[\"']twitter:title[\"'][^>]->")
-
-   if tw then
-      return tw
-   end
-
-   local t = h:match("<title[^>]*>(.-)</title>")
-   if t then
-      t = vim.trim(html_unescape(t:gsub("%s+", " ")))
-      if t ~= "" then
-         return t
-      end
-   end
-
-   return nil
-end
-
-local function fallback_title_from_url(url)
-   -- simple fallback: last path segment or host
-   local host = url:match("^https?://([^/%?#]+)") or url
-   local last = url:match("^https?://[^/]+/(.-)$")
-   if last and last ~= "" then
-      last = last:gsub("[?#].*$", "")
-      last = last:gsub("/+$", "")
-      local seg = last:match("([^/]+)$")
-      if seg and seg ~= "" then
-         seg = seg:gsub("[-_]+", " ")
-         return seg
-      end
-   end
-   return host
-end
-
-local function fetch_html(url)
-   local cmd = {
-      "curl",
-      "-fsSL",
-      "--compressed",
-      "-m",
-      "15",
-      url,
-   }
-
-   local out = vim.system(cmd, { text = true }):wait()
-   if out.code ~= 0 then
-      return nil, ("curl failed (%d): %s"):format(out.code, vim.trim(out.stderr or ""))
-   end
-   return out.stdout, nil
-end
-
-local function handle_weblink(url)
-   local html, err = fetch_html(url)
-   if err then
-      local title = fallback_title_from_url(url)
-      return title
-   end
-
-   local title = parse_title(html) or fallback_title_from_url(url)
-   title = title:gsub("%]", "\\]")
-   return ("[%s](%s)"):format(title, url)
-end
-
 -- Unescape common shell-style backslash escapes from drag&drop paths:
 --   /a/b/Churchill\ BRIEF\ Memo.pdf  ->  /a/b/Churchill BRIEF Memo.pdf
 local function unescape_shell_path(s)
@@ -182,7 +83,7 @@ local function format_attachment_link(path)
    return string.format("[%s](%s)", basename, location)
 end
 
-local function handle_path(path, callback, phase)
+local function handle_path(path)
    path = unescape_shell_path(path)
    local link
    local choice = api.confirm("How to handle file", "&Attach\n&Embed\n&Link")
@@ -196,7 +97,7 @@ local function handle_path(path, callback, phase)
       link = "!" .. format_attachment_link(path)
    end
    if link then
-      callback({ link }, phase)
+      vim.api.nvim_put({ link }, "l", true, true)
    else
       log.err("Failed to handle local file")
    end
@@ -204,58 +105,30 @@ end
 
 local attachment = require("obsidian.attachment")
 
-local function fetch_remote_file(url, basename)
-   local vault_attachment_path = api.resolve_attachment_path(basename)
-   local out = vim.system({ "curl", url, "-o", vault_attachment_path }):wait(50000)
-   if out.code ~= 0 then
-      vim.notify("failed to copy attachment to vault " .. out.stderr)
-      return
-   end
-end
-
-local function handle_remote_resource_as_attachment(url)
-   local basename = vim.fs.basename(url)
-
-   local choice = api.confirm("How to handle remote file", "&Attach\n&Embed\n&Link")
-   local link
-
-   if choice == "Link" then
-      link = ("![%s](%s)"):format(basename, url)
-   elseif choice == "Attach" then
-      fetch_remote_file(url, basename)
-      link = ("[%s](%s)"):format(basename, util.urlencode(basename, { keep_path_sep = true }))
-   elseif choice == "Embed" then
-      fetch_remote_file(url, basename)
-      link = ("![%s](%s)"):format(basename, util.urlencode(basename, { keep_path_sep = true }))
-   end
-
-   return link
-end
-
-local function handle_link(url, callback, phase)
+local function handle_link(url)
    local link
    if vim.startswith(url, "https://open.spotify.com/") then
       link = spotify.markdown_link(url)
    elseif attachment.is_attachment_path(url) then
-      link = handle_remote_resource_as_attachment(url)
+      link = require("obsidian._paste.remote_attachment")(url)
    else
-      link = handle_weblink(url)
+      link = require("obsidian._paste.weblink")(url)
    end
    if link then
-      return callback({ link }, phase)
+      vim.api.nvim_put({ link }, "l", true, true)
    else
       log.err("Failed to handle remote link")
    end
 end
 
-local function paste(lines, overridden, phase)
+local function paste(lines)
    local line = lines[1]
    local is_uri, scheme = util.is_uri(line)
    -- TODO: check clipboard is image
    if is_uri and (scheme == "http" or scheme == "https") then
-      return handle_link(line, overridden, phase)
+      return handle_link(line)
    elseif looks_like_path(line) then
-      return handle_path(line, overridden, phase)
+      return handle_path(line)
    end
 end
 
@@ -263,7 +136,7 @@ return function()
    vim.paste = (function(overridden)
       return function(lines, phase)
          if vim.b.obsidian_buffer then
-            paste(lines, overridden, phase)
+            return paste(lines)
          end
          return overridden(lines, phase)
       end

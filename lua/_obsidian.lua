@@ -53,6 +53,8 @@ obsidian.setup({
    },
 
    completion = {
+      -- nvim_cmp = true,
+      -- blink = false,
       min_chars = 2,
    },
 
@@ -70,6 +72,10 @@ obsidian.setup({
          if vim.b[note.bufnr].obsidian_help then
             vim.bo[note.bufnr].readonly = false
          end
+
+         pcall(function()
+            vim.keymap.set("n", "<leader>ul", actions.unique_link, { buffer = true })
+         end)
 
          pcall(function()
             vim.keymap.set("n", "<leader>xt", _actions.extract_text, { buffer = true })
@@ -117,15 +123,6 @@ obsidian.setup({
             { buffer = true, desc = "Obsidian toggle checkbox" }
          )
       end,
-      -- post_setup = function()
-      --    local subcommands = require("obsidian._commands")
-      --    for name, command in pairs(subcommands) do
-      --       obsidian.register_command(name, command)
-      --    end
-      --
-      --    -- refresh tags
-      --    subcommands.refresh_tags.func()
-      -- end,
    },
 
    frontmatter = {
@@ -178,21 +175,13 @@ obsidian.setup({
    -- },
 
    legacy_commands = false,
-   -- prefer_config_from_obsidian_app = true,
 
    link = {
       format = "shortest",
-      -- format = "relative",
-      -- style = "markdown",
       style = "wiki",
+      -- asciidoc
    },
 
-   -- templater = {
-   --    commands = {
-   --       hi = "hello",
-   --    },
-   -- },
-   --
    ---@param id string
    ---@param dir obsidian.Path
    ---@return string
@@ -207,6 +196,7 @@ obsidian.setup({
    checkbox = {
       order = { "x", " " },
       create_new = true,
+      enabled = false,
    },
 
    open = {
@@ -224,7 +214,6 @@ obsidian.setup({
 
    picker = {
       -- enabled = false,
-      -- name = false,
       -- name = "mini.pick",
       name = "snacks.pick",
       -- name = "fzf-lua",
@@ -240,22 +229,15 @@ obsidian.setup({
    },
 
    templates = {
-      -- folder = "Templates",
+      folder = "Templates",
       date_format = "%Y-%m-%d",
       time_format = "%H:%M",
-      customizations = {
-         zettel = {
-            dir = "zettel",
-            note_id_func = function(title)
-               return "my-cool-id+" .. title
-            end,
-         },
-         meetings = {
-            note_id_func = function(title)
-               return title
-            end,
-         },
-      },
    },
+
+   unique_note = {
+      folder = "Zettel",
+      template = "zettel.md",
+   },
+
    workspaces = workspaces,
 })

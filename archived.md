@@ -3,6 +3,12 @@ id: nvim_archived
 tags: []
 ---
 
+## folke/noice.nvim
+
+```lua
+require("noice").setup({})
+```
+
 ## aikhe/wrapped.nvim
 
 ```lua

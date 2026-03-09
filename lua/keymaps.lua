@@ -42,10 +42,6 @@ set("n", "<leader>U", "<cmd>Undotree<cr>", { desc = "Toggle UndoTree" })
 
 set("n", "<End>", "<cmd>restart<cr>")
 
-set("n", "grl", function()
-   vim.lsp.buf.document_link({ loclist = false })
-end)
-
 set("n", "<C-S-C>", function()
    local buf = vim.api.nvim_get_current_buf()
    local file = vim.api.nvim_buf_get_name(buf)

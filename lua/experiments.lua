@@ -2,6 +2,8 @@ require("qol.search")
 require("qol.easymotion")
 require("spell")
 
+vim.lsp.enable("my_hover_ls")
+
 -- require("quickfix")
 -- require("diy.fuzzy").enable(false)
 
@@ -33,14 +35,15 @@ local ok, err = pcall(function()
    vim.cmd("packadd snacks.nvim")
    vim.cmd("packadd telescope.nvim")
    vim.cmd("packadd blink.cmp")
+   vim.cmd("packadd nvim-cmp")
    vim.cmd("packadd mini.nvim")
    vim.cmd("packadd coop.nvim")
 
    vim.opt.rtp:append("~/Plugins/obsidian.nvim")
    require("_obsidian")
 
-   vim.opt.rtp:append("~/Plugins/feed.nvim/")
-   require("_feed")
+   -- vim.opt.rtp:append("~/Plugins/feed.nvim/")
+   -- require("_feed")
 
    vim.opt.rtp:append("~/Plugins/diy.nvim/")
    vim.opt.rtp:append("~/Plugins/nldates.nvim/")

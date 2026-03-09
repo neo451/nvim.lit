@@ -56,6 +56,8 @@ local function new_spinner(bufnr, row, col)
    return id
 end
 
+-- TODO: handle the clipboard image, and make a floating window to edit the text before putting
+
 local function extract_text()
    local spinner = require("spinner")
 

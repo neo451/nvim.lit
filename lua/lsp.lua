@@ -5,7 +5,7 @@ local servers = {
    "nixd",
    "zls",
    "ts_ls",
-   "dummy_ls",
+   -- "dummy_ls",
    "qmlls",
    "pyright",
    "ts_ls",
