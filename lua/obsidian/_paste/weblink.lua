@@ -89,11 +89,10 @@ local function handle_weblink(url)
    local html, err = fetch_html(url)
    if err then
       local title = fallback_title_from_url(url)
-      return title
+      return ("[%s](%s)"):format(title, url)
    end
 
    local title = parse_title(html) or fallback_title_from_url(url)
-   title = title:gsub("%]", "\\]")
    return ("[%s](%s)"):format(title, url)
 end
 

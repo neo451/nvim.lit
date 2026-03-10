@@ -97,7 +97,7 @@ local function handle_path(path)
       link = "!" .. format_attachment_link(path)
    end
    if link then
-      vim.api.nvim_put({ link }, "l", true, true)
+      vim.api.nvim_put({ link }, "c", true, true)
    else
       log.err("Failed to handle local file")
    end
@@ -115,7 +115,7 @@ local function handle_link(url)
       link = require("obsidian._paste.weblink")(url)
    end
    if link then
-      vim.api.nvim_put({ link }, "l", true, true)
+      vim.api.nvim_put({ link }, "c", true, true)
    else
       log.err("Failed to handle remote link")
    end

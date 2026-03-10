@@ -330,9 +330,6 @@ vim.diagnostic.config({ virtual_text = false })
 - version: `1.*`
 
 ```lua
-if true then
-   return
-end
 require("blink.cmp").setup({
    keymap = {
       preset = "default",
