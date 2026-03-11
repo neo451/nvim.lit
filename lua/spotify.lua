@@ -65,13 +65,22 @@ function M.markdown_link(url)
    local sp = require("spotify")
    local t, id = sp.parse(url)
    local out = sp.query_api(t .. "s/" .. id)
-   local name
+   local text = "failed to query spotify api"
    if out then
-      name = out.name
-   else
-      name = ("spotify:%s:%s"):format(t, id)
+      if t == "artist" then
+         text = out.name
+      elseif t == "album" then
+         local artists_text = out.artists
+            and table.concat(
+               vim.tbl_map(function(a)
+                  return a.name
+               end, out.artists),
+               ", "
+            )
+         text = ("%s - %s"):format(artists_text, out.name)
+      end
    end
-   return ("[`%s`](spotify:%s:%s)"):format(name, t, id)
+   return ("[`%s`](spotify:%s:%s)"):format(text, t, id)
 end
 
 return M

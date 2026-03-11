@@ -9,6 +9,18 @@ tags: []
 - [[tey]]
 - [[lib]]
 
+## AaravB23/spotUI-nvim
+
+## jalvesaq/zotcite
+
+```lua
+require("zotcite").setup({})
+```
+
+## maxardito/obtero.nvim
+
+## scinac/vim-norm-trainer.nvim
+
 ## NicholasZolton/neojj
 
 ## barrettruth/preview.nvim
@@ -378,7 +390,7 @@ require("blink.cmp").setup({
       per_filetype = {
          markdown = {
             "bibtex",
-            "obsidian",
+            -- "obsidian",
             "dictionary",
          },
          sql = { "snippets", "dadbod", "buffer" },

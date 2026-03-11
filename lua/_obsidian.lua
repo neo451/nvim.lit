@@ -208,8 +208,9 @@ obsidian.setup({
 
    daily_notes = {
       enabled = true,
-      -- template = "daily.md",
+      template = "daily.md",
       folder = "Daily",
+      default_tags = {},
    },
 
    picker = {
