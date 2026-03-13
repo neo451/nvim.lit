@@ -12,6 +12,7 @@ return {
    },
    filetypes = { "lua" },
 
+   ---@type lspconfig.settings.lua_ls  TODO: ?
    settings = {
       Lua = {
          runtime = {
@@ -20,9 +21,10 @@ return {
          workspace = {
             library = {
                vim.env.VIMRUNTIME,
-               -- vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "mini.nvim"),
-               -- vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "snacks.nvim"),
-               -- "~/Plugins/obsidian.nvim/",
+               vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "mini.nvim"),
+               vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "snacks.nvim"),
+               vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "nvim-lspconfig"),
+               "~/Plugins/obsidian.nvim/",
             },
             -- library = vim.api.nvim_get_runtime_file("", true)
          },

@@ -18,10 +18,9 @@ return {
       -- Use this function to define buffer-local mappings and behavior that depend
       -- on attached client or only makes sense if there is language server attached.
    end,
-   -- LuaLS Structure of these settings comes from LuaLS, not Neovim
+   ---@type lspconfig.settings.lua_ls
    settings = {
       Lua = {
-         -- Define runtime properties. Use 'LuaJIT', as it is built into Neovim.
          runtime = {
             version = "LuaJIT",
             -- path = vim.split(package.path, ";"),
@@ -35,6 +34,7 @@ return {
                vim.env.VIMRUNTIME,
                vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "mini.nvim"),
                vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "snacks.nvim"),
+               vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "nvim-lspconfig"),
                "~/Plugins/obsidian.nvim/",
             },
             -- library = vim.api.nvim_get_runtime_file("", true)
