@@ -63,6 +63,17 @@ obsidian.setup({
    },
 
    callbacks = {
+      post_set_workspace = function(workspace)
+         vim.system({ "ob", "sync", "--continuous" }, {
+            cwd = tostring(workspace.root),
+            stdout = function(err, line)
+               if err then
+                  obsidian.log.err(err)
+               end
+            end,
+         }, function() end)
+      end,
+
       ---@param note obsidian.Note
       enter_note = function(note)
          require("obsidian._paste")() -- override paste handler
