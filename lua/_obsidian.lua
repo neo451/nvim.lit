@@ -155,6 +155,12 @@ obsidian.setup({
          if vim.tbl_isempty(note.aliases) then
             out.aliases = nil
          end
+         if vim.tbl_isempty(note.tags) then
+            out.tags = nil
+         end
+         if note.id == note.path.stem then
+            out.id = nil
+         end
          return out
       end,
       enabled = function(path)
@@ -207,7 +213,6 @@ obsidian.setup({
    checkbox = {
       order = { "x", " " },
       create_new = true,
-      enabled = false,
    },
 
    open = {
@@ -238,6 +243,14 @@ obsidian.setup({
       end,
       confirm_img_paste = true,
       folder = "./Attachments",
+      pick = function(callback)
+         Obsidian.picker.find_files({
+            dir = "~",
+            callback = function(path)
+               callback(path)
+            end,
+         })
+      end,
    },
 
    templates = {
@@ -248,7 +261,6 @@ obsidian.setup({
 
    unique_note = {
       folder = "Zettel",
-      template = "zettel.md",
    },
 
    workspaces = workspaces,

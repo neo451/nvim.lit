@@ -42,6 +42,9 @@ local ok, err = pcall(function()
    vim.opt.rtp:append("~/Plugins/obsidian.nvim")
    require("_obsidian")
 
+   vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
+   require("obsidian.media-db").setup({})
+
    -- vim.opt.rtp:append("~/Plugins/feed.nvim/")
    -- require("_feed")
 
