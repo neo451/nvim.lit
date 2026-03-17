@@ -1,8 +1,3 @@
----
-id: nvim_archived
-tags: []
----
-
 ## folke/noice.nvim
 
 ```lua

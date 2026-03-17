@@ -58,19 +58,40 @@ obsidian.setup({
       min_chars = 2,
    },
 
-   note = {
-      template = "default.md",
-   },
-
    callbacks = {
       post_set_workspace = function(workspace)
+         vim.g.obsidian_sync_status = ""
+         local handler = function(err, line)
+            if err then
+               obsidian.log.err(err)
+            end
+            if not line then
+               return
+            end
+            line = vim.trim(line)
+
+            local sync_icons = {
+               synced = "󰸞",
+               syncing = "󰑓",
+               paused = "󰏤",
+               disconnected = "󰲁",
+               resume = "󰐊",
+               history = "󰄉",
+               log = "󰉫",
+               deleted = "󰆴",
+               settings = "󰒓",
+            }
+            if line == "Fully synced" then
+               vim.g.obsidian_sync_status = sync_icons.synced
+            else
+               vim.g.obsidian_sync_status = sync_icons.syncing
+            end
+         end
+
          vim.system({ "ob", "sync", "--continuous" }, {
             cwd = tostring(workspace.root),
-            stdout = function(err, line)
-               if err then
-                  obsidian.log.err(err)
-               end
-            end,
+            stdout = handler,
+            stderr = handler,
          }, function() end)
       end,
 
@@ -83,6 +104,10 @@ obsidian.setup({
          if vim.b[note.bufnr].obsidian_help then
             vim.bo[note.bufnr].readonly = false
          end
+
+         pcall(function()
+            vim.keymap.set("n", "<leader>A", actions.add_attachment, { buffer = true })
+         end)
 
          pcall(function()
             vim.keymap.set("n", "<leader>ul", actions.unique_link, { buffer = true })

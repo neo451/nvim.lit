@@ -1,13 +1,21 @@
----
-id: nvim
-count: 29
-tags: []
----
-
 - [[vim]]
 - [[archived]]
 - [[tey]]
 - [[lib]]
+
+## nvim-lualine/lualine.nvim
+
+```lua
+require("lualine").setup({
+   options = {
+      component_separators = "",
+      section_separators = "",
+   },
+   sections = {
+      lualine_x = { "g:obsidian_sync_status" },
+   },
+})
+```
 
 ## AaravB23/spotUI-nvim
 

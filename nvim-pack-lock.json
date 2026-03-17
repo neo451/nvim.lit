@@ -69,6 +69,10 @@
       "rev": "69829ff3ca8397521a4a6354d418f87c4da10791",
       "src": "https://github.com/selimacerbas/live-server.nvim.git"
     },
+    "lualine.nvim": {
+      "rev": "47f91c416daef12db467145e16bed5bbfe00add8",
+      "src": "https://github.com/nvim-lualine/lualine.nvim.git"
+    },
     "lz.n": {
       "rev": "05d6a5ced29ab3907443865d49fa92a804cda341",
       "src": "https://github.com/nvim-neorocks/lz.n.git"
