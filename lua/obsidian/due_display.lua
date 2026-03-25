@@ -42,7 +42,7 @@ local id_c = 1
 
 local function update_dues(buf)
    local path = vim.api.nvim_buf_get_name(buf)
-   if not vim.endswith(path, "todo.md") then
+   if not vim.endswith(path, "TODO.md") then
       return
    end
    local ok, note = pcall(obsidian.Note.from_buffer, buf)
@@ -56,9 +56,15 @@ local function update_dues(buf)
          local notes = obsidian.search.resolve_note(loc)
          if #notes == 1 then
             local ref = notes[1]
-            local due = ref.metadata.due
-            if due then
-               local id = display_result(buf, line, due, id_c)
+            local text
+
+            if ref.metadata.due then
+               text = "Due: " .. ref.metadata.due
+            elseif ref.metadata.from and ref.metadata.to then
+               text = "From: " .. ref.metadata.from .. " To: " .. ref.metadata.to
+            end
+            if text then
+               local id = display_result(buf, line, text, id_c)
                if id then
                   id_c = id_c + 1
                end

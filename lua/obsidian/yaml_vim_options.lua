@@ -47,6 +47,23 @@ local function apply_frontmatter_words(words, bufnr)
    end
 end
 
+vim.keymap.set("n", "zG", function()
+   local word = vim.fn.expand("<cword>") -- TODO: visual mode
+   if word == "" then
+      return
+   end
+   local note = obsidian.api.current_note()
+   if not note then
+      return
+   end
+   local words = note.metadata.words or {}
+   table.insert(words, word)
+   note:add_field("words", words)
+   local buf = vim.api.nvim_get_current_buf()
+   note:update_frontmatter(buf)
+   apply_frontmatter_words(words, buf)
+end)
+
 vim.api.nvim_create_autocmd("User", {
    pattern = "ObsidianNoteEnter",
    callback = function()

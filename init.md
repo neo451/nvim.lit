@@ -12,7 +12,12 @@ require("lualine").setup({
       section_separators = "",
    },
    sections = {
-      lualine_x = { "g:obsidian_sync_status" },
+      lualine_x = {
+         {
+            "g:obsidian_sync_status",
+            color = require("obsidian._sync").status_color,
+         },
+      },
    },
 })
 ```

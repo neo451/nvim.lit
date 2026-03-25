@@ -5,6 +5,9 @@ vim.ui.open = (function(overridden)
       if vim.endswith(uri, ".pdf") then
          opt = { cmd = { "zathura" } } -- override open app
       end
+      if obsidian.api.get_os() == "Wsl" then
+         opt = { cmd = { "wsl-open" } }
+      end
       return overridden(uri, opt)
    end
 end)(vim.ui.open)
@@ -60,39 +63,7 @@ obsidian.setup({
 
    callbacks = {
       post_set_workspace = function(workspace)
-         vim.g.obsidian_sync_status = ""
-         local handler = function(err, line)
-            if err then
-               obsidian.log.err(err)
-            end
-            if not line then
-               return
-            end
-            line = vim.trim(line)
-
-            local sync_icons = {
-               synced = "󰸞",
-               syncing = "󰑓",
-               paused = "󰏤",
-               disconnected = "󰲁",
-               resume = "󰐊",
-               history = "󰄉",
-               log = "󰉫",
-               deleted = "󰆴",
-               settings = "󰒓",
-            }
-            if line == "Fully synced" then
-               vim.g.obsidian_sync_status = sync_icons.synced
-            else
-               vim.g.obsidian_sync_status = sync_icons.syncing
-            end
-         end
-
-         vim.system({ "ob", "sync", "--continuous" }, {
-            cwd = tostring(workspace.root),
-            stdout = handler,
-            stderr = handler,
-         }, function() end)
+         require("obsidian._sync").start(workspace)
       end,
 
       ---@param note obsidian.Note
@@ -252,6 +223,7 @@ obsidian.setup({
       template = "daily.md",
       folder = "Daily",
       default_tags = {},
+      workdays_only = false,
    },
 
    picker = {

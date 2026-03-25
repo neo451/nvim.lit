@@ -3,6 +3,9 @@ local log = require("obsidian.log")
 local api = require("obsidian.api")
 local spotify = require("spotify")
 
+-- TODO: don't error if just normal text
+-- TODO: abort option
+
 -- Unescape common shell-style backslash escapes from drag&drop paths:
 --   /a/b/Churchill\ BRIEF\ Memo.pdf  ->  /a/b/Churchill BRIEF Memo.pdf
 local function unescape_shell_path(s)
@@ -123,20 +126,27 @@ end
 
 local function paste(lines)
    local line = lines[1]
+   if vim.tbl_isempty(lines) or type(line) ~= "string" then
+      return false
+   end
    local is_uri, scheme = util.is_uri(line)
    -- TODO: check clipboard is image
    if is_uri and (scheme == "http" or scheme == "https") then
-      return handle_link(line)
+      handle_link(line)
+      return true
    elseif looks_like_path(line) then
-      return handle_path(line)
+      handle_path(line)
+      return true
+   else
+      return false
    end
 end
 
 return function()
    vim.paste = (function(overridden)
       return function(lines, phase)
-         if vim.b.obsidian_buffer then
-            return paste(lines)
+         if vim.b.obsidian_buffer and paste(lines) then
+            return
          end
          return overridden(lines, phase)
       end
