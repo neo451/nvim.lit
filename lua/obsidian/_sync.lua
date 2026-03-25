@@ -62,9 +62,7 @@ local function append_log(workspace, message)
    end
 
    local ts = os.date("%Y-%m-%d %H:%M")
-   local entry = string.format("%s - %s", ts, message)
-
-   local lines = vim.split(entry, "\n")
+   local lines = vim.split(message, "\n")
 
    for _, line in ipairs(lines) do
       if line and line ~= "" then
@@ -75,7 +73,8 @@ local function append_log(workspace, message)
          else
             set_status(workspace, "syncing")
          end
-         table.insert(sync_log[key], line)
+         local entry = string.format("%s - %s", ts, line)
+         table.insert(sync_log[key], entry)
       end
    end
 end
@@ -185,6 +184,20 @@ M.open_log = function(workspace)
    vim.bo[buf].modifiable = false
    vim.api.nvim_buf_set_name(buf, "Obsidian Sync Log")
    vim.api.nvim_set_current_buf(buf)
+end
+
+M.menu = function()
+   vim.ui.select({ "Start Sync", "Pause Sync", "View Sync Log" }, {
+      prompt = "Obsidian Sync",
+   }, function(choice)
+      if choice == "Start Sync" then
+         M.start()
+      elseif choice == "Pause Sync" then
+         M.stop()
+      elseif choice == "View Sync Log" then
+         M.open_log()
+      end
+   end)
 end
 
 return M
