@@ -1,13 +1,13 @@
 local set = vim.keymap.set
 
-vim.keymap.set("i", "jk", "<esc>l")
+set("i", "jk", "<esc>l")
 
-vim.keymap.set("n", "<leader>H", function()
+set("n", "<leader>H", function()
    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
    vim.notify(vim.lsp.inlay_hint.is_enabled() and "Inlay Hint Enabled" or "Inlay Hint Disabled")
 end)
 
-vim.keymap.set("n", "gra", function()
+set("n", "gra", function()
    local ok, tiny = pcall(require, "tiny-code-action")
    if ok then
       tiny.code_action({})
@@ -15,6 +15,8 @@ vim.keymap.set("n", "gra", function()
       vim.lsp.buf.code_action()
    end
 end)
+
+set("n", "<C-n>", "<cmd>Obsidian media_search<cr>", { desc = "New Media DB Entry" })
 
 set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })

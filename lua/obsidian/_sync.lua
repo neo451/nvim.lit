@@ -184,6 +184,9 @@ M.open_log = function(workspace)
    vim.bo[buf].modifiable = false
    vim.api.nvim_buf_set_name(buf, "Obsidian Sync Log")
    vim.api.nvim_set_current_buf(buf)
+   vim.keymap.set("n", "q", function()
+      vim.api.nvim_buf_delete(buf, { force = true })
+   end, { buffer = buf, silent = true })
 end
 
 M.menu = function()

@@ -9,6 +9,7 @@ vim.g.lit = {
 
 vim.cmd("packadd nvim.undotree")
 vim.cmd("packadd nvim.difftool")
+vim.cmd("packadd nvim.tohtml")
 
 require("helpers")
 require("options")

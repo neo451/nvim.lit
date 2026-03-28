@@ -1,5 +1,16 @@
 local obsidian = require("obsidian")
 
+require("obsidian.media-db").setup({
+   api_keys = {
+      omdb = "debaf6f7",
+      giant_bomb = "0d3deb61eeed923a919def933ceeb4d168fa3f64",
+      spotify = {
+         id = os.getenv("SPOTIFY_CLIENT_ID"),
+         secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
+      },
+   },
+})
+
 vim.ui.open = (function(overridden)
    return function(uri, opt)
       if vim.endswith(uri, ".pdf") then
@@ -56,7 +67,7 @@ obsidian.setup({
    },
 
    completion = {
-      -- nvim_cmp = true,
+      nvim_cmp = true,
       -- blink = false,
       min_chars = 2,
    },
