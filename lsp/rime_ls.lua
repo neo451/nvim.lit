@@ -10,6 +10,7 @@ local rime_on_attach = function(client, _)
    end
    -- keymaps for executing command
    vim.keymap.set("n", "<leader>rr", toggle_rime, { desc = "Toggle [R]ime" })
+   vim.keymap.set("i", "<C-x>", toggle_rime, { desc = "Toggle Rime" })
    vim.keymap.set("n", "<leader>rs", function()
       vim.lsp.buf.execute_command({ command = "rime-ls.sync-user-data" })
    end, { desc = "[R]ime [S]ync" })
@@ -34,18 +35,21 @@ local rime_on_attach = function(client, _)
    end
 end
 
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
 
+---@type vim.lsp.Config
 return {
    name = "rime_ls",
    cmd = { "rime_ls" },
-   filetypes = { "markdown" },
+   -- cmd = { '/home/wlh/coding/rime-ls/target/debug/rime_ls' },
+   -- cmd = { "/home/wlh/coding/rime-ls/target/release/rime_ls" },
+   -- cmd = vim.lsp.rpc.connect('127.0.0.1', 9257),
+
    init_options = {
       enabled = vim.g.rime_enabled,
       shared_data_dir = "/usr/share/rime-data",
-      user_data_dir = "~/.config/rime-ls/",
+      user_data_dir = "~/.local/share/rime-ls",
       log_dir = "/tmp",
       max_candidates = 9,
       paging_characters = { ",", "." },

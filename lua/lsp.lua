@@ -1,6 +1,6 @@
 local servers = {
-   -- "lua_ls",
-   "emmylua_ls",
+   "lua_ls",
+   -- "emmylua_ls",
    "gopls",
    "nixd",
    "zls",
@@ -12,7 +12,7 @@ local servers = {
    "copilot",
    -- "marksman",
    -- "mpls",
-   -- "rime_ls",
+   "rime_ls",
    -- "harper_ls",
 }
 
