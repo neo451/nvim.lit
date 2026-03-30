@@ -165,6 +165,9 @@ obsidian.setup({
          if vim.tbl_isempty(note.tags) then
             out.tags = nil
          end
+         if #note.aliases == 1 and note.aliases[1] == note.id then
+            out.aliases = nil
+         end
          if note.id == note.path.stem then
             out.id = nil
          end

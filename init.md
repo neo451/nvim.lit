@@ -239,10 +239,6 @@ end, { expr = true })
 vim.cmd.colorscheme("tokyonight")
 ```
 
-### j-hui/fidget.nvim!
-
-- event: `LspAttach`
-
 ### folke/todo-comments.nvim
 
 ```lua

@@ -2,6 +2,9 @@ local set = vim.keymap.set
 
 set("i", "jk", "<esc>l")
 
+-- super help docs everywhere
+set("n", "vK", "<C-\\><C-N><Cmd>help!<CR>")
+
 set("n", "<leader>H", function()
    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
    vim.notify(vim.lsp.inlay_hint.is_enabled() and "Inlay Hint Enabled" or "Inlay Hint Disabled")

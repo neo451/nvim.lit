@@ -1,3 +1,7 @@
+## j-hui/fidget.nvim!
+
+- event: `LspAttach`
+
 ## selimacerbas/live-server.nvim
 
 ## selimacerbas/markdown-preview.nvim
