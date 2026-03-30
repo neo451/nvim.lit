@@ -1,3 +1,4 @@
+vim.loader.enable()
 vim.opt.rtp:append("~/Plugins/lit.nvim/")
 
 vim.g.lit = {

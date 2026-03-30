@@ -14,25 +14,6 @@ local rime_on_attach = function(client, _)
    vim.keymap.set("n", "<leader>rs", function()
       vim.lsp.buf.execute_command({ command = "rime-ls.sync-user-data" })
    end, { desc = "[R]ime [S]ync" })
-
-   -- set trigger for different filetypes
-   local set_rime_trigger = function(trigger)
-      local clients = vim.lsp.get_clients({
-         bufnr = vim.api.nvim_get_current_buf(),
-         name = "rime_ls",
-      })
-      for _, client in ipairs(clients) do
-         local settings = { trigger_characters = trigger }
-         client.config.settings = settings
-         client.notify("workspace/didChangeConfiguration", { settings = settings })
-      end
-   end
-   local filetype = vim.bo.filetype
-   if filetype == "text" or filetype == "markdown" or filetype == "tex" or filetype == "typst" then
-      set_rime_trigger({})
-   else
-      set_rime_trigger({ ">" })
-   end
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -42,10 +23,6 @@ capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
 return {
    name = "rime_ls",
    cmd = { "rime_ls" },
-   -- cmd = { '/home/wlh/coding/rime-ls/target/debug/rime_ls' },
-   -- cmd = { "/home/wlh/coding/rime-ls/target/release/rime_ls" },
-   -- cmd = vim.lsp.rpc.connect('127.0.0.1', 9257),
-
    init_options = {
       enabled = vim.g.rime_enabled,
       shared_data_dir = "/usr/share/rime-data",
