@@ -6,6 +6,9 @@
 ## nvim-lualine/lualine.nvim
 
 ```lua
+if true then
+   return
+end
 require("lualine").setup({
    options = {
       component_separators = "",

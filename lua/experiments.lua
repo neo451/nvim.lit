@@ -22,8 +22,6 @@ vim.api.nvim_create_user_command("Sort", function(opts)
    vim.cmd(pattern)
 end, { nargs = 1, bang = true, range = true })
 
-vim.api.nvim_create_user_command("Lsp", "checkhealth vim.lsp", {})
-
 require("vim._core.ui2").enable({})
 
 require("babel").enable(true)

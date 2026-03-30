@@ -17,20 +17,19 @@ local function fetch_markdown(url, callback)
       callback(nil, {
          contents = cache[url],
       })
+      return
    end
-   vim.system(
-      { "curl", "-s", "https://markdown.new/" .. url },
-      {},
-      vim.schedule_wrap(function(out)
-         if out.code ~= 0 then
-            return
-         end
-         cache[url] = out.stdout
-         callback(nil, {
-            contents = out.stdout,
-         })
-      end)
-   )
+
+   vim.net.request("https://markdown.new/" .. url, {}, function(err, response)
+      if err or not response then
+         return
+      end
+
+      cache[url] = response.body
+      callback(nil, {
+         contents = response.body,
+      })
+   end)
 end
 
 return {
