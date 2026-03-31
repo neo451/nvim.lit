@@ -22,7 +22,11 @@ vim.api.nvim_create_user_command("Sort", function(opts)
    vim.cmd(pattern)
 end, { nargs = 1, bang = true, range = true })
 
-require("vim._core.ui2").enable({})
+require("vim._core.ui2").enable({
+   msg = {
+      targets = "msg",
+   },
+})
 
 require("babel").enable(true)
 
