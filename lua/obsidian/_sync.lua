@@ -2,6 +2,8 @@ local log = require("obsidian.log")
 
 local M = {}
 
+vim.g.obsidian_sync_status_kind = nil
+vim.g.obsidian_sync_status_icon = ""
 vim.g.obsidian_sync_status = ""
 local sync_proc = {}
 
@@ -31,11 +33,17 @@ function M.status_color()
    local key = workspace and tostring(workspace.root) or nil
    local kind = key and sync_status[key] or nil
 
-   vim.g._obsidian_sync_status = kind
-   vim.g.obsidian_sync_status = (kind and sync_icons[kind]) or ""
-
    local hl = group[kind]
    return hl or "DiagnosticInfo"
+end
+
+local function set_statusline_globals(kind)
+   local icon = (kind and sync_icons[kind]) or ""
+   local hl = group[kind] or "DiagnosticInfo"
+
+   vim.g.obsidian_sync_status_kind = kind
+   vim.g.obsidian_sync_status_icon = icon
+   vim.g.obsidian_sync_status = icon ~= "" and string.format(" %%#%s#%s%%*", hl, icon) or ""
 end
 
 local function set_status(workspace, kind)
@@ -47,8 +55,7 @@ local function set_status(workspace, kind)
       return
    end
 
-   vim.g._obsidian_sync_status = kind
-   vim.g.obsidian_sync_status = (kind and sync_icons[kind]) or ""
+   set_statusline_globals(kind)
 end
 
 local function append_log(workspace, message)
@@ -93,8 +100,7 @@ local function stop_sync(workspace)
          sync_proc[path] = nil
          sync_status[path] = nil
       end
-      vim.g._obsidian_sync_status = nil
-      vim.g.obsidian_sync_status = ""
+      set_statusline_globals(nil)
       return
    end
 
