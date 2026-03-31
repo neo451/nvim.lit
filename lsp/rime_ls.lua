@@ -1,4 +1,4 @@
-vim.g.rime_enabled = true
+vim.g.rime_enabled = false
 
 local rime_on_attach = function(client, _)
    local toggle_rime = function()
