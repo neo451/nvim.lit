@@ -43,7 +43,7 @@ local function set_statusline_globals(kind)
 
    vim.g.obsidian_sync_status_kind = kind
    vim.g.obsidian_sync_status_icon = icon
-   vim.g.obsidian_sync_status = icon ~= "" and string.format(" %%#%s#%s%%*", hl, icon) or ""
+   vim.g.obsidian_sync_status = icon ~= "" and string.format(" %%#%s# %s %%*", hl, icon) or ""
 end
 
 local function set_status(workspace, kind)
