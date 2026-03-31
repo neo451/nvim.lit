@@ -1,3 +1,28 @@
+## nvim-lualine/lualine.nvim
+
+```lua
+require("lualine").setup({
+   options = {
+      component_separators = "",
+      section_separators = "",
+   },
+   sections = {
+      lualine_x = {
+         {
+            "g:obsidian_sync_status",
+            color = require("obsidian._sync").status_color,
+         },
+      },
+   },
+})
+```
+
+## jalvesaq/zotcite
+
+```lua
+-- require("zotcite").setup({})
+```
+
 ### nvim-orgmode/orgmode
 
 ```lua
