@@ -1,7 +1,3 @@
--- if true then
---    return
--- end
-
 local obsidian = require("obsidian")
 
 pcall(function()
