@@ -17,6 +17,14 @@
       "rev": "fc8edd6ecf8e4095ef878780e4bed83cc5c56c14",
       "src": "https://github.com/bngarren/checkmate.nvim.git"
     },
+    "cmp-nvim-lsp": {
+      "rev": "cbc7b02bb99fae35cb42f514762b89b5126651ef",
+      "src": "https://github.com/hrsh7th/cmp-nvim-lsp.git"
+    },
+    "codediff.nvim": {
+      "rev": "832f1ecc5f8b15a44cf7537e31d3266d657775b1",
+      "src": "https://github.com/esmuellert/codediff.nvim.git"
+    },
     "conform.nvim": {
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim.git"
@@ -72,6 +80,10 @@
     "neogit": {
       "rev": "4681c1fdac1b730592ae195576e87406f7255750",
       "src": "https://github.com/NeogitOrg/neogit.git"
+    },
+    "nerdy.nvim": {
+      "rev": "97b0914dece80204a777f04c94b9980da0f7ac88",
+      "src": "https://github.com/2kabhishek/nerdy.nvim.git"
     },
     "no-neck-pain.nvim": {
       "rev": "4bc52782524fd50c5658685d584df6fa48fe49f9",
@@ -146,6 +158,14 @@
       "rev": "50092d60feb242602d7578398c6eb53b4a8ffe7b",
       "src": "https://github.com/kkharji/sqlite.lua.git"
     },
+    "store.nvim": {
+      "rev": "bd894bd538c013c04d2b5bdae4eb5c83d3d38758",
+      "src": "https://github.com/alex-popov-tech/store.nvim.git"
+    },
+    "super-kanban.nvim": {
+      "rev": "fbddd3f48bf672dab1fc6ca26424f3a158623be9",
+      "src": "https://github.com/hasansujon786/super-kanban.nvim.git"
+    },
     "telescope.nvim": {
       "rev": "cfb85dcf7f822b79224e9e6aef9e8c794211b20b",
       "src": "https://github.com/nvim-telescope/telescope.nvim.git"
@@ -153,10 +173,6 @@
     "tiny-code-action.nvim": {
       "rev": "8e72efa075ba3154bbc4c7d1db532b03b4e68373",
       "src": "https://github.com/rachartier/tiny-code-action.nvim.git"
-    },
-    "tiny-inline-diagnostic.nvim": {
-      "rev": "ba133b3e932416e4b9507095731a6d7276878fe8",
-      "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim.git"
     },
     "todo-comments.nvim": {
       "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
@@ -181,10 +197,6 @@
     "volt": {
       "rev": "620de1321f275ec9d80028c68d1b88b409c0c8b1",
       "src": "https://github.com/nvzone/volt.git"
-    },
-    "vscode-diff.nvim": {
-      "rev": "832f1ecc5f8b15a44cf7537e31d3266d657775b1",
-      "src": "https://github.com/esmuellert/vscode-diff.nvim.git"
     }
   }
 }

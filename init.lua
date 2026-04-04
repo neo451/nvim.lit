@@ -11,12 +11,37 @@ vim.g.lit = {
 vim.cmd("packadd nvim.undotree")
 vim.cmd("packadd nvim.difftool")
 vim.cmd("packadd nvim.tohtml")
+vim.cmd("packadd nohlsearch")
+vim.cmd("packadd cfilter")
 
-require("helpers")
 require("options")
 require("experiments")
 
-require("lsp")
+local servers = {
+   -- "lua_ls",
+   "rime_ls",
+   "emmylua_ls",
+   "gopls",
+   "nixd",
+   "zls",
+   "ts_ls",
+   "qmlls",
+   "pyright",
+   "ts_ls",
+   "copilot",
+   -- "markdown_oxide"
+   -- "marksman",
+   -- "mpls",
+   -- "dummy_ls",
+   -- "harper_ls",
+}
+
+for _, name in ipairs(servers) do
+   pcall(vim.lsp.enable, name)
+end
+
+vim.lsp.inline_completion.enable()
+
 require("autocmds")
 require("keymaps")
 

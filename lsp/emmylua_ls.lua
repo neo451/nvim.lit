@@ -25,6 +25,7 @@ return {
                vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "snacks.nvim"),
                vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "nvim-lspconfig"),
                "~/Plugins/obsidian.nvim/",
+               "~/Plugins/obsidian-media-db.nvim/",
             },
             -- library = vim.api.nvim_get_runtime_file("", true)
          },

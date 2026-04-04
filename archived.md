@@ -1,3 +1,10 @@
+### rachartier/tiny-inline-diagnostic.nvim
+
+```lua
+require("tiny-inline-diagnostic").setup()
+vim.diagnostic.config({ virtual_text = false })
+```
+
 ## nvim-lualine/lualine.nvim
 
 ```lua

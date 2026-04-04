@@ -1,12 +1,47 @@
+-- if true then
+--    return
+-- end
+
 local obsidian = require("obsidian")
 
+pcall(function()
+   require("obsidian.lsp.watchfiles").register_handler(function(events, raw_changes)
+      for _, event in ipairs(events) do
+         if event.type == "renamed" then
+            print("rename", event.old_path, "->", event.new_path)
+         elseif event.type == "created" then
+            print("created", event.path)
+         elseif event.type == "deleted" then
+            print("deleted", event.path)
+         elseif event.type == "changed" then
+            print("changed", event.path)
+         end
+      end
+   end)
+end)
+
 require("obsidian.media-db").setup({
-   api_keys = {
-      omdb = "debaf6f7",
-      giant_bomb = "0d3deb61eeed923a919def933ceeb4d168fa3f64",
+   apis = {
+      omdb = { key = "debaf6f7" },
+      -- giant_bomb = { key = "0d3deb61eeed923a919def933ceeb4d168fa3f64" },
       spotify = {
          id = os.getenv("SPOTIFY_CLIENT_ID"),
          secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
+      },
+      open_library = { enabled = false },
+      google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
+   },
+   media_types = {
+      movie = {
+         field_mappings = {
+            director = { format = "[[%s]]" },
+            actors = { format = "[[%s]]" },
+         },
+      },
+      musicRelease = {
+         field_mappings = {
+            artists = { format = "[[%s]]" },
+         },
       },
    },
 })
@@ -61,14 +96,68 @@ local ut = require("obsidian._utils")
 
 vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
 
+---@type table<string, obsidian.BacklinkMatch[]>
+local linked_mentions_cache = {}
+
+---@param match obsidian.BacklinkMatch
+---@return string, integer, integer, string
+local function backlink_sort_key(match)
+   local rel_path = obsidian.Path.new(match.path):vault_relative_path() or tostring(match.path)
+   return rel_path, match.line or 0, match.start or 0, match.text or ""
+end
+
+---@param matches obsidian.BacklinkMatch[]
+---@return obsidian.BacklinkMatch[]
+local function sort_backlink_matches(matches)
+   table.sort(matches, function(a, b)
+      local a_path, a_line, a_start, a_text = backlink_sort_key(a)
+      local b_path, b_line, b_start, b_text = backlink_sort_key(b)
+
+      if a_path ~= b_path then
+         return a_path < b_path
+      elseif a_line ~= b_line then
+         return a_line < b_line
+      elseif a_start ~= b_start then
+         return a_start < b_start
+      else
+         return a_text < b_text
+      end
+   end)
+
+   return matches
+end
+
 obsidian.setup({
    bookmarks = {
       group = true,
    },
 
+   footer = {
+      format = "{{status}}\n{{linked_mentions}}",
+      substitutions = {
+         linked_mentions = function(note, update)
+            local path = tostring(note.path)
+            if update or linked_mentions_cache[path] == nil then
+               linked_mentions_cache[path] = sort_backlink_matches(note:backlinks({}))
+            end
+            local matches = linked_mentions_cache[path]
+
+            if #matches == 0 then
+               return {}
+            end
+
+            local lines = { "Linked Mentions", "" }
+            for _, match in ipairs(matches) do
+               local rel_path = obsidian.Path.new(match.path):vault_relative_path() or tostring(match.path)
+               lines[#lines + 1] = string.format("%s: %s", rel_path, match.text or "")
+            end
+
+            return lines
+         end,
+      },
+   },
+
    completion = {
-      nvim_cmp = true,
-      -- blink = false,
       min_chars = 2,
    },
 
@@ -89,6 +178,10 @@ obsidian.setup({
 
          pcall(function()
             vim.keymap.set("n", "<leader>A", actions.add_attachment, { buffer = true })
+         end)
+
+         pcall(function()
+            vim.keymap.set("n", "<leader>W", actions.workspace_symbol, { buffer = true })
          end)
 
          pcall(function()
@@ -205,8 +298,8 @@ obsidian.setup({
 
    link = {
       format = "shortest",
-      style = "wiki",
-      -- asciidoc
+      -- format = "absolute",
+      -- format = "relative",
    },
 
    ---@param id string
@@ -272,6 +365,10 @@ obsidian.setup({
 
    unique_note = {
       folder = "Zettel",
+   },
+
+   note = {
+      template = "default.md",
    },
 
    workspaces = workspaces,

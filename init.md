@@ -1,7 +1,14 @@
 - [[vim]]
 - [[archived]]
-- [[tey]]
 - [[lib]]
+
+## Utilities
+
+### 2kabhishek/nerdy.nvim!
+
+- cmd: `Nerdy`
+
+## alex-popov-tech/store.nvim!
 
 ## nickjvandyke/opencode.nvim
 
@@ -209,6 +216,8 @@ end, {
 
 ## Markdown
 
+### hasansujon786/super-kanban.nvim!
+
 ### MeanderingProgrammer/render-markdown.nvim
 
 - ft: `markdown`
@@ -243,13 +252,6 @@ works for `todo.md` `TODO.md`
 
 - event: `LspAttach`
 
-### rachartier/tiny-inline-diagnostic.nvim
-
-```lua
-require("tiny-inline-diagnostic").setup()
-vim.diagnostic.config({ virtual_text = false })
-```
-
 ## Completion
 
 ### rafamadriz/friendly-snippets
@@ -263,27 +265,7 @@ vim.diagnostic.config({ virtual_text = false })
 
 ```lua
 require("blink.cmp").setup({
-   keymap = {
-      preset = "default",
-      ["<C-b>"] = { "scroll_documentation_up" },
-      ["<C-f>"] = { "scroll_documentation_down" },
-      [";"] = {
-         function(cmp)
-            if not vim.g.rime_enabled then
-               return false
-            end
-            local rime_item_index = require("rime").get_n_rime_item_index(1)
-            if #rime_item_index ~= 1 then
-               return false
-            end
-            -- If you want to select more than once,
-            -- just update this cmp.accept with vim.api.nvim_feedkeys('1', 'n', true)
-            -- The rest can be updated similarly
-            return cmp.accept({ index = rime_item_index[1] })
-         end,
-         "fallback",
-      },
-   },
+   -- keymap = { preset = "default" },
    completion = {
       menu = {
          draw = {
@@ -455,9 +437,8 @@ require("mini.icons").setup()
 MiniIcons.mock_nvim_web_devicons()
 require("mini.surround").setup({})
 require("mini.test").setup({})
-require("mini.cmdline").setup({
-   -- autocomplete = { enable = false },
-})
+require("mini.pick").setup({})
+require("mini.extra").setup({})
 ```
 
 ## folke/snacks.nvim
@@ -498,7 +479,7 @@ require("snacks").setup({
 })
 ```
 
-## esmuellert/vscode-diff.nvim
+## esmuellert/codediff.nvim
 
 - cmd: `CodeDiff`
 

@@ -78,6 +78,8 @@ vim.g.spell_aff = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.a
 vim.cmd([[set completeopt+=menuone,noselect,popup]])
 
 vim.diagnostic.config({
+   -- virtual_lines = true,
+   virtual_text = true,
    signs = {
       text = {
          [vim.diagnostic.severity.ERROR] = " ",

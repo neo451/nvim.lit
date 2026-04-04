@@ -152,9 +152,6 @@ require("feed").setup({
          auth = "n451/1e4d0d767d8647e7caa5c89ad5ae35f7fb8ccc45",
       },
    },
-   -- progress = {
-   --   backend = "fidget",
-   -- },
    ui = {
       order = { "date", "feed", "tags", "title", "reading_time" },
       reading_time = {

@@ -1,3 +1,5 @@
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+
 ---@param client vim.lsp.Client
 ---@param bufnr integer
 ---@param cmd string
@@ -14,6 +16,14 @@ return {
    root_markers = { ".git", ".obsidian", ".moxide.toml" },
    filetypes = { "markdown" },
    cmd = { "markdown-oxide" },
+
+   capabilities = vim.tbl_deep_extend("force", capabilities, {
+      workspace = {
+         didChangeWatchedFiles = {
+            dynamicRegistration = true,
+         },
+      },
+   }),
    on_attach = function(client, bufnr)
       for _, cmd in ipairs({ "today", "tomorrow", "yesterday" }) do
          vim.api.nvim_buf_create_user_command(bufnr, "Lsp" .. ("%s"):format(cmd:gsub("^%l", string.upper)), function()
