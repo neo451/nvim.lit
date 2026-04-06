@@ -1,6 +1,24 @@
-- [[vim]]
 - [[archived]]
 - [[lib]]
+
+## nvim-lualine/lualine.nvim
+
+```lua
+require("lualine").setup({
+   options = {
+      component_separators = "",
+      section_separators = "",
+   },
+   sections = {
+      lualine_x = {
+         -- {
+         --    "g:obsidian_sync_status_icon",
+         --    color = require("obsidian.sync.status").color,
+         -- },
+      },
+   },
+})
+```
 
 ## Utilities
 
@@ -43,12 +61,6 @@ end, { desc = "Scroll opencode down" })
 -- You may want these if you use the opinionated `<C-a>` and `<C-x>` keymaps above — otherwise consider `<leader>o…` (and remove terminal mode from the `toggle` keymap)
 vim.keymap.set("n", "+", "<C-a>", { desc = "Increment under cursor", noremap = true })
 vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = true })
-```
-
-## lewis6991/gitsigns.nvim
-
-```lua
-require("gitsigns").setup({})
 ```
 
 ## shortcuts/no-neck-pain.nvim
@@ -128,16 +140,6 @@ end)
 ## Git
 
 ### noamsto/resolved.nvim!
-
-### NeogitOrg/neogit
-
-- keys: `<leader>gg`
-- cmd: `Neogit`
-
-```lua
-require("neogit").setup({})
-vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>")
-```
 
 ## stevearc/oil.nvim
 
@@ -444,18 +446,45 @@ require("mini.extra").setup({})
 ## folke/snacks.nvim
 
 ```lua
+
+local api = require("obsidian.api")
+local util = require("obsidian.util")
+
+local cache = {}
+
+local function resovle_image(path, src)
+   local is_uri, scheme = util.is_uri(src)
+   if not api.path_is_note(path) then
+      return
+   end
+
+   if is_uri and scheme == "https" then
+      if cache[src] then
+         return cache[src]
+      end
+      local tmp = vim.fn.tempname() .. ".png" -- TODO: get suffix
+      local cmd = { "curl", "-L", "-o", tmp, src }
+      local result = vim.system(cmd):wait()
+      if result.code == 0 then
+         cache[src] = tmp
+         print(tmp)
+         return tmp
+      else
+         vim.notify("Failed to download image: " .. result.stderr, vim.log.levels.ERROR)
+         return nil
+      end
+   else
+      return api.resolve_attachment_path(src)
+   end
+end
+
 require("snacks").setup({
    lazygit = {},
    gitbrowse = { enabled = true },
    scroll = { enabled = true },
    image = {
       enabled = vim.fn.executable("convert") == 1,
-      resolve = function(path, src)
-         local api = require("obsidian.api")
-         if api.path_is_note(path) then
-            return api.resolve_attachment_path(src)
-         end
-      end,
+      resolve = resovle_image,
       -- wo = { winhighlight = "FloatBorder:WhichKeyBorder" },
       doc = {
          inline = true,
@@ -470,7 +499,6 @@ require("snacks").setup({
       notification = {
          wo = { wrap = true },
       },
-      snacks_image = { relative = "editor", col = -1 },
    },
    notifier = {
       enabled = true,

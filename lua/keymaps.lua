@@ -131,7 +131,7 @@ nmap_leader("go", function()
    MiniDiff.toggle_overlay(0)
 end, "Toggle Minidiff Overlay")
 
-nmap_leader("gl", function()
+nmap_leader("gg", function()
    Snacks.lazygit()
 end, "Open Lazygit")
 

@@ -1,8 +1,3 @@
----
-id: lib
-tags: []
----
-
 ## neovim/nvim-lspconfig
 
 ## hrsh7th/cmp-nvim-lsp

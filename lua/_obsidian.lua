@@ -69,6 +69,10 @@ local workspaces = {
       name = "blog",
       path = "~/quarto-blog/posts/",
    },
+   {
+      name = "config",
+      path = "~/.config/nvim/",
+   },
    -- {
    --    name = "auto",
    --    path = function()
@@ -128,6 +132,8 @@ obsidian.setup({
       group = true,
    },
 
+   sync = { enabled = true },
+
    footer = {
       format = "{{status}}\n{{linked_mentions}}",
       substitutions = {
@@ -158,9 +164,6 @@ obsidian.setup({
    },
 
    callbacks = {
-      post_set_workspace = function(workspace)
-         require("obsidian._sync").start(workspace)
-      end,
 
       ---@param note obsidian.Note
       enter_note = function(note)

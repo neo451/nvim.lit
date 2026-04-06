@@ -1,27 +1,24 @@
+## lewis6991/gitsigns.nvim
+
+```lua
+require("gitsigns").setup({})
+```
+
+### NeogitOrg/neogit
+
+- keys: `<leader>gg`
+- cmd: `Neogit`
+
+```lua
+require("neogit").setup({})
+vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>")
+```
+
 ### rachartier/tiny-inline-diagnostic.nvim
 
 ```lua
 require("tiny-inline-diagnostic").setup()
 vim.diagnostic.config({ virtual_text = false })
-```
-
-## nvim-lualine/lualine.nvim
-
-```lua
-require("lualine").setup({
-   options = {
-      component_separators = "",
-      section_separators = "",
-   },
-   sections = {
-      lualine_x = {
-         {
-            "g:obsidian_sync_status",
-            color = require("obsidian._sync").status_color,
-         },
-      },
-   },
-})
 ```
 
 ## jalvesaq/zotcite
