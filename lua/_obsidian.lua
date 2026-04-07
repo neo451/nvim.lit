@@ -238,18 +238,9 @@ obsidian.setup({
    frontmatter = {
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
-         if note.id == "Douban" then
-            out.count = ut.count_checkbox(note, "^%d*%. ") .. "/250"
-         elseif note.id == "TSPDT" then
-            out.count = ut.count_checkbox(note, "^%d*%. %[x%]") .. "/1000"
-         elseif note.id == "nvim" then
-            local count = 0
-            for _, line in ipairs(note.contents) do
-               if line:match("#* %w*/%w*") then
-                  count = count + 1
-               end
-            end
-            out.count = count
+         if note.metadata and note.metadata.count then
+            local res = ut.count_checkbox(note)
+            out.count = string.format("%d/%d", res.done, res.total)
          end
          if vim.tbl_isempty(note.aliases) then
             out.aliases = nil

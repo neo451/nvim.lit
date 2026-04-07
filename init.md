@@ -4,6 +4,7 @@
 ## nvim-lualine/lualine.nvim
 
 ```lua
+local ok, sync = pcall(require, "obsidian.sync.status")
 require("lualine").setup({
    options = {
       component_separators = "",
@@ -11,10 +12,10 @@ require("lualine").setup({
    },
    sections = {
       lualine_x = {
-         -- {
-         --    "g:obsidian_sync_status_icon",
-         --    color = require("obsidian.sync.status").color,
-         -- },
+         {
+            "g:obsidian_sync_status_icon",
+            color = ok and sync.color or nil,
+         },
       },
    },
 })
@@ -459,20 +460,20 @@ local function resovle_image(path, src)
    end
 
    if is_uri and scheme == "https" then
-      if cache[src] then
-         return cache[src]
-      end
-      local tmp = vim.fn.tempname() .. ".png" -- TODO: get suffix
-      local cmd = { "curl", "-L", "-o", tmp, src }
-      local result = vim.system(cmd):wait()
-      if result.code == 0 then
-         cache[src] = tmp
-         print(tmp)
-         return tmp
-      else
-         vim.notify("Failed to download image: " .. result.stderr, vim.log.levels.ERROR)
-         return nil
-      end
+      -- if cache[src] then
+      --    return cache[src]
+      -- end
+      -- local tmp = vim.fn.tempname() .. ".png" -- TODO: get suffix
+      -- local cmd = { "curl", "-L", "-o", tmp, src }
+      -- local result = vim.system(cmd):wait()
+      -- if result.code == 0 then
+      --    cache[src] = tmp
+      --    print(tmp)
+      --    return tmp
+      -- else
+      --    vim.notify("Failed to download image: " .. result.stderr, vim.log.levels.ERROR)
+      --    return nil
+      -- end
    else
       return api.resolve_attachment_path(src)
    end

@@ -1,13 +1,19 @@
 local M = {}
 
-function M.count_checkbox(note, pat)
-   local count = 0
+local util = require("obsidian.util")
+
+function M.count_checkbox(note)
+   local done = 0
+   local total = 0
    for _, line in ipairs(note.contents) do
-      if line:match(pat) then
-         count = count + 1
+      if util.is_checkbox(line) then
+         total = total + 1
+         if line:match("%[x%]") then
+            done = done + 1
+         end
       end
    end
-   return count
+   return { total = total, done = done }
 end
 
 local filetypes = {
