@@ -1,4 +1,5 @@
 local M = {}
+local opencode = require("_opencode")
 
 local prompts = {
    commit = [[Run `git diff --cached` to see the staged changes. If empty, fall back to `git diff HEAD`.
@@ -67,11 +68,6 @@ end
 ---@param style "commit"|"pr"
 ---@param hint? string
 local function generate(style, hint)
-   if vim.fn.executable("opencode") ~= 1 then
-      vim.notify("opencode not found in PATH", vim.log.levels.ERROR, { title = "AI Commit" })
-      return
-   end
-
    local prompt = prompts[style] or prompts.commit
    if hint and hint ~= "" then
       prompt = prompt .. "\n\nAdditional context: " .. hint
@@ -81,30 +77,16 @@ local function generate(style, hint)
 
    vim.notify("Generating commit message...", vim.log.levels.INFO, { title = "AI Commit" })
 
-   vim.system(
-      { "opencode", "run", prompt },
-      {},
-      vim.schedule_wrap(function(result)
-         if result.code ~= 0 then
-            vim.notify(
-               "opencode failed (exit " .. result.code .. "): " .. (result.stderr or ""),
-               vim.log.levels.ERROR,
-               { title = "AI Commit" }
-            )
-            return
-         end
+   opencode(prompt, function(output)
+      output = strip_fences(output)
 
-         local output = result.stdout or ""
-         output = strip_fences(output)
+      if output == "" then
+         vim.notify("AI returned an empty response", vim.log.levels.WARN, { title = "AI Commit" })
+         return
+      end
 
-         if output == "" then
-            vim.notify("AI returned an empty response", vim.log.levels.WARN, { title = "AI Commit" })
-            return
-         end
-
-         insert_message(output, bufnr)
-      end)
-   )
+      insert_message(output, bufnr)
+   end)
 end
 
 --- Setup the buffer-local :AICommit command.
