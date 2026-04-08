@@ -42,6 +42,7 @@ local ok, err = pcall(function()
    vim.cmd("packadd coop.nvim")
 
    vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
+   vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
    vim.opt.rtp:append("~/Plugins/obsidian.nvim")
    require("_obsidian")
 

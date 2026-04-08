@@ -77,7 +77,7 @@ local function generate(style, hint)
 
    vim.notify("Generating commit message...", vim.log.levels.INFO, { title = "AI Commit" })
 
-   opencode(prompt, function(output)
+   opencode(prompt, {}, function(output)
       output = strip_fences(output)
 
       if output == "" then

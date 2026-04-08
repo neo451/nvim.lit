@@ -1,6 +1,38 @@
 - [[archived]]
 - [[lib]]
 
+## carlos-algms/agentic.nvim
+
+```lua
+require("agentic").setup({
+   provider = "opencode-acp",
+})
+
+vim.keymap.set({ "n", "v", "i" }, "<leader>A", function()
+   require("agentic").toggle()
+end, { desc = "Toggle Agentic Chat" })
+
+vim.keymap.set({ "n", "v" }, "<leader>aa", function()
+   require("agentic").add_selection_or_file_to_context()
+end, { desc = "Add file or selection to Agentic to Context" })
+
+vim.keymap.set({ "n", "v", "i" }, "<leader>an", function()
+   require("agentic").new_session()
+end, { desc = "[N]ew Agentic Session" })
+
+vim.keymap.set({ "n", "v", "i" }, "<leader>as", function()
+   require("agentic").restore_session()
+end, { desc = "Agentic Restore session", silent = true })
+
+vim.keymap.set("n", "<leader>ad", function()
+   require("agentic").add_current_line_diagnostics()
+end, { desc = "Add current line diagnostic to Agentic" })
+
+vim.keymap.set("n", "<leader>aD", function()
+   require("agentic").add_buffer_diagnostics()
+end, { desc = "Add all buffer diagnostics to Agentic" })
+```
+
 ## nvim-lualine/lualine.nvim
 
 ```lua
@@ -16,6 +48,9 @@ require("lualine").setup({
             "g:obsidian_sync_status_icon",
             color = ok and sync.color or nil,
          },
+         {
+            "g:obsidian_spaced_repetition_status",
+         },
       },
    },
 })
@@ -28,41 +63,6 @@ require("lualine").setup({
 - cmd: `Nerdy`
 
 ## alex-popov-tech/store.nvim!
-
-## nickjvandyke/opencode.nvim
-
-```lua
--- vim.o.autoread = true -- Required for `opts.events.reload`
-
--- Recommended/example keymaps
-vim.keymap.set({ "n", "x" }, "<leader>ao", function()
-   require("opencode").ask("@this: ", { submit = true })
-end, { desc = "Ask opencode…" })
-vim.keymap.set({ "n", "x" }, "<leader>A", function()
-   require("opencode").select()
-end, { desc = "Execute opencode action…" })
-vim.keymap.set({ "n", "t" }, "<leader>oo", function()
-   require("opencode").toggle()
-end, { desc = "Toggle opencode" })
-
-vim.keymap.set({ "n", "x" }, "go", function()
-   return require("opencode").operator("@this ")
-end, { desc = "Add range to opencode", expr = true })
-vim.keymap.set("n", "goo", function()
-   return require("opencode").operator("@this ") .. "_"
-end, { desc = "Add line to opencode", expr = true })
-
-vim.keymap.set("n", "<S-C-u>", function()
-   require("opencode").command("session.half.page.up")
-end, { desc = "Scroll opencode up" })
-vim.keymap.set("n", "<S-C-d>", function()
-   require("opencode").command("session.half.page.down")
-end, { desc = "Scroll opencode down" })
-
--- You may want these if you use the opinionated `<C-a>` and `<C-x>` keymaps above — otherwise consider `<leader>o…` (and remove terminal mode from the `toggle` keymap)
-vim.keymap.set("n", "+", "<C-a>", { desc = "Increment under cursor", noremap = true })
-vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = true })
-```
 
 ## shortcuts/no-neck-pain.nvim
 

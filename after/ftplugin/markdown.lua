@@ -1,4 +1,7 @@
 local my_popup_group = vim.api.nvim_create_augroup("my_popup_group", {})
+local inline_refactor = require("inline_refactor")
+
+vim.keymap.set("n", "<leader>ai", inline_refactor.refactor, { desc = "Refactor code with AI" })
 
 local ts = vim.treesitter
 

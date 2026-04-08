@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "agentic.nvim": {
+      "rev": "5234e93013b86de0af54d9691b1781d9f2820e22",
+      "src": "https://github.com/carlos-algms/agentic.nvim.git"
+    },
     "blink-cmp-bibtex": {
       "rev": "06ee2cb476e79a8703cc2774a7a2e04d448c02aa",
       "src": "https://github.com/krissen/blink-cmp-bibtex.git"
@@ -105,10 +109,6 @@
     "oil.nvim": {
       "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
       "src": "https://github.com/stevearc/oil.nvim.git"
-    },
-    "opencode.nvim": {
-      "rev": "df533d6da724109bf08446392db860fdceddbd0c",
-      "src": "https://github.com/nickjvandyke/opencode.nvim.git"
     },
     "otter.nvim": {
       "rev": "a455e68a99d395889ab30a25ac3846a135e93c46",

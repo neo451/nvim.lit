@@ -42,6 +42,10 @@ require("obsidian.media-db").setup({
    },
 })
 
+require("obsidian.spaced-repetition").setup({
+   auto_next_note = true,
+})
+
 vim.ui.open = (function(overridden)
    return function(uri, opt)
       if vim.endswith(uri, ".pdf") then
@@ -238,9 +242,9 @@ obsidian.setup({
    frontmatter = {
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
-         if note.metadata and note.metadata.count then
+         if note.metadata and note.metadata.progress then
             local res = ut.count_checkbox(note)
-            out.count = string.format("%d/%d", res.done, res.total)
+            out.progress = string.format("%d/%d", res.done, res.total)
          end
          if vim.tbl_isempty(note.aliases) then
             out.aliases = nil
@@ -337,14 +341,14 @@ obsidian.setup({
       end,
       confirm_img_paste = true,
       folder = "./Attachments",
-      pick = function(callback)
-         Obsidian.picker.find_files({
-            dir = "~",
-            callback = function(path)
-               callback(path)
-            end,
-         })
-      end,
+      -- pick = function(callback)
+      --    Obsidian.picker.find_files({
+      --       dir = "~",
+      --       callback = function(path)
+      --          callback(path)
+      --       end,
+      --    })
+      -- end,
    },
 
    templates = {

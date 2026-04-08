@@ -28,7 +28,7 @@ local servers = {
    "qmlls",
    "pyright",
    "ts_ls",
-   "copilot",
+   -- "copilot",
    -- "markdown_oxide"
    -- "marksman",
    -- "mpls",
