@@ -1,5 +1,9 @@
 local obsidian = require("obsidian")
 
+vim.api.nvim_set_hl(0, "ObsidianSyncSynced", { fg = "#18e379", bold = true })
+vim.api.nvim_set_hl(0, "ObsidianSyncSyncing", { fg = "#e5c07b" })
+vim.api.nvim_set_hl(0, "ObsidianSyncPaused", { fg = "#61afef" })
+
 pcall(function()
    require("obsidian.lsp.watchfiles").register_handler(function(events, raw_changes)
       for _, event in ipairs(events) do
@@ -208,7 +212,7 @@ obsidian.setup({
 
          pcall(function()
             vim.keymap.set("n", "<leader>;", obsidian.api.add_property, { buffer = true })
-            vim.keymap.set("n", "<leader>S", actions.start_presentation, { buffer = true })
+            -- vim.keymap.set("n", "<leader>S", actions.start_presentation, { buffer = true })
          end)
 
          pcall(function()
@@ -359,6 +363,7 @@ obsidian.setup({
 
    unique_note = {
       folder = "Zettel",
+      template = "unique.md",
    },
 
    note = {

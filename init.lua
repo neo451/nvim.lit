@@ -46,7 +46,7 @@ require("autocmds")
 require("keymaps")
 
 _G.obsidian_statusline = function()
-   local s = vim.g.obsidian_sync_status or ""
+   local s = require("obsidian.sync.status").component()
    return s == "" and "" or (s .. " ")
 end
 

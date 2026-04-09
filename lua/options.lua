@@ -3,8 +3,7 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.node_host_prog = vim.fn.exepath("neovim-node-host")
 vim.g.mapleader = " "
--- vim.g.maplocalleader = "\\"
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = "\\"
 vim.loader.enable(true)
 
 local opt = vim.opt

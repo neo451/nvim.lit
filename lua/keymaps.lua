@@ -122,6 +122,7 @@ nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
 nmap_leader("O", "<cmd>Obsidian<cr>")
+nmap_leader("S", "<cmd>Obsidian sync<cr>")
 
 -- u for "Neovim UI and highlights"
 nmap_leader("ui", vim.show_pos, "Inspect Pos")

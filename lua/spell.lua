@@ -5,7 +5,7 @@ vim.api.nvim_create_user_command("Mkspell", function()
    -- local cmd = ("mkspell! " .. spellfile .. " " .. afffile)
    for spellfile in vim.gsplit(spellfiles, ",") do
       local cmd = ("mkspell! " .. spellfile)
-      vim.cmc(cmd)
+      vim.cmd(cmd)
    end
 end, {})
 
@@ -15,6 +15,22 @@ vim.api.nvim_create_user_command("Edspell", function()
 end, {})
 
 local H = {}
+
+function H.get_spell()
+   local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = vim.fn.mode() })
+   local results = {}
+   for _, line in ipairs(lines) do
+      while true do
+         local word, type = unpack(vim.fn.spellbadword(line))
+         if word == "" or type ~= "bad" then
+            break
+         end
+         results[#results + 1] = word
+         -- vim.cmd.spellgood(word)
+      end
+   end
+   return results
+end
 
 function H.spell_all_good()
    local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = vim.fn.mode() })

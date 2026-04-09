@@ -112,3 +112,6 @@ yves
 rebase
 unstage
 unstaged
+lualine
+frontend
+microservices
