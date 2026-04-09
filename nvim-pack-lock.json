@@ -166,6 +166,10 @@
       "rev": "cfb85dcf7f822b79224e9e6aef9e8c794211b20b",
       "src": "https://github.com/nvim-telescope/telescope.nvim.git"
     },
+    "tiny-cmdline.nvim": {
+      "rev": "13f083c732eee50c77ca5c5fafbcf573575d28ad",
+      "src": "https://github.com/rachartier/tiny-cmdline.nvim.git"
+    },
     "tiny-code-action.nvim": {
       "rev": "8e72efa075ba3154bbc4c7d1db532b03b4e68373",
       "src": "https://github.com/rachartier/tiny-code-action.nvim.git"

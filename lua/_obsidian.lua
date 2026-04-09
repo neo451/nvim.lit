@@ -264,6 +264,27 @@ obsidian.setup({
          end
          return out
       end,
+      ---@type fun(note: obsidian.Note): table<string, any>
+      func = function(note)
+         local out = {}
+         local has_metadata = note.metadata ~= nil and not vim.tbl_isempty(note.metadata)
+
+         if has_metadata then
+            for k, v in pairs(note.metadata) do
+               out[k] = v
+            end
+         end
+
+         vim.notify(string.format("exists ? %d", note:exists() and 1 or 0))
+
+         if not note:exists() and out["created"] == nil then
+            out.created = os.date("%Y-%m-%d")
+         end
+
+         out.last_modified = os.date("%Y-%m-%d")
+
+         return out
+      end,
       enabled = function(path)
          if tostring(path):find("draft") then
             return false
@@ -312,7 +333,7 @@ obsidian.setup({
    ui = { enable = false },
 
    checkbox = {
-      order = { "x", " " },
+      order = { " ", "x" },
       create_new = true,
    },
 

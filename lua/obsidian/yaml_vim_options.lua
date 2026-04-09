@@ -109,18 +109,22 @@ vim.api.nvim_create_autocmd("User", {
       if not note then
          return
       end
-      if vim.tbl_isempty(note.metadata) then
+      local metadata = note.metadata
+
+      if not metadata then
          return
       end
 
-      apply_frontmatter_words(note.metadata.words, bufnr)
-
-      local options = note.metadata.nvim
-      if not options or vim.tbl_isempty(options) then
+      if vim.tbl_isempty(metadata) then
          return
       end
-      for k, v in pairs(note.metadata.nvim) do
-         vim.o[k] = v
+
+      apply_frontmatter_words(metadata.words, bufnr)
+
+      for k, v in pairs(metadata) do
+         if vim.startswith(k, ".") then
+            vim.opt_local[k:sub(2)] = v
+         end
       end
    end,
 })

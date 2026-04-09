@@ -119,6 +119,7 @@ nmap_leader("qo", "<cmd>copen<cr>")
 
 nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
+nmap_leader("od", "<cmd>Obsidian today<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
 nmap_leader("O", "<cmd>Obsidian<cr>")

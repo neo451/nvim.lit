@@ -1,6 +1,8 @@
 - [[archived]]
 - [[lib]]
 
+## rachartier/tiny-cmdline.nvim!
+
 ## carlos-algms/agentic.nvim
 
 ```lua
