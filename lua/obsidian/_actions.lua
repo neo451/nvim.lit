@@ -1,6 +1,41 @@
 local obsidian = require("obsidian")
 local log = obsidian.log
 
+local function capture_to_daily(text, open)
+   -- TODO: select date
+   -- TODO: create date note
+   -- TODO: get headings note api
+
+   text = text or obsidian.api.input("Capture")
+
+   local daily = require("obsidian.daily")
+   local path = daily.daily_note_path(os.time())
+   local today_note = obsidian.Note.from_file(path)
+
+   vim.ui.select({
+      "Tasks",
+      "TIL",
+      "Entries",
+      "Wins",
+      "Gratitudes",
+   }, {}, function(choice)
+      if not choice then
+         log.info("Aborted")
+         return
+      end
+      today_note:insert_text(text, {
+         section = {
+            header = choice,
+            level = 2,
+            on_missing = "create",
+         },
+      })
+      if open then
+         today_note:open({ sync = true })
+      end
+   end)
+end
+
 local function delete_to_trash()
    local note = obsidian.api.current_note()
    if not note or not note.path then
@@ -126,4 +161,5 @@ end)
 
 return {
    extract_text = extract_text,
+   capture_to_daily = capture_to_daily,
 }

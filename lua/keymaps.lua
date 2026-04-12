@@ -150,13 +150,8 @@ nmap_leader("ba", "<Cmd>b#<CR>", "alternate")
 nmap_leader("bs", new_scratch_buffer, "scratch")
 set("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
--- nmap_leader("bd", "<Cmd>lua MiniBufremove.delete()<CR>", "Delete")
--- nmap_leader("bD", "<Cmd>lua MiniBufremove.delete(0, true)<CR>", "Delete!")
--- nmap_leader("bw", "<Cmd>lua MiniBufremove.wipeout()<CR>", "Wipeout")
--- nmap_leader("bW", "<Cmd>lua MiniBufremove.wipeout(0, true)<CR>", "Wipeout!")
 
 -- e is for 'Explore' and 'Edit'
-
 local explore_quickfix = function()
    for _, win_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
       if vim.fn.getwininfo(win_id).quickfix == 1 then
@@ -167,7 +162,7 @@ local explore_quickfix = function()
 end
 
 nmap_leader("ei", "<Cmd>edit $MYVIMRC<CR>", "init.lua")
-nmap_leader("ep", "<Cmd>edit ~/Vaults/Notes/nvim.md<cr>", "plugins")
+nmap_leader("ep", "<Cmd>edit ~/.config/nvim/init.md<cr>", "plugins")
 nmap_leader("eq", explore_quickfix, "quickfix")
 -- nmap_leader("ed", "<Cmd>lua MiniFiles.open()<CR>", "Directory")
 -- nmap_leader("ef", explore_at_file, "File directory")
@@ -196,6 +191,7 @@ set("n", "[t", ":tabprevious<CR>", { desc = "Previous tab", silent = true })
 nmap_leader("/", function()
    Snacks.picker.grep()
 end, "Grep")
+
 nmap_leader("ff", function()
    Snacks.picker.files()
 end, "Find files")
@@ -218,8 +214,6 @@ nmap_leader("un", function()
    Snacks.notifier.hide()
 end, "Hide Notifications")
 
--- stylua: ignore end
-
 set("n", "<leader>fp", function()
    Snacks.picker.projects()
 end, { desc = "Find Prject" })
@@ -241,14 +235,6 @@ set("n", "<leader>fp", function()
    Snacks.picker.projects()
 end, { desc = "Projects" })
 
-set("n", "<leader>sm", function()
-   Snacks.picker.marks()
-end, { desc = "Marks" })
-
-set("n", "<leader>gb", function()
-   Snacks.picker.git_branches()
-end, { desc = "Git branches" })
-
 set("n", "<leader>P", function()
-   Snacks.picker()
+   Snacks.picker({})
 end, { desc = "All pickers" })

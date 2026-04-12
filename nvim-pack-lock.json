@@ -97,6 +97,10 @@
       "rev": "a1d504892f2bc56c2e79b65c6faded2fd21f3eca",
       "src": "https://github.com/hrsh7th/nvim-cmp.git"
     },
+    "nvim-lsp-file-operations": {
+      "rev": "679cc6921a04d75748e22e2cf34e7c0c347f308c",
+      "src": "https://github.com/igorlfs/nvim-lsp-file-operations.git"
+    },
     "nvim-lspconfig": {
       "rev": "5492a24edd68f78d8a778edcb8905d0a28993abc",
       "src": "https://github.com/neovim/nvim-lspconfig.git"

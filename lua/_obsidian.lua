@@ -47,7 +47,7 @@ require("obsidian.media-db").setup({
 })
 
 require("obsidian.spaced-repetition").setup({
-   auto_next_note = true,
+   auto_next_note = false,
 })
 
 vim.ui.open = (function(overridden)
@@ -69,6 +69,10 @@ vim.filetype.add({
 })
 
 local workspaces = {
+   -- {
+   --    name = "zettel",
+   --    path = "~/Documents/Zettel/",
+   -- },
    {
       name = "notes",
       path = "~/Documents/Notes/",
@@ -103,6 +107,7 @@ local _actions = require("obsidian._actions")
 local ut = require("obsidian._utils")
 
 vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
+vim.keymap.set("n", "<leader>dc", _actions.capture_to_daily)
 
 ---@type table<string, obsidian.BacklinkMatch[]>
 local linked_mentions_cache = {}
@@ -136,6 +141,9 @@ local function sort_backlink_matches(matches)
 end
 
 obsidian.setup({
+   files = {
+      trash = "local",
+   },
    bookmarks = {
       group = true,
    },
@@ -262,27 +270,6 @@ obsidian.setup({
          if note.id == note.path.stem then
             out.id = nil
          end
-         return out
-      end,
-      ---@type fun(note: obsidian.Note): table<string, any>
-      func = function(note)
-         local out = {}
-         local has_metadata = note.metadata ~= nil and not vim.tbl_isempty(note.metadata)
-
-         if has_metadata then
-            for k, v in pairs(note.metadata) do
-               out[k] = v
-            end
-         end
-
-         vim.notify(string.format("exists ? %d", note:exists() and 1 or 0))
-
-         if not note:exists() and out["created"] == nil then
-            out.created = os.date("%Y-%m-%d")
-         end
-
-         out.last_modified = os.date("%Y-%m-%d")
-
          return out
       end,
       enabled = function(path)

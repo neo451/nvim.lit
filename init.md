@@ -1,13 +1,15 @@
 - [[archived]]
 - [[lib]]
 
+## igorlfs/nvim-lsp-file-operations!
+
 ## rachartier/tiny-cmdline.nvim!
 
 ## carlos-algms/agentic.nvim
 
 ```lua
 require("agentic").setup({
-   provider = "opencode-acp",
+   -- provider = "opencode-acp",
 })
 
 vim.keymap.set("n", "<localleader>A", function()
