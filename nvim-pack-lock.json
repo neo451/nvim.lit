@@ -4,10 +4,6 @@
       "rev": "5234e93013b86de0af54d9691b1781d9f2820e22",
       "src": "https://github.com/carlos-algms/agentic.nvim.git"
     },
-    "blink-cmp-bibtex": {
-      "rev": "06ee2cb476e79a8703cc2774a7a2e04d448c02aa",
-      "src": "https://github.com/krissen/blink-cmp-bibtex.git"
-    },
     "blink-cmp-words": {
       "rev": "d6a56f532a1826b4f3aeed4d5e2fe7b8743a9244",
       "src": "https://github.com/archie-judd/blink-cmp-words.git"
@@ -56,10 +52,6 @@
     "git-dashboard-nvim": {
       "rev": "c54fa2faf8ebe1c4091cc0c17c840835534943a6",
       "src": "https://github.com/juansalvatore/git-dashboard-nvim.git"
-    },
-    "kulala.nvim": {
-      "rev": "6656c9d332735ca6a27725e0fb45a1715c4372d9",
-      "src": "https://github.com/mistweaverco/kulala.nvim.git"
     },
     "lualine.nvim": {
       "rev": "8811f3f3f4dc09d740c67e9ce399e7a541e2e5b2",
@@ -142,10 +134,6 @@
       "rev": "156bec20c460d28cc4b78bf6a265ea45447d413f",
       "src": "https://github.com/noamsto/resolved.nvim.git"
     },
-    "snacks-bibtex.nvim": {
-      "rev": "6dbf6ffc9fed889765a0d9d95f404f9274a73b2d",
-      "src": "https://github.com/krissen/snacks-bibtex.nvim.git"
-    },
     "snacks.nvim": {
       "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
       "src": "https://github.com/folke/snacks.nvim.git"
@@ -157,10 +145,6 @@
     "sqlite.lua": {
       "rev": "50092d60feb242602d7578398c6eb53b4a8ffe7b",
       "src": "https://github.com/kkharji/sqlite.lua.git"
-    },
-    "store.nvim": {
-      "rev": "bd894bd538c013c04d2b5bdae4eb5c83d3d38758",
-      "src": "https://github.com/alex-popov-tech/store.nvim.git"
     },
     "super-kanban.nvim": {
       "rev": "fbddd3f48bf672dab1fc6ca26424f3a158623be9",
