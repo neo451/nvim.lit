@@ -1,3 +1,9 @@
+## xieyonn/spinner.nvim
+
+```lua
+require("spinner").setup({})
+```
+
 ## neovim/nvim-lspconfig
 
 ## hrsh7th/cmp-nvim-lsp

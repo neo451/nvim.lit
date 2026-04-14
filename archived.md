@@ -1,3 +1,33 @@
+## Bib
+
+### krissen/blink-cmp-bibtex
+
+- ft: `markdown`
+
+```lua
+require("blink-cmp-bibtex").setup({
+   filetypes = { "markdown" },
+   files = { vim.fn.expand("$REF") },
+})
+```
+
+### krissen/snacks-bibtex.nvim
+
+- ft: `markdown`
+
+```lua
+require("snacks-bibtex").setup({
+   global_files = {
+      vim.fn.expand("$REF"),
+   },
+})
+vim.keymap.set("n", "<leader>bc", function()
+   require("snacks-bibtex").bibtex()
+end, {
+   desc = "BibTeX citations (Snacks)",
+})
+```
+
 ## lewis6991/gitsigns.nvim
 
 ```lua

@@ -1,5 +1,11 @@
 local my_popup_group = vim.api.nvim_create_augroup("my_popup_group", {})
 
+vim.lsp.codelens.enable(true, { bufnr = 0 })
+
+vim.keymap.set("n", "<leader>cl", function()
+   vim.lsp.codelens.run({})
+end, { buf = 0 })
+
 local ts = vim.treesitter
 
 ---@param node_type string | string[]

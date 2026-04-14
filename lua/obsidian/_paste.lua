@@ -143,12 +143,12 @@ local function paste(lines)
 end
 
 return function()
-   vim.paste = (function(overridden)
-      return function(lines, phase)
-         if vim.b.obsidian_buffer and paste(lines) then
-            return
-         end
-         return overridden(lines, phase)
-      end
-   end)(vim.paste)
+   -- vim.paste = (function(overridden)
+   --    return function(lines, phase)
+   --       if vim.b.obsidian_buffer and paste(lines) then
+   --          return
+   --       end
+   --       return overridden(lines, phase)
+   --    end
+   -- end)(vim.paste)
 end

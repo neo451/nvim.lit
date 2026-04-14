@@ -66,17 +66,9 @@ require("lualine").setup({
 
 - cmd: `Nerdy`
 
-## alex-popov-tech/store.nvim!
-
 ## shortcuts/no-neck-pain.nvim
 
 ## quarto-dev/quarto-nvim
-
-## xieyonn/spinner.nvim
-
-```lua
-require("spinner").setup({})
-```
 
 ## jbuck95/recollect.nvim
 
@@ -180,47 +172,6 @@ vim.cmd.colorscheme("tokyonight")
 require("todo-comments").setup({})
 ```
 
-## mistweaverco/kulala.nvim
-
-- ft: `{ "http", "rest" }`
-- keys: `{ "<leader>Rs", "<leader>Ra", "<leader>Rb" }`
-
-```lua
-require("kulala").setup({
-   global_keymaps = true,
-})
-```
-
-## Bib
-
-### krissen/blink-cmp-bibtex
-
-- ft: `markdown`
-
-```lua
-require("blink-cmp-bibtex").setup({
-   filetypes = { "markdown" },
-   files = { vim.fn.expand("$REF") },
-})
-```
-
-### krissen/snacks-bibtex.nvim
-
-- ft: `markdown`
-
-```lua
-require("snacks-bibtex").setup({
-   global_files = {
-      vim.fn.expand("$REF"),
-   },
-})
-vim.keymap.set("n", "<leader>bc", function()
-   require("snacks-bibtex").bibtex()
-end, {
-   desc = "BibTeX citations (Snacks)",
-})
-```
-
 ## Markdown
 
 ### hasansujon786/super-kanban.nvim!
@@ -297,11 +248,7 @@ require("blink.cmp").setup({
          "buffer",
       },
       per_filetype = {
-         markdown = {
-            "bibtex",
-            -- "obsidian",
-            "dictionary",
-         },
+         markdown = { "bibtex", "dictionary" },
          sql = { "snippets", "dadbod", "buffer" },
       },
       providers = {
