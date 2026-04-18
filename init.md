@@ -1,7 +1,23 @@
 - [[archived]]
 - [[lib]]
 
-## igorlfs/nvim-lsp-file-operations!
+## nvzone/volt
+
+## nvzone/typr
+
+## nvim-neo-tree/neo-tree.nvim!
+
+## nvim-tree/nvim-tree.lua
+
+```lua
+require("nvim-tree").setup({})
+```
+
+## igorlfs/nvim-lsp-file-operations
+
+```lua
+require("lsp-file-operations").setup({})
+```
 
 ## rachartier/tiny-cmdline.nvim!
 
@@ -248,7 +264,7 @@ require("blink.cmp").setup({
          "buffer",
       },
       per_filetype = {
-         markdown = { "bibtex", "dictionary" },
+         markdown = { "dictionary" },
          sql = { "snippets", "dadbod", "buffer" },
       },
       providers = {
