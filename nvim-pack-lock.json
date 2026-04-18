@@ -53,9 +53,9 @@
       "rev": "c54fa2faf8ebe1c4091cc0c17c840835534943a6",
       "src": "https://github.com/juansalvatore/git-dashboard-nvim.git"
     },
-    "lualine.nvim": {
-      "rev": "a905eeebc4e63fdc48b5135d3bf8aea5618fb21c",
-      "src": "https://github.com/nvim-lualine/lualine.nvim.git"
+    "kulala.nvim": {
+      "rev": "6656c9d332735ca6a27725e0fb45a1715c4372d9",
+      "src": "https://github.com/mistweaverco/kulala.nvim.git"
     },
     "lz.n": {
       "rev": "232b3e981aee6f62405ac40342600ce4d1fe6a7f",
@@ -72,10 +72,6 @@
     "mini.nvim": {
       "rev": "418ef4930ddabe80f449c6f1323f8b6abb172d1c",
       "src": "https://github.com/nvim-mini/mini.nvim.git"
-    },
-    "neo-tree.nvim": {
-      "rev": "4d0828d95adaf4250c1373d2cd9318d3509712b7",
-      "src": "https://github.com/nvim-neo-tree/neo-tree.nvim.git"
     },
     "nerdy.nvim": {
       "rev": "97b0914dece80204a777f04c94b9980da0f7ac88",
@@ -100,10 +96,6 @@
     "nvim-lspconfig": {
       "rev": "4b7fbaa239c5db6b36f424a4521ca9f1a401be33",
       "src": "https://github.com/neovim/nvim-lspconfig.git"
-    },
-    "nvim-tree.lua": {
-      "rev": "d277467fc0d1d0e2bca88165a1de6b526f9f6fe8",
-      "src": "https://github.com/nvim-tree/nvim-tree.lua.git"
     },
     "nvim-treesitter": {
       "rev": "7caec274fd19c12b55902a5b795100d21531391f",

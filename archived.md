@@ -1,3 +1,34 @@
+## nvim-lualine/lualine.nvim
+
+```lua
+require("lualine").setup({
+   options = {
+      component_separators = "",
+      section_separators = "",
+   },
+   sections = {
+      lualine_x = {
+         {
+            require("obsidian.sync.status").icon,
+            color = require("obsidian.sync.status").color,
+            cond = require("obsidian.sync.status").cond,
+         },
+         {
+            "g:obsidian_spaced_repetition_status",
+         },
+      },
+   },
+})
+```
+
+## nvim-neo-tree/neo-tree.nvim!
+
+## nvim-tree/nvim-tree.lua
+
+```lua
+require("nvim-tree").setup({})
+```
+
 ## Bib
 
 ### krissen/blink-cmp-bibtex

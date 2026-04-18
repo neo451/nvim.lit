@@ -372,9 +372,9 @@ obsidian.setup({
    picker = {
       -- enabled = false,
       -- name = "mini.pick",
-      name = "snacks.pick",
+      -- name = "snacks.pick",
       -- name = "fzf-lua",
-      -- name = "telescope.nvim",
+      name = "telescope.nvim",
    },
 
    attachments = {

@@ -45,14 +45,4 @@ vim.lsp.inline_completion.enable()
 require("autocmds")
 require("keymaps")
 
-_G.obsidian_statusline = function()
-   local s = require("obsidian.sync.status").component()
-   return s == "" and "" or (s .. " ")
-end
-
-_G.rime_statusline = function()
-   local s = vim.g.rime_enabled and "ㄓ" or ""
-   return s == "" and "" or (s .. " ")
-end
-
-vim.o.statusline = "%<%f %h%m%r%=%{%v:lua.obsidian_statusline()%}%{%v:lua.rime_statusline()%}%-14.(%l,%c%V%) %P"
+vim.opt.statusline = "%!v:lua.require'ui.statusline'.render()"

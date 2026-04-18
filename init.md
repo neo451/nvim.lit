@@ -1,17 +1,20 @@
 - [[archived]]
 - [[lib]]
 
+## mistweaverco/kulala.nvim
+
+```lua
+require("kulala").setup({
+   global_keymaps = true,
+})
+-- vim.keymap.set("n",  "<leader>Rs", desc = "Send request" },
+-- { "<leader>Ra", desc = "Send all requests" },
+-- { "<leader>Rb", desc = "Open scratchpad" },
+```
+
 ## nvzone/volt
 
 ## nvzone/typr
-
-## nvim-neo-tree/neo-tree.nvim!
-
-## nvim-tree/nvim-tree.lua
-
-```lua
-require("nvim-tree").setup({})
-```
 
 ## igorlfs/nvim-lsp-file-operations
 
@@ -51,29 +54,6 @@ end, { desc = "Add current line diagnostic to Agentic" })
 vim.keymap.set("n", "<localleader>aD", function()
    require("agentic").add_buffer_diagnostics()
 end, { desc = "Add all buffer diagnostics to Agentic" })
-```
-
-## nvim-lualine/lualine.nvim
-
-```lua
-require("lualine").setup({
-   options = {
-      component_separators = "",
-      section_separators = "",
-   },
-   sections = {
-      lualine_x = {
-         {
-            require("obsidian.sync.status").icon,
-            color = require("obsidian.sync.status").color,
-            cond = require("obsidian.sync.status").cond,
-         },
-         {
-            "g:obsidian_spaced_repetition_status",
-         },
-      },
-   },
-})
 ```
 
 ## Utilities
