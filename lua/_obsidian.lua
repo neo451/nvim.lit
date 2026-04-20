@@ -20,35 +20,37 @@ pcall(function()
    end)
 end)
 
-require("obsidian.media-db").setup({
-   apis = {
-      omdb = { key = "debaf6f7" },
-      -- giant_bomb = { key = "0d3deb61eeed923a919def933ceeb4d168fa3f64" },
-      spotify = {
-         id = os.getenv("SPOTIFY_CLIENT_ID"),
-         secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
-      },
-      open_library = { enabled = false },
-      google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
-   },
-   media_types = {
-      movie = {
-         field_mappings = {
-            director = { format = "[[%s]]" },
-            actors = { format = "[[%s]]" },
-         },
-      },
-      musicRelease = {
-         field_mappings = {
-            artists = { format = "[[%s]]" },
-         },
-      },
-   },
-})
-
-require("obsidian.spaced-repetition").setup({
-   auto_next_note = false,
-})
+pcall(function()
+   -- require("obsidian.media-db").setup({
+   --    apis = {
+   --       omdb = { key = "debaf6f7" },
+   --       -- giant_bomb = { key = "0d3deb61eeed923a919def933ceeb4d168fa3f64" },
+   --       spotify = {
+   --          id = os.getenv("SPOTIFY_CLIENT_ID"),
+   --          secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
+   --       },
+   --       open_library = { enabled = false },
+   --       google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
+   --    },
+   --    media_types = {
+   --       movie = {
+   --          field_mappings = {
+   --             director = { format = "[[%s]]" },
+   --             actors = { format = "[[%s]]" },
+   --          },
+   --       },
+   --       musicRelease = {
+   --          field_mappings = {
+   --             artists = { format = "[[%s]]" },
+   --          },
+   --       },
+   --    },
+   -- })
+   --
+   -- require("obsidian.spaced-repetition").setup({
+   --    auto_next_note = true,
+   -- })
+end)
 
 vim.ui.open = (function(overridden)
    return function(uri, opt)
@@ -57,6 +59,8 @@ vim.ui.open = (function(overridden)
       end
       if obsidian.api.get_os() == "Wsl" then
          opt = { cmd = { "wsl-open" } }
+      else
+         opt = { cmd = { "zen-beta" } }
       end
       return overridden(uri, opt)
    end
@@ -81,10 +85,10 @@ local workspaces = {
       name = "blog",
       path = "~/quarto-blog/posts/",
    },
-   {
-      name = "config",
-      path = "~/.config/nvim/",
-   },
+   -- {
+   --    name = "config",
+   --    path = "~/.config/nvim/",
+   -- },
    -- {
    --    name = "auto",
    --    path = function()
@@ -220,6 +224,15 @@ obsidian.setup({
          if vim.b[note.bufnr].obsidian_help then
             vim.bo[note.bufnr].readonly = false
          end
+
+         local function set(mode, lhs, rhs)
+            vim.keymap.set(mode, lhs, rhs, { buffer = true })
+         end
+
+         pcall(function()
+            -- set("n", "<Tab>", actions.cycle_fold)
+            -- set("n", "<S-Tab>", actions.cycle_folds_global)
+         end)
 
          pcall(function()
             vim.keymap.set("n", "<leader>A", actions.add_attachment, { buffer = true })
@@ -372,9 +385,9 @@ obsidian.setup({
    picker = {
       -- enabled = false,
       -- name = "mini.pick",
-      -- name = "snacks.pick",
+      name = "snacks.pick",
       -- name = "fzf-lua",
-      name = "telescope.nvim",
+      -- name = "telescope.nvim",
    },
 
    attachments = {

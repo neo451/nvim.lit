@@ -1,3 +1,26 @@
+## arborist-ts/arborist.nvim!
+
+## MunifTanjim/nui.nvim
+
+- lazy: `true`
+
+## hasansujon786/super-kanban.nvim!
+
+## jbuck95/recollect.nvim
+
+## juansalvatore/git-dashboard-nvim
+
+## mistweaverco/kulala.nvim
+
+```lua
+require("kulala").setup({
+   global_keymaps = true,
+})
+-- vim.keymap.set("n",  "<leader>Rs", desc = "Send request" },
+-- { "<leader>Ra", desc = "Send all requests" },
+-- { "<leader>Rb", desc = "Open scratchpad" },
+```
+
 ## nvim-lualine/lualine.nvim
 
 ```lua
@@ -100,8 +123,6 @@ require("orgmode").setup({
 -- Experimental LSP support
 vim.lsp.enable("org")
 ```
-
-### OXY2DEV/markview.nvim
 
 ### mrcjkb/haskell-tools.nvim
 

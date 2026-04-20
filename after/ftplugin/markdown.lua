@@ -1,3 +1,11 @@
+require("render-markdown").setup({
+   html = {
+      comment = { conceal = false },
+   },
+})
+
+require("markdown-plus").setup({})
+
 local my_popup_group = vim.api.nvim_create_augroup("my_popup_group", {})
 
 vim.lsp.codelens.enable(true, { bufnr = 0 })
@@ -68,7 +76,9 @@ vim.api.nvim_create_autocmd("MenuPopup", {
 vim.wo.conceallevel = 1
 vim.cmd("setlocal spell")
 
-vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
+vim.wo.foldtext = "v:lua.vim.lsp.foldtext()"
 vim.wo.foldmethod = "expr"
 vim.wo.foldlevel = 99
 vim.cmd("norm zx")

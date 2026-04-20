@@ -2,14 +2,14 @@ require("qol.search")
 require("qol.easymotion")
 require("spell")
 
-vim.lsp.enable("my_hover_ls")
-
 -- require("quickfix")
 -- require("diy.fuzzy").enable(false)
 
 -- require("ob_git").setup({
 --    pull_on_startup = false,
 -- })
+
+require("babel").enable(true)
 
 vim.api.nvim_create_user_command("Sort", function(opts)
    if not tonumber(opts.args) then
@@ -21,47 +21,5 @@ vim.api.nvim_create_user_command("Sort", function(opts)
    local pattern = string.format("%ssort%s /^\\([^|]*|\\)\\{%s\\}/", range, bang, opts.args)
    vim.cmd(pattern)
 end, { nargs = 1, bang = true, range = true })
-
-require("vim._core.ui2").enable({
-   msg = {
-      targets = "msg",
-   },
-})
-
-require("babel").enable(true)
-
-local ok, err = pcall(function()
-   vim.cmd("packadd nvim-treesitter")
-   vim.cmd("packadd fzf-lua")
-   vim.cmd("packadd plenary.nvim")
-   vim.cmd("packadd snacks.nvim")
-   vim.cmd("packadd telescope.nvim")
-   vim.cmd("packadd blink.cmp")
-   vim.cmd("packadd nvim-cmp")
-   vim.cmd("packadd mini.nvim")
-   vim.cmd("packadd coop.nvim")
-
-   vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
-   vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
-   vim.opt.rtp:append("~/Plugins/obsidian.nvim")
-   require("_obsidian")
-
-   vim.opt.rtp:append("~/Plugins/feed.nvim/")
-   require("_feed")
-
-   vim.opt.rtp:append("~/Plugins/diy.nvim/")
-   vim.opt.rtp:append("~/Plugins/nldates.nvim/")
-   vim.opt.rtp:append("~/Plugins/templater.nvim/")
-   -- vim.opt.rtp:append("~/Plugins/dict-lsp.nvim/")
-   -- require("dict-lsp")
-   -- vim.opt.rtp:append("~/Plugins/obpilot/")
-   -- require("obpilot")
-   vim.opt.rtp:append("~/Plugins/calendar.nvim/")
-   vim.opt.rtp:append("~/Plugins/nvim-treesitter/")
-end)
-
-if not ok then
-   print(err)
-end
 
 -- require("dict-lsp")

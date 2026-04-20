@@ -92,7 +92,11 @@ local statusline_bufnr = function()
 end
 
 local obsidian_sync = function()
-   local s = require("obsidian.sync.status").component()
+   local ok, sync = pcall(require,"obsidian.sync.status")
+   if not ok then
+      return ""
+   end
+   local s = sync.component()
    return s == "" and "" or (s .. " ")
 end
 
