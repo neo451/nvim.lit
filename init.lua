@@ -185,10 +185,11 @@ require("lz.n").load({
    },
 })
 
+vim.opt.rtp:append("~/Plugins/obsidian.nvim")
+-- vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
+-- vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
+
 vim.schedule(function()
-   -- vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
-   -- vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
-   vim.opt.rtp:append("~/Plugins/obsidian.nvim")
    require("_obsidian")
 
    vim.cmd("packadd nvim.undotree")
@@ -197,6 +198,31 @@ vim.schedule(function()
    vim.cmd("packadd nohlsearch")
    vim.cmd("packadd cfilter")
 
+   vim.pack.add({
+      "https://github.com/xieyonn/spinner.nvim",
+      "https://github.com/gregorias/coop.nvim",
+      "https://github.com/nvim-telescope/telescope.nvim",
+      "https://github.com/ibhagwan/fzf-lua",
+      "https://github.com/neovim/nvim-lspconfig",
+      "https://github.com/nvim-lua/plenary.nvim",
+      "https://github.com/igorlfs/nvim-lsp-file-operations",
+   })
+
+   -- require("lsp-file-operations").setup({})
+   --
+   -- local lspconfig = require("lspconfig")
+   --
+   -- -- Set global defaults for all servers
+   -- lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
+   --    capabilities = vim.tbl_deep_extend(
+   --       "force",
+   --       vim.lsp.protocol.make_client_capabilities(),
+   --       -- returns configured operations if setup() was already called
+   --       -- or default operations if not
+   --       require("lsp-file-operations").default_capabilities()
+   --    ),
+   -- })
+
    -- vim.cmd("packadd coop.nvim")
    -- vim.opt.rtp:append("~/Plugins/feed.nvim/")
    -- require("_feed")
@@ -204,10 +230,10 @@ vim.schedule(function()
    -- vim.opt.rtp:append("~/Plugins/diy.nvim/")
    -- vim.opt.rtp:append("~/Plugins/nldates.nvim/")
    -- vim.opt.rtp:append("~/Plugins/templater.nvim/")
-   -- -- vim.opt.rtp:append("~/Plugins/dict-lsp.nvim/")
-   -- -- require("dict-lsp")
-   -- -- vim.opt.rtp:append("~/Plugins/obpilot/")
-   -- -- require("obpilot")
+   -- vim.opt.rtp:append("~/Plugins/dict-lsp.nvim/")
+   -- require("dict-lsp")
+   -- vim.opt.rtp:append("~/Plugins/obpilot/")
+   -- require("obpilot")
    -- vim.opt.rtp:append("~/Plugins/calendar.nvim/")
    -- vim.opt.rtp:append("~/Plugins/nvim-treesitter/")
 end)
@@ -217,7 +243,7 @@ require("experiments")
 
 local servers = {
    "rime_ls",
-   "emmylua_ls",
+   -- "emmylua_ls",
    "gopls",
    "nixd",
    "zls",
@@ -225,11 +251,10 @@ local servers = {
    "qmlls",
    "pyright",
    "ts_ls",
-   -- "lua_ls",
-   -- "copilot",
+   "copilot",
+   "lua_ls",
    -- "markdown_oxide"
    -- "marksman",
-   -- "mpls",
    -- "dummy_ls",
    -- "harper_ls",
 }
@@ -239,7 +264,6 @@ for _, name in ipairs(servers) do
 end
 
 --- TODO: lazy and other capabilities
-vim.lsp.inline_completion.enable()
 
 require("autocmds")
 require("keymaps")

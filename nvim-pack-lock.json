@@ -25,6 +25,10 @@
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim"
     },
+    "coop.nvim": {
+      "rev": "98760ee1a2f964454f2daef57eb80ec7df71f281",
+      "src": "https://github.com/gregorias/coop.nvim"
+    },
     "debugprint.nvim": {
       "rev": "01ff4d03e623243dc9302cdddc14b08bc2fbb7be",
       "src": "https://github.com/andrewferrier/debugprint.nvim"
@@ -32,6 +36,10 @@
     "friendly-snippets": {
       "rev": "6cd7280adead7f586db6fccbd15d2cac7e2188b9",
       "src": "https://github.com/rafamadriz/friendly-snippets"
+    },
+    "fzf-lua": {
+      "rev": "fcabe3cb7cfa6bd5148ffac0188997196401937d",
+      "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "jieba-lua": {
       "rev": "a99955a7c475d302221a441d9e5869d864a0818c",
@@ -65,6 +73,14 @@
       "rev": "4bc52782524fd50c5658685d584df6fa48fe49f9",
       "src": "https://github.com/shortcuts/no-neck-pain.nvim"
     },
+    "nvim-lsp-file-operations": {
+      "rev": "679cc6921a04d75748e22e2cf34e7c0c347f308c",
+      "src": "https://github.com/igorlfs/nvim-lsp-file-operations"
+    },
+    "nvim-lspconfig": {
+      "rev": "e05fb8c3bd61d909dacff24f77f23beb644daf54",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    },
     "nvim-treesitter": {
       "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
@@ -73,6 +89,10 @@
     "oil.nvim": {
       "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
       "src": "https://github.com/stevearc/oil.nvim"
+    },
+    "plenary.nvim": {
+      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "quarto-nvim": {
       "rev": "d923bb7cfc2bde41143e1c531c28190f0fade3a2",
@@ -94,9 +114,17 @@
       "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
       "src": "https://github.com/folke/snacks.nvim"
     },
+    "spinner.nvim": {
+      "rev": "d0ff69542de176963a4da68e55b6020c095296b4",
+      "src": "https://github.com/xieyonn/spinner.nvim"
+    },
     "sqlite.lua": {
       "rev": "50092d60feb242602d7578398c6eb53b4a8ffe7b",
       "src": "https://github.com/kkharji/sqlite.lua"
+    },
+    "telescope.nvim": {
+      "rev": "028d9a0695a0cc4cfa893889f8c408ed7ccc8adc",
+      "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "tiny-cmdline.nvim": {
       "rev": "ad58747b955d0743ccfd56e97da1a4c1fac89f58",

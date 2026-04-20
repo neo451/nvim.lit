@@ -89,5 +89,7 @@ return {
       vim.api.nvim_buf_create_user_command(bufnr, "LspCopilotSignOut", function()
          sign_out(bufnr, client)
       end, { desc = "Sign out Copilot with GitHub" })
+
+      vim.lsp.inline_completion.enable()
    end,
 }
