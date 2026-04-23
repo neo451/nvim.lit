@@ -64,6 +64,9 @@ vim.pack.add({
       src = "https://github.com/nvim-treesitter/nvim-treesitter",
       version = "main",
    },
+
+   -- image
+   "https://github.com/3rd/image.nvim",
 }, { load = selective_load })
 
 require("_snacks")
@@ -100,6 +103,13 @@ require("lz.n").load({
       end,
    },
    {
+      "jisho.nvim",
+      -- cmd = "Jisho",
+      after = function()
+         require("jisho").setup({})
+      end,
+   },
+   {
       "quicker.nvim",
       ft = "qf",
       after = function()
@@ -125,8 +135,6 @@ require("lz.n").load({
    },
    {
       "oil.nvim",
-      keys = { "-" },
-      cmd = "Oil",
       after = function()
          require("oil").setup({
             skip_confirm_for_simple_edits = true,
@@ -183,15 +191,21 @@ require("lz.n").load({
          require("codediff").setup({})
       end,
    },
+   {
+      "image.nvim",
+      after = function()
+         -- require("image").setup({})
+      end,
+   },
 })
 
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
--- vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
--- vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
+vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
+vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
+vim.opt.rtp:append("~/Plugins/irc.nvim")
+require("_obsidian")
 
 vim.schedule(function()
-   require("_obsidian")
-
    vim.cmd("packadd nvim.undotree")
    vim.cmd("packadd nvim.difftool")
    vim.cmd("packadd nvim.tohtml")
@@ -249,7 +263,8 @@ local servers = {
    "zls",
    "ts_ls",
    "qmlls",
-   "pyright",
+   -- "pyright",
+   "ruff",
    "ts_ls",
    "copilot",
    "lua_ls",

@@ -21,39 +21,54 @@ pcall(function()
 end)
 
 pcall(function()
-   -- require("obsidian.media-db").setup({
-   --    apis = {
-   --       omdb = { key = "debaf6f7" },
-   --       -- giant_bomb = { key = "0d3deb61eeed923a919def933ceeb4d168fa3f64" },
-   --       spotify = {
-   --          id = os.getenv("SPOTIFY_CLIENT_ID"),
-   --          secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
-   --       },
-   --       open_library = { enabled = false },
-   --       google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
-   --    },
-   --    media_types = {
-   --       movie = {
-   --          field_mappings = {
-   --             director = { format = "[[%s]]" },
-   --             actors = { format = "[[%s]]" },
-   --          },
-   --       },
-   --       musicRelease = {
-   --          field_mappings = {
-   --             artists = { format = "[[%s]]" },
-   --          },
-   --       },
-   --    },
-   -- })
-   --
-   -- require("obsidian.spaced-repetition").setup({
-   --    auto_next_note = true,
-   -- })
+   require("obsidian.media-db").setup({
+      apis = {
+         omdb = { key = "debaf6f7" },
+         -- giant_bomb = { key = "0d3deb61eeed923a919def933ceeb4d168fa3f64" },
+         spotify = {
+            id = os.getenv("SPOTIFY_CLIENT_ID"),
+            secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
+         },
+         open_library = { enabled = false },
+         google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
+      },
+      media_types = {
+         movie = {
+            field_mappings = {
+               director = { format = "[[%s]]" },
+               actors = { format = "[[%s]]" },
+            },
+         },
+         music = {
+            field_mappings = {
+               artists = { format = "[[%s]]" },
+            },
+         },
+      },
+   })
+
+   require("obsidian.spaced-repetition").setup({
+      auto_next_note = true,
+   })
 end)
+
+local handlers = {
+   jisho = function(uri)
+      local query = uri:gsub(vim.pesc("jisho://"), "")
+      vim.cmd("Jisho " .. query)
+   end,
+   man = function(uri)
+      local query = uri:gsub(vim.pesc("man://"), "")
+      vim.cmd("Man " .. query)
+   end,
+}
 
 vim.ui.open = (function(overridden)
    return function(uri, opt)
+      local ok, scheme = require("obsidian.util").is_uri(uri)
+      if ok and handlers[scheme] then
+         return handlers[scheme](uri)
+      end
       if vim.endswith(uri, ".pdf") then
          opt = { cmd = { "zathura" } } -- override open app
       end
@@ -229,6 +244,9 @@ obsidian.setup({
             vim.keymap.set(mode, lhs, rhs, { buffer = true })
          end
 
+         vim.keymap.set("x", "<leader>ol", actions.link_new, { desc = "Link new" })
+         vim.keymap.set("x", "<leader>oL", actions.link, { desc = "Link" })
+
          pcall(function()
             -- set("n", "<Tab>", actions.cycle_fold)
             -- set("n", "<S-Tab>", actions.cycle_folds_global)
@@ -371,6 +389,8 @@ obsidian.setup({
       use_advanced_uri = false,
       schemes = {
          "zotero",
+         "jisho",
+         "man",
       },
    },
 

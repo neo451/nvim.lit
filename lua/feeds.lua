@@ -32,6 +32,7 @@ return {
       "https://feeds.feedburner.com/ruanyifeng",
       "https://www.openmymind.net/atom.xml",
       "https://pawelgrzybek.com/feed.xml",
+      "https://news.ntppool.org/post/index.xml",
    },
    podcast = {
       "https://feeds.megaphone.fm/BVLLC2163264914",

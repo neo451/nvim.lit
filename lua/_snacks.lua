@@ -9,20 +9,19 @@ local function resovle_image(path, src)
    end
 
    if is_uri and scheme == "https" then
-      if cache[src] then
-         return cache[src]
-      end
-      local tmp = vim.fn.tempname() .. ".jpg" -- TODO: get suffix
-      local cmd = { "curl", "-L", "-o", tmp, src }
-      local result = vim.system(cmd):wait()
-      if result.code == 0 then
-         cache[src] = tmp
-         print(tmp)
-         return tmp
-      else
-         vim.notify("Failed to download image: " .. result.stderr, vim.log.levels.ERROR)
-         return nil
-      end
+      -- if cache[src] then
+      --    return cache[src]
+      -- end
+      -- local tmp = vim.fn.tempname() .. ".jpg" -- TODO: get suffix
+      -- local cmd = { "curl", "-L", "-o", tmp, src }
+      -- vim.system(cmd, {}, function(result)
+      --    if result.code == 0 then
+      --       cache[src] = tmp
+      --    else
+      --       vim.notify("Failed to download image: " .. result.stderr, vim.log.levels.ERROR)
+      --    end
+      -- end)
+      -- return tmp
    else
       return api.resolve_attachment_path(src)
    end

@@ -22,5 +22,6 @@ require("conform").setup({
       quarto = { "prettier" },
       qml = { "qmlformat" },
       json = { "jq" },
+      python = { "black" },
    },
 })

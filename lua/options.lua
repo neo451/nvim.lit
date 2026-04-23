@@ -3,7 +3,7 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.node_host_prog = vim.fn.exepath("neovim-node-host")
 vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+vim.g.maplocalleader = ","
 vim.loader.enable(true)
 
 local opt = vim.opt
@@ -77,7 +77,7 @@ vim.g.spell_aff = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.a
 vim.cmd([[set completeopt+=menuone,noselect,popup]])
 
 vim.diagnostic.config({
-   -- virtual_lines = true,
+   virtual_lines = true,
    virtual_text = true,
    signs = {
       text = {
