@@ -6,6 +6,8 @@ require("render-markdown").setup({
 
 require("markdown-plus").setup({})
 
+vim.wo.conceallevel = 3
+
 local my_popup_group = vim.api.nvim_create_augroup("my_popup_group", {})
 
 vim.lsp.codelens.enable(true, { bufnr = 0 })
@@ -108,38 +110,3 @@ local H = require("spell")
 
 vim.keymap.set("x", "zg", H.spell_all_good, { buffer = true })
 vim.keymap.set("n", "zg", H.enhanced_spell_good, { buffer = true })
-
--- Markdown link. Common usage:
--- `saiwL` + [type/paste link] + <CR> - add link
--- `sdL` - delete link
--- `srLL` + [type/paste link] + <CR> - replace link
-vim.b.minisurround_config = {
-   custom_surroundings = {
-      L = {
-         input = { "%[().-()%]%(.-%)" },
-         output = function()
-            local clipboard = vim.fn.getreg("+")
-            local link
-            if clipboard:find("^([%a][%w+%-%.]*):(.*)$") then
-               link = clipboard
-            else
-               link = require("mini.surround").user_input("Link")
-            end
-            if not link then
-               return
-            end
-            return { left = "[", right = "](" .. link .. ")" }
-         end,
-      },
-      l = {
-         input = { "%[().-()%]%(.-%)" },
-         output = function()
-            local name = require("mini.surround").user_input("Name")
-            if not name then
-               return
-            end
-            return { left = "[" .. name .. "](", right = ")" }
-         end,
-      },
-   },
-}

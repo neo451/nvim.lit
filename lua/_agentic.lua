@@ -1,12 +1,12 @@
 require("agentic").setup({
-   -- provider = "opencode-acp",
+   provider = "pi-acp",
 })
 
 vim.keymap.set("n", "<localleader>A", function()
    require("agentic").toggle()
 end, { desc = "Toggle Agentic Chat" })
 
-vim.keymap.set({ "n", "v" }, "<localleader>aa", function()
+vim.keymap.set({ "n", "x" }, "<localleader>aa", function()
    require("agentic").add_selection_or_file_to_context()
 end, { desc = "Add file or selection to Agentic to Context" })
 

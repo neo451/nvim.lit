@@ -4,6 +4,17 @@ vim.api.nvim_set_hl(0, "ObsidianSyncSynced", { fg = "#18e379", bold = true })
 vim.api.nvim_set_hl(0, "ObsidianSyncSyncing", { fg = "#e5c07b" })
 vim.api.nvim_set_hl(0, "ObsidianSyncPaused", { fg = "#61afef" })
 
+local buf = vim.api.nvim_get_current_buf()
+
+vim.lsp.semantic_tokens.enable(true, { bufnr = buf })
+
+require("obsidian-cite").setup({
+   source = {
+      type = "better-bibtex-json",
+      path = "~/My Library.json",
+   },
+})
+
 pcall(function()
    require("obsidian.lsp.watchfiles").register_handler(function(events, raw_changes)
       for _, event in ipairs(events) do
@@ -61,13 +72,19 @@ local handlers = {
       local query = uri:gsub(vim.pesc("man://"), "")
       vim.cmd("Man " .. query)
    end,
+   rfc = function(uri, overridden)
+      local rfc_number = uri:gsub(vim.pesc("rfc://"), "")
+      rfc_number = tonumber(rfc_number)
+      local url = "https://www.rfc-editor.org/rfc/rfc" .. rfc_number .. ".txt"
+      overridden(url, { cmd = { "zen-beta" } })
+   end,
 }
 
 vim.ui.open = (function(overridden)
    return function(uri, opt)
       local ok, scheme = require("obsidian.util").is_uri(uri)
       if ok and handlers[scheme] then
-         return handlers[scheme](uri)
+         return handlers[scheme](uri, overridden)
       end
       if vim.endswith(uri, ".pdf") then
          opt = { cmd = { "zathura" } } -- override open app
@@ -196,8 +213,21 @@ obsidian.setup({
    bookmarks = {
       group = true,
    },
+   cache = {
+      enabled = true,
+      backend = "memory",
+      ignore_patterns = {
+         "^%.agents/",
+         "^Archived/",
+      },
+   },
 
-   sync = { enabled = true },
+   sync = {
+      -- backend = "git",
+      -- backend = "rclone",
+      trigger = "on_write",
+      enabled = true,
+   },
 
    footer = {
       format = "{{status}}\n{{linked_mentions}}",
@@ -226,6 +256,10 @@ obsidian.setup({
 
    completion = {
       min_chars = 2,
+   },
+
+   backlinks = {
+      parse_headers = true,
    },
 
    callbacks = {
@@ -265,7 +299,7 @@ obsidian.setup({
          end)
 
          pcall(function()
-            vim.keymap.set("n", "<leader>xt", _actions.extract_text, { buffer = true })
+            vim.keymap.set("n", "<leader>xt", _actions.process_image, { buffer = true })
          end)
 
          -- vim.keymap.set("n", "<Tab>", actions.cycal_global_headings, { buffer = true })
@@ -313,6 +347,7 @@ obsidian.setup({
    },
 
    frontmatter = {
+      enabled = false,
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
          if note.metadata and note.metadata.progress then
@@ -333,20 +368,20 @@ obsidian.setup({
          end
          return out
       end,
-      enabled = function(path)
-         if tostring(path):find("draft") then
-            return false
-         end
-         if vim.endswith(tostring(path), ".qmd") then
-            return false
-         end
-
-         if Obsidian.workspace.name == "wiki" then
-            return false
-         end
-
-         return true
-      end,
+      -- enabled = function(path)
+      --    if tostring(path):find("draft") then
+      --       return false
+      --    end
+      --    if vim.endswith(tostring(path), ".qmd") then
+      --       return false
+      --    end
+      --
+      --    if Obsidian.workspace.name == "wiki" then
+      --       return false
+      --    end
+      --
+      --    return true
+      -- end,
    },
 
    -- lsp = {
@@ -364,6 +399,7 @@ obsidian.setup({
    legacy_commands = false,
 
    link = {
+      resolve = "strict",
       format = "shortest",
       -- format = "absolute",
       -- format = "relative",
@@ -391,6 +427,7 @@ obsidian.setup({
          "zotero",
          "jisho",
          "man",
+         "rfc",
       },
    },
 

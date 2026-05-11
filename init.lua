@@ -25,7 +25,7 @@ vim.pack.add({
       version = vim.version.range("1.*"),
    },
    "https://github.com/nvim-mini/mini.nvim",
-   "https://github.com/carlos-algms/agentic.nvim",
+   -- "https://github.com/carlos-algms/agentic.nvim",
    "https://github.com/stevearc/quicker.nvim",
    "https://github.com/stevearc/conform.nvim",
    "https://github.com/stevearc/oil.nvim",
@@ -35,6 +35,8 @@ vim.pack.add({
    "https://github.com/MeanderingProgrammer/render-markdown.nvim",
    "https://github.com/YousefHadder/markdown-plus.nvim",
    "https://github.com/quarto-dev/quarto-nvim",
+
+   -- "https://github.com/jalvesaq/zotcite",
 
    -- language
    "https://github.com/atusy/budoux.lua",
@@ -67,11 +69,17 @@ vim.pack.add({
 
    -- image
    "https://github.com/3rd/image.nvim",
+
+   -- lib
+   "https://github.com/gregorias/coop.nvim",
+   "https://github.com/ibhagwan/fzf-lua",
 }, { load = selective_load })
 
 require("_snacks")
 require("_mini")
 require("_treesitter")
+
+vim.opt.rtp:append("~/Plugins/agentic.nvim/")
 
 require("lz.n").load({
    {
@@ -202,8 +210,13 @@ require("lz.n").load({
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
 vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
+vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
 vim.opt.rtp:append("~/Plugins/irc.nvim")
 require("_obsidian")
+
+vim.opt.rtp:append("~/Plugins/feed.nvim/")
+-- vim.cmd.packadd("feed.nvim")
+require("_feed")
 
 vim.schedule(function()
    vim.cmd("packadd nvim.undotree")
@@ -214,9 +227,7 @@ vim.schedule(function()
 
    vim.pack.add({
       "https://github.com/xieyonn/spinner.nvim",
-      "https://github.com/gregorias/coop.nvim",
       "https://github.com/nvim-telescope/telescope.nvim",
-      "https://github.com/ibhagwan/fzf-lua",
       "https://github.com/neovim/nvim-lspconfig",
       "https://github.com/nvim-lua/plenary.nvim",
       "https://github.com/igorlfs/nvim-lsp-file-operations",
@@ -238,8 +249,6 @@ vim.schedule(function()
    -- })
 
    -- vim.cmd("packadd coop.nvim")
-   -- vim.opt.rtp:append("~/Plugins/feed.nvim/")
-   -- require("_feed")
 
    -- vim.opt.rtp:append("~/Plugins/diy.nvim/")
    -- vim.opt.rtp:append("~/Plugins/nldates.nvim/")

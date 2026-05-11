@@ -92,7 +92,7 @@ local statusline_bufnr = function()
 end
 
 local obsidian_sync = function()
-   local ok, sync = pcall(require,"obsidian.sync.status")
+   local ok, sync = pcall(require, "obsidian.sync.status")
    if not ok then
       return ""
    end
@@ -110,6 +110,46 @@ local obsidian_status = function()
       return ""
    end
    return s
+end
+
+local daily_cache = { path = nil, mtime = -1, text = "" }
+
+local obsidian_daily = function()
+   local ok_d, daily = pcall(require, "obsidian.daily")
+   if not ok_d then
+      return ""
+   end
+   local ok_p, path = pcall(daily.daily_note_path)
+   if not ok_p then
+      return ""
+   end
+   local fname = tostring(path)
+   local stat = vim.uv.fs_stat(fname)
+   local mtime = stat and stat.mtime.sec or 0
+   if daily_cache.path == fname and daily_cache.mtime == mtime then
+      return daily_cache.text
+   end
+   local text = ""
+   if stat then
+      local Note = require("obsidian").Note
+      local ok_n, note = pcall(Note.from_file, path)
+      if ok_n and note then
+         local res = require("obsidian._utils").count_checkbox(note)
+         if res.total > 0 then
+            text = string.format("Daily: %d/%d ", res.done, res.total)
+         end
+      end
+   end
+   daily_cache.path, daily_cache.mtime, daily_cache.text = fname, mtime, text
+   return text
+end
+
+--- The buffer's filetype.
+---@return string?
+local file_component = function()
+   local buf_path = vim.api.nvim_buf_get_name(0)
+   local buf_tail = vim.fn.fnamemodify(buf_path, ":t")
+   return " " .. buf_tail
 end
 
 local rime_statusline = function()
@@ -160,8 +200,10 @@ return {
       return table.concat({
          mode_component(),
          diff_component(),
+         file_component(),
          "%=",
          diagnostic_component(),
+         obsidian_daily(),
          obsidian_status(),
          obsidian_sync(),
          rime_statusline(),

@@ -33,12 +33,7 @@ require("snacks").setup({
    image = {
       enabled = vim.fn.executable("convert") == 1,
       resolve = resovle_image,
-      -- wo = { winhighlight = "FloatBorder:WhichKeyBorder" },
-      doc = {
-         inline = true,
-         max_width = 45,
-         max_height = 20,
-      },
+      wo = { winhighlight = "FloatBorder:WhichKeyBorder" },
    },
    input = { enabled = true },
    picker = { enabled = true },

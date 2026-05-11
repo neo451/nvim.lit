@@ -42,9 +42,10 @@ local id_c = 1
 
 local function update_dues(buf)
    local path = vim.api.nvim_buf_get_name(buf)
-   if not vim.endswith(path, "TODO.md") then
-      return
-   end
+   -- TODO:
+   -- if not vim.endswith(path, "TODO.md") then
+   --    return
+   -- end
    local ok, note = pcall(obsidian.Note.from_buffer, buf)
    if not ok then
       return
