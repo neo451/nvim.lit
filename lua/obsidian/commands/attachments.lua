@@ -11,9 +11,7 @@ return function()
          for p, type in vim.fs.dir(tostring(attachment_dir)) do
             if type == "file" then
                local path = tostring(attachment_dir / p)
-               attachments[#attachments + 1] = {
-                  filename = path,
-               }
+               attachments[#attachments + 1] = path
             end
          end
       end
@@ -27,5 +25,23 @@ return function()
    end
    walk(Obsidian.dir)
 
-   picker.pick(attachments)
+   vim.ui.select(attachments, {
+      format_item = function(item)
+         return vim.fs.basename(item)
+      end,
+      preview_item = function(item)
+         -- local buf = vim.api.nvim_create_buf(false, true)
+         local buf = vim.fn.bufadd(item)
+         vim.fn.bufload(buf)
+         vim.bo[buf].buflisted = false
+
+         return { buf = buf }
+      end,
+   }, function(item, idx)
+      if not item then
+         return
+      end
+   end)
+
+   -- picker.pick(attachments)
 end

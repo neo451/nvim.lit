@@ -54,25 +54,26 @@ local function update_dues(buf)
       local line = link_match.line - 1
       local loc = obsidian.util.parse_link(link_match.link)
       if loc then
-         local notes = obsidian.search.resolve_note(loc)
-         if #notes == 1 then
-            local ref = notes[1]
-            local text
-
-            if ref.metadata.due then
-               text = "Due: " .. ref.metadata.due
-            elseif ref.metadata.from and ref.metadata.to then
-               text = "From: " .. ref.metadata.from .. " To: " .. ref.metadata.to
-            end
-            if text then
-               local id = display_result(buf, line, text, id_c)
-               if id then
-                  id_c = id_c + 1
-               end
-            end
-         else
-            -- obsidian.log.info("failed to resolve note link")
-         end
+         -- obsidian.search.resolve_note_async(loc, function(notes)
+         --    if #notes == 1 then
+         --       local ref = notes[1]
+         --       local text
+         --
+         --       if ref.metadata.due then
+         --          text = "Due: " .. ref.metadata.due
+         --       elseif ref.metadata.from and ref.metadata.to then
+         --          text = "From: " .. ref.metadata.from .. " To: " .. ref.metadata.to
+         --       end
+         --       if text then
+         --          local id = display_result(buf, line, text, id_c)
+         --          if id then
+         --             id_c = id_c + 1
+         --          end
+         --       end
+         --    else
+         --       -- obsidian.log.info("failed to resolve note link")
+         --    end
+         -- end)
       end
    end
 end

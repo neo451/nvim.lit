@@ -16,7 +16,15 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 vim.api.nvim_create_autocmd("TextYankPost", {
    group = augroup("highlight_yank"),
    callback = function()
-      (vim.hl or vim.highlight).on_yank()
+      vim.hl.hl_op({ higroup = "Visual", timeout = 300 })
+   end,
+})
+
+-- Highlight on put
+vim.api.nvim_create_autocmd("TextPutPost", {
+   group = augroup("highlight_put"),
+   callback = function()
+      vim.hl.hl_op({ higroup = "Visual", timeout = 300 })
    end,
 })
 

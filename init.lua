@@ -25,7 +25,7 @@ vim.pack.add({
       version = vim.version.range("1.*"),
    },
    "https://github.com/nvim-mini/mini.nvim",
-   -- "https://github.com/carlos-algms/agentic.nvim",
+   "https://github.com/carlos-algms/agentic.nvim",
    "https://github.com/stevearc/quicker.nvim",
    "https://github.com/stevearc/conform.nvim",
    "https://github.com/stevearc/oil.nvim",
@@ -73,13 +73,16 @@ vim.pack.add({
    -- lib
    "https://github.com/gregorias/coop.nvim",
    "https://github.com/ibhagwan/fzf-lua",
+
+   -- jj
+   "https://github.com/NicholasZolton/neojj",
+
+   "https://github.com/glacambre/firenvim",
 }, { load = selective_load })
 
 require("_snacks")
 require("_mini")
 require("_treesitter")
-
-vim.opt.rtp:append("~/Plugins/agentic.nvim/")
 
 require("lz.n").load({
    {

@@ -1,6 +1,7 @@
 local set = vim.keymap.set
 
 set("i", "jk", "<esc>l")
+vim.keymap.set("n", "<leader>dc", require("obsidian._actions").capture_to_daily)
 
 -- super help docs everywhere
 set("n", "vK", "<C-\\><C-N><Cmd>help!<CR>")
@@ -26,7 +27,7 @@ set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr =
 set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 set({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 
-set("n", "<C-S-;>", require("qol.search").query_browser, { remap = true })
+set({ "n", "x" }, "<C-S-;>", require("qol.search").query_browser, { remap = true })
 
 -- mini version control!
 set("n", "ycc", function()

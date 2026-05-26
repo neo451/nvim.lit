@@ -23,7 +23,7 @@ local function capture_to_daily(text, open)
          log.info("Aborted")
          return
       end
-      today_note:insert_text(text, {
+      today_note:insert_text("- " .. text, {
          section = {
             header = choice,
             level = 2,
@@ -116,11 +116,6 @@ pcall(function()
       name = "process_image",
       title = "Process image (extract text, describe, or custom)",
       fn = process_image,
-   })
-
-   require("obsidian").code_action.add({
-      name = "add_attachment",
-      title = "Add attachment from folder, filepath or url",
    })
 end)
 

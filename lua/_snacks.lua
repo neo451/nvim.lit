@@ -36,7 +36,7 @@ require("snacks").setup({
       wo = { winhighlight = "FloatBorder:WhichKeyBorder" },
    },
    input = { enabled = true },
-   picker = { enabled = true },
+   -- picker = { enabled = true },
    statuscolumn = { enabled = true },
    styles = {
       notification = {

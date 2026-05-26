@@ -1,5 +1,6 @@
 require("agentic").setup({
    provider = "pi-acp",
+   -- provider = "codex-acp",
 })
 
 vim.keymap.set("n", "<localleader>A", function()

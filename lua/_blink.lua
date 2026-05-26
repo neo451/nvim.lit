@@ -23,7 +23,10 @@ require("blink.cmp").setup({
          "buffer",
       },
       per_filetype = {
-         markdown = { "dictionary" },
+         markdown = {
+            inherit_defaults = true,
+            "dictionary",
+         },
          sql = { "snippets", "dadbod", "buffer" },
       },
       providers = {

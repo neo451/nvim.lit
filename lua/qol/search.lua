@@ -35,20 +35,28 @@ local function _query_browser(input)
 end
 
 local function query_browser(input)
-   if not input then
-      vim.ui.input({
-         prompt = "Search: ",
-         default = vim.fn.expand("<cWORD>"),
-      }, function(i)
-         if i then
-            _query_browser(i)
-         else
-            vim.notify("Aborted")
-         end
-      end)
-   else
+   if input then
       return _query_browser(input)
    end
+   local viz = require("obsidian.api").get_visual_selection()
+
+   local default = nil
+   if viz then
+      default = viz.selection
+   else
+      default = vim.fn.expand("<cWORD>")
+   end
+
+   vim.ui.input({
+      prompt = "Search: ",
+      default = default,
+   }, function(i)
+      if i then
+         _query_browser(i)
+      else
+         vim.notify("Aborted")
+      end
+   end)
 end
 
 return {

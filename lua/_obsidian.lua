@@ -1,9 +1,4 @@
 local obsidian = require("obsidian")
-
-vim.api.nvim_set_hl(0, "ObsidianSyncSynced", { fg = "#18e379", bold = true })
-vim.api.nvim_set_hl(0, "ObsidianSyncSyncing", { fg = "#e5c07b" })
-vim.api.nvim_set_hl(0, "ObsidianSyncPaused", { fg = "#61afef" })
-
 local buf = vim.api.nvim_get_current_buf()
 
 vim.lsp.semantic_tokens.enable(true, { bufnr = buf })
@@ -117,6 +112,10 @@ local workspaces = {
       name = "blog",
       path = "~/quarto-blog/posts/",
    },
+   {
+      name = "skills",
+      path = "~/.agents/skills/",
+   },
    -- {
    --    name = "config",
    --    path = "~/.config/nvim/",
@@ -139,41 +138,11 @@ local workspaces = {
 
 require("obsidian.due_display")
 require("obsidian.yaml_vim_options")
+require("obsidian.yazi_attachment")
 local _actions = require("obsidian._actions")
 local ut = require("obsidian._utils")
 
 vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
-vim.keymap.set("n", "<leader>dc", _actions.capture_to_daily)
-
-local yazi_attachment_select = function()
-   local tmp = vim.fn.tempname()
-   local buf = vim.api.nvim_create_buf(false, true)
-   local width = math.floor(vim.o.columns * 0.8)
-   local height = math.floor(vim.o.lines * 0.8)
-   local win = vim.api.nvim_open_win(buf, true, {
-      relative = "editor",
-      row = math.floor((vim.o.lines - height) / 2),
-      col = math.floor((vim.o.columns - width) / 2),
-      width = width,
-      height = height,
-      style = "minimal",
-      border = "rounded",
-   })
-   vim.fn.jobstart({ "yazi", "--chooser-file=" .. tmp }, {
-      term = true,
-      on_exit = function()
-         vim.api.nvim_win_close(win, true)
-         vim.api.nvim_buf_delete(buf, { force = true })
-         if vim.uv.fs_stat(tmp) then
-            local lines = vim.fn.readfile(tmp)
-            if lines[1] then
-               require("obsidian.attachment").add(lines[1])
-            end
-         end
-      end,
-   })
-   vim.cmd("startinsert")
-end
 
 ---@type table<string, obsidian.BacklinkMatch[]>
 local linked_mentions_cache = {}
@@ -223,6 +192,7 @@ obsidian.setup({
    },
 
    sync = {
+      enabled = false,
       -- backend = "git",
       -- backend = "rclone",
       trigger = "on_write",
@@ -313,6 +283,17 @@ obsidian.setup({
             end
          end, { buffer = true, expr = true })
 
+         local paste_from_path = function()
+            local path = vim.fn.getreg("+")
+            path = vim.trim(path)
+            -- TODO: check looks like a path
+            vim.schedule(function()
+               require("obsidian.attachment").add(path, { insert = true })
+            end)
+         end
+
+         vim.keymap.set("n", "<leader><leader>p", paste_from_path, { buffer = true, expr = true })
+
          pcall(function()
             vim.keymap.set("n", "<leader>;", obsidian.api.add_property, { buffer = true })
             -- vim.keymap.set("n", "<leader>S", actions.start_presentation, { buffer = true })
@@ -347,7 +328,6 @@ obsidian.setup({
    },
 
    frontmatter = {
-      enabled = false,
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
          if note.metadata and note.metadata.progress then
@@ -368,20 +348,20 @@ obsidian.setup({
          end
          return out
       end,
-      -- enabled = function(path)
-      --    if tostring(path):find("draft") then
-      --       return false
-      --    end
-      --    if vim.endswith(tostring(path), ".qmd") then
-      --       return false
-      --    end
-      --
-      --    if Obsidian.workspace.name == "wiki" then
-      --       return false
-      --    end
-      --
-      --    return true
-      -- end,
+      enabled = function(path)
+         if tostring(path):find("draft") then
+            return false
+         end
+         if vim.endswith(tostring(path), ".qmd") then
+            return false
+         end
+
+         if Obsidian.workspace.name == "wiki" then
+            return false
+         end
+
+         return true
+      end,
    },
 
    -- lsp = {
@@ -453,7 +433,6 @@ obsidian.setup({
       end,
       confirm_img_paste = true,
       folder = "./Attachments",
-      -- resolve = yazi_attachment_select,
    },
 
    templates = {
