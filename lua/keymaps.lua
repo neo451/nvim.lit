@@ -20,7 +20,7 @@ set("n", "gra", function()
    end
 end)
 
-set("n", "<C-n>", "<cmd>Obsidian media_search<cr>", { desc = "New Media DB Entry" })
+set("n", "<C-n>", require("obsidian._media").search, { desc = "New Media DB Entry" })
 
 set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })

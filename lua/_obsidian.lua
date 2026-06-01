@@ -3,12 +3,14 @@ local buf = vim.api.nvim_get_current_buf()
 
 vim.lsp.semantic_tokens.enable(true, { bufnr = buf })
 
-require("obsidian-cite").setup({
-   source = {
-      type = "better-bibtex-json",
-      path = "~/My Library.json",
-   },
-})
+pcall(function()
+   require("obsidian-cite").setup({
+      source = {
+         type = "better-bibtex-json",
+         path = "~/My Library.json",
+      },
+   })
+end)
 
 pcall(function()
    require("obsidian.lsp.watchfiles").register_handler(function(events, raw_changes)
@@ -27,35 +29,47 @@ pcall(function()
 end)
 
 pcall(function()
-   require("obsidian.media-db").setup({
-      apis = {
-         omdb = { key = "debaf6f7" },
-         -- giant_bomb = { key = "0d3deb61eeed923a919def933ceeb4d168fa3f64" },
-         spotify = {
-            id = os.getenv("SPOTIFY_CLIENT_ID"),
-            secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
-         },
-         open_library = { enabled = false },
-         google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
-      },
-      media_types = {
-         movie = {
-            field_mappings = {
-               director = { format = "[[%s]]" },
-               actors = { format = "[[%s]]" },
-            },
-         },
-         music = {
-            field_mappings = {
-               artists = { format = "[[%s]]" },
-            },
-         },
-      },
-   })
-
    require("obsidian.spaced-repetition").setup({
       auto_next_note = true,
    })
+end)
+
+local mediaDB = require("obsidian.media-db")
+mediaDB.setup({
+   apis = {
+      omdb = { key = "debaf6f7" },
+      -- giant_bomb = { key = "0d3deb61eeed923a919def933ceeb4d168fa3f64" },
+      spotify = {
+         id = os.getenv("SPOTIFY_CLIENT_ID"),
+         secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
+      },
+      open_library = { enabled = false },
+      google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
+   },
+   media_types = {
+      movie = {
+         field_mappings = {
+            director = { format = "[[%s]]" },
+            actors = { format = "[[%s]]" },
+         },
+      },
+      music = {
+         field_mappings = {
+            artists = { format = "[[%s]]" },
+         },
+      },
+   },
+})
+
+mediaDB.register_action("rym", function(model, _ctx)
+   local title = model.title or ""
+   local artist = (model.artists and model.artists[1]) or ""
+   local q = vim.uri_encode(title .. " " .. artist)
+   vim.ui.open("https://rateyourmusic.com/search?searchterm=" .. q)
+end)
+
+vim.keymap.set("n", "<leader>ry", function()
+   mediaDB.run_action("rym", { selecter = "type" })
 end)
 
 local handlers = {
@@ -85,7 +99,7 @@ vim.ui.open = (function(overridden)
          opt = { cmd = { "zathura" } } -- override open app
       end
       if obsidian.api.get_os() == "Wsl" then
-         opt = { cmd = { "wsl-open" } }
+         -- opt = { cmd = { "wsl-open" } }
       else
          opt = { cmd = { "zen-beta" } }
       end
@@ -191,13 +205,12 @@ obsidian.setup({
       },
    },
 
-   sync = {
-      enabled = false,
-      -- backend = "git",
-      -- backend = "rclone",
-      trigger = "on_write",
-      enabled = true,
-   },
+   -- sync = {
+   --    -- backend = "git",
+   --    -- backend = "rclone",
+   --    -- trigger = "on_write",
+   --    -- enabled = false,
+   -- },
 
    footer = {
       format = "{{status}}\n{{linked_mentions}}",

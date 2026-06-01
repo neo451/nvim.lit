@@ -212,14 +212,14 @@ require("lz.n").load({
 
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
 vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
-vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
-vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
-vim.opt.rtp:append("~/Plugins/irc.nvim")
+-- vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
+-- vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
+-- vim.opt.rtp:append("~/Plugins/irc.nvim")
 require("_obsidian")
 
-vim.opt.rtp:append("~/Plugins/feed.nvim/")
+-- vim.opt.rtp:append("~/Plugins/feed.nvim/")
 -- vim.cmd.packadd("feed.nvim")
-require("_feed")
+-- require("_feed")
 
 vim.schedule(function()
    vim.cmd("packadd nvim.undotree")
