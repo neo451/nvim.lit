@@ -205,12 +205,12 @@ obsidian.setup({
       },
    },
 
-   -- sync = {
-   --    -- backend = "git",
-   --    -- backend = "rclone",
-   --    -- trigger = "on_write",
-   --    -- enabled = false,
-   -- },
+   sync = {
+      -- backend = "git",
+      -- backend = "rclone",
+      -- trigger = "on_write",
+      enabled = true,
+   },
 
    footer = {
       format = "{{status}}\n{{linked_mentions}}",
