@@ -110,3 +110,38 @@ local H = require("spell")
 
 vim.keymap.set("x", "zg", H.spell_all_good, { buffer = true })
 vim.keymap.set("n", "zg", H.enhanced_spell_good, { buffer = true })
+
+local handlers = {
+   jisho = function(uri)
+      local query = uri:gsub(vim.pesc("jisho://"), "")
+      vim.cmd("Jisho " .. query)
+   end,
+   man = function(uri)
+      local query = uri:gsub(vim.pesc("man://"), "")
+      vim.cmd("Man " .. query)
+   end,
+   rfc = function(uri, overridden)
+      local rfc_number = uri:gsub(vim.pesc("rfc://"), "")
+      rfc_number = tonumber(rfc_number)
+      local url = "https://www.rfc-editor.org/rfc/rfc" .. rfc_number .. ".txt"
+      overridden(url, { cmd = { "zen-beta" } })
+   end,
+}
+
+vim.ui.open = (function(overridden)
+   return function(uri, opt)
+      local ok, scheme = require("obsidian.util").is_uri(uri)
+      if ok and handlers[scheme] then
+         return handlers[scheme](uri, overridden)
+      end
+      if vim.endswith(uri, ".pdf") then
+         opt = { cmd = { "zathura" } } -- override open app
+      end
+      if require("obsidian").api.get_os() == "Wsl" then
+         opt = { cmd = { "wsl-open" } }
+      else
+         opt = { cmd = { "zen-beta" } }
+      end
+      return overridden(uri, opt)
+   end
+end)(vim.ui.open)

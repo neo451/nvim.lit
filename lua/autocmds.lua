@@ -158,11 +158,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
             { desc = "LSP: switch inline completion", buffer = bufnr }
          )
       end
+
+      if client and client.name == "obsidian-ls" then
+         -- client.server_capabilities.completionProvider.triggerCharacters = chars -- HACK:
+         vim.bo[bufnr].completeopt = "menuone,noselect,fuzzy,nosort" -- noselect to make sure no accidentally accept and create new notes, others are not strictly necessary, adjust to your taste, see `:h completeopt'
+         vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+      end
    end,
 })
 
 vim.api.nvim_create_autocmd("LspProgress", {
-   buffer = buf,
+   -- buffer = buf,
    callback = function(ev)
       local value = ev.data.params.value
       vim.api.nvim_echo({ { value.message or "done" } }, false, {
