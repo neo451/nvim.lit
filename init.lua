@@ -80,11 +80,28 @@ vim.pack.add({
    "https://github.com/glacambre/firenvim",
 }, { load = selective_load })
 
-require("_snacks")
 require("_mini")
 require("_treesitter")
 
 require("lz.n").load({
+   {
+      "snacks.nvim",
+      after = function()
+         require("snacks").setup({
+            input = { enabled = true },
+            statuscolumn = { enabled = true },
+            styles = {
+               notification = {
+                  wo = { wrap = true },
+               },
+            },
+            notifier = {
+               enabled = true,
+               timeout = 3000,
+            },
+         })
+      end,
+   },
    {
       "agentic.nvim",
       keys = {

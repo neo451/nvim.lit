@@ -215,13 +215,8 @@ obsidian.setup({
    },
 
    callbacks = {
-
       ---@param note obsidian.Note
       enter_note = function(note)
-         -- pcall(function()
-         require("obsidian.image").inline.attach(0)
-         -- end)
-
          require("obsidian._paste")() -- override paste handler
 
          local actions = require("obsidian.actions")
@@ -234,27 +229,8 @@ obsidian.setup({
          vim.keymap.set("x", "<leader>oL", actions.link, { desc = "Link" })
 
          pcall(function()
-            -- set("n", "<Tab>", actions.cycle_fold)
-            -- set("n", "<S-Tab>", actions.cycle_folds_global)
-         end)
-
-         pcall(function()
-            vim.keymap.set("n", "<leader>A", actions.add_attachment, { buffer = true })
-         end)
-
-         pcall(function()
-            vim.keymap.set("n", "<leader>W", actions.workspace_symbol, { buffer = true })
-         end)
-
-         pcall(function()
-            vim.keymap.set("n", "<leader>ul", actions.unique_link, { buffer = true })
-         end)
-
-         pcall(function()
             vim.keymap.set("n", "<leader>xt", _actions.process_image, { buffer = true })
          end)
-
-         -- vim.keymap.set("n", "<Tab>", actions.cycal_global_headings, { buffer = true })
 
          vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
          vim.keymap.set("n", "<leader>p", function()
@@ -265,21 +241,8 @@ obsidian.setup({
             end
          end, { buffer = true, expr = true })
 
-         local paste_from_path = function()
-            local path = vim.fn.getreg("+")
-            path = vim.trim(path)
-            -- TODO: check looks like a path
-            vim.schedule(function()
-               require("obsidian.attachment").add(path, { insert = true })
-            end)
-         end
-
-         vim.keymap.set("n", "<leader><leader>p", paste_from_path, { buffer = true, expr = true })
-
-         pcall(function()
-            vim.keymap.set("n", "<leader>;", obsidian.api.add_property, { buffer = true })
-            -- vim.keymap.set("n", "<leader>S", actions.start_presentation, { buffer = true })
-         end)
+         vim.keymap.set("n", "<leader>;", obsidian.api.add_property, { buffer = true })
+         -- vim.keymap.set("n", "<leader>S", actions.start_presentation, { buffer = true })
 
          pcall(function()
             vim.keymap.set("n", "<leader>il", actions.insert_link, {
@@ -292,11 +255,6 @@ obsidian.setup({
                buffer = true,
             })
          end)
-
-         if vim.endswith(tostring(note.path), "todo.md") then
-            vim.keymap.del("n", "<CR>", { buffer = true })
-            vim.keymap.set("n", "<CR>", "<cmd>Checkmate toggle<cr>", { buffer = true })
-         end
 
          vim.keymap.set("n", "<leader>cb", obsidian.api.set_checkbox, { buffer = true, desc = "Obsidian set checkbox" })
 
@@ -345,18 +303,6 @@ obsidian.setup({
          return true
       end,
    },
-
-   -- lsp = {
-   --    hover = {
-   --       note_preview_callback = function(note)
-   --          local contents = {}
-   --          for i = 1, 20 do
-   --             contents[i] = note.contents[i]
-   --          end
-   --          return contents
-   --       end,
-   --    },
-   -- },
 
    legacy_commands = false,
 

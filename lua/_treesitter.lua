@@ -13,7 +13,7 @@ nts.install({
    "zig",
    "bash",
    "fish",
-   -- "gitcommit",
+   "gitcommit",
    "diff",
    "sql",
    "html",
