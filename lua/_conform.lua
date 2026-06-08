@@ -1,3 +1,5 @@
+local pangu = require("pangu")
+
 require("conform").setup({
    format_on_save = function(bufnr)
       local bufname = vim.api.nvim_buf_get_name(bufnr)
@@ -18,10 +20,17 @@ require("conform").setup({
    formatters_by_ft = {
       nix = { "alejandra" },
       lua = { "stylua" },
-      markdown = { "prettier", "injected" },
+      markdown = { "prettier", "injected", "pangu" },
       quarto = { "prettier" },
       qml = { "qmlformat" },
       json = { "jq" },
       python = { "black" },
+   },
+   formatters = {
+      pangu = {
+         format = function(_, _, lines, callback)
+            callback(nil, pangu.format_lines(lines))
+         end,
+      },
    },
 })
