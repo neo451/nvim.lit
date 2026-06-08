@@ -6,6 +6,12 @@ vim.keymap.set("n", "<leader>dc", require("obsidian._actions").capture_to_daily)
 -- super help docs everywhere
 set("n", "vK", "<C-\\><C-N><Cmd>help!<CR>")
 
+set("n", "<leader>C", function()
+   vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled({ bufnr = 0 }), { bufnr = 0 })
+
+   vim.notify(vim.lsp.codelens.is_enabled() and "Code Lens Enabled" or "Code Lens Disabled")
+end)
+
 set("n", "<leader>H", function()
    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
    vim.notify(vim.lsp.inlay_hint.is_enabled() and "Inlay Hint Enabled" or "Inlay Hint Disabled")
@@ -122,6 +128,7 @@ nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
 nmap_leader("od", "<cmd>Obsidian today<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
+nmap_leader("ou", require("obsidian._unique_note").create_and_append, "Obsidian unique note")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
 nmap_leader("O", "<cmd>Obsidian<cr>")
 nmap_leader("S", "<cmd>Obsidian sync<cr>")

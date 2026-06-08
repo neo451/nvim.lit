@@ -24,7 +24,7 @@ require("blink.cmp").setup({
       },
       per_filetype = {
          markdown = {
-            inherit_defaults = true,
+            "lsp",
             "dictionary",
          },
          sql = { "snippets", "dadbod", "buffer" },

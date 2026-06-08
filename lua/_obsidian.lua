@@ -225,6 +225,16 @@ obsidian.setup({
             vim.bo[note.bufnr].readonly = false
          end
 
+         pcall(function()
+            vim.keymap.set("n", "<C-a>", function()
+               require("obsidian.api").image_bigger()
+            end, { desc = "Obsidian image bigger", buffer = true })
+
+            vim.keymap.set("n", "<C-x>", function()
+               require("obsidian.api").image_smaller()
+            end, { desc = "Obsidian image smaller", buffer = true })
+         end)
+
          vim.keymap.set("x", "<leader>ol", actions.link_new, { desc = "Link new" })
          vim.keymap.set("x", "<leader>oL", actions.link, { desc = "Link" })
 
