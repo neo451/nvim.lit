@@ -57,6 +57,7 @@ mediaDB.setup({
          field_mappings = {
             artists = { format = "[[%s]]" },
          },
+         template = "music.md",
       },
    },
 })
@@ -217,8 +218,6 @@ obsidian.setup({
    callbacks = {
       ---@param note obsidian.Note
       enter_note = function(note)
-         require("obsidian._paste")() -- override paste handler
-
          local actions = require("obsidian.actions")
 
          if vim.b[note.bufnr].obsidian_help then
