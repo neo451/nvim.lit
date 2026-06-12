@@ -107,12 +107,6 @@ end
 
 pcall(function()
    require("obsidian").code_action.add({
-      name = "insert_tag",
-      title = "Insert an existing tag",
-      fn = require("obsidian.actions").insert_tag,
-   })
-
-   require("obsidian").code_action.add({
       name = "process_image",
       title = "Process image (extract text, describe, or custom)",
       fn = process_image,

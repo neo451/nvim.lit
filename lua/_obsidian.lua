@@ -1,3 +1,10 @@
+vim.opt.rtp:append("~/Plugins/obsidian.nvim")
+vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
+vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
+-- vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
+-- vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
+-- vim.opt.rtp:append("~/Plugins/irc.nvim")
+
 local obsidian = require("obsidian")
 local buf = vim.api.nvim_get_current_buf()
 
@@ -10,6 +17,10 @@ pcall(function()
          path = "~/My Library.json",
       },
    })
+end)
+
+pcall(function()
+   require("obsidian").register_command("heatmap", { nargs = 0 })
 end)
 
 pcall(function()
