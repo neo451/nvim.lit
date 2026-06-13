@@ -91,17 +91,9 @@ vim.filetype.add({
 })
 
 local workspaces = {
-   -- {
-   --    name = "zettel",
-   --    path = "~/Documents/Zettel/",
-   -- },
    {
       name = "notes",
       path = "~/Documents/Notes/",
-   },
-   {
-      name = "blog",
-      path = "~/quarto-blog/posts/",
    },
    {
       name = "skills",
@@ -111,6 +103,10 @@ local workspaces = {
          daily_notes = { enabeld = false },
       },
    },
+   vim.uv.fs_stat("~/quarto-blog/posts/") ~= nil and {
+      name = "blog",
+      path = "~/quarto-blog/posts/",
+   } or nil,
    -- {
    --    name = "config",
    --    path = "~/.config/nvim/",
@@ -371,8 +367,8 @@ obsidian.setup({
    picker = {
       -- enabled = false,
       -- name = "mini.pick",
-      name = "snacks.pick",
-      -- name = "fzf-lua",
+      -- name = "snacks.pick",
+      name = "fzf-lua",
       -- name = "telescope.nvim",
    },
 

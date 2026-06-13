@@ -30,6 +30,7 @@ vim.pack.add({
    "https://github.com/stevearc/conform.nvim",
    "https://github.com/stevearc/oil.nvim",
    "https://github.com/folke/tokyonight.nvim",
+   "https://github.com/catppuccin/nvim",
 
    -- markdown
    "https://github.com/MeanderingProgrammer/render-markdown.nvim",
@@ -191,7 +192,13 @@ require("lz.n").load({
    {
       "tokyonight.nvim",
       after = function()
-         vim.cmd.colorscheme("tokyonight")
+         -- vim.cmd.colorscheme("tokyonight")
+      end,
+   },
+   {
+      "nvim",
+      after = function()
+         vim.cmd.colorscheme("catppuccin")
       end,
    },
    {
