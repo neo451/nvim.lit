@@ -1,6 +1,7 @@
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
 vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
+vim.opt.rtp:append("~/Plugins/scribe.nvim/")
 -- vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
 -- vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
 -- vim.opt.rtp:append("~/Plugins/irc.nvim")
@@ -9,6 +10,10 @@ local obsidian = require("obsidian")
 local buf = vim.api.nvim_get_current_buf()
 
 vim.lsp.semantic_tokens.enable(true, { bufnr = buf })
+
+pcall(function()
+   require("scribe").setup({})
+end)
 
 pcall(function()
    require("obsidian-cite").setup({
@@ -167,6 +172,11 @@ local function sort_backlink_matches(matches)
 end
 
 obsidian.setup({
+   audio_recorder = {
+      run_callback_on_stop = true,
+      callback = require("obsidian.transcribe").whisper,
+   },
+
    files = {
       trash = "local",
    },
