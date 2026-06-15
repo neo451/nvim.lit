@@ -35,6 +35,7 @@ vim.pack.add({
    -- markdown
    "https://github.com/MeanderingProgrammer/render-markdown.nvim",
    "https://github.com/YousefHadder/markdown-plus.nvim",
+   "https://github.com/jmbuhr/otter.nvim",
    "https://github.com/quarto-dev/quarto-nvim",
 
    -- "https://github.com/jalvesaq/zotcite",
@@ -57,7 +58,6 @@ vim.pack.add({
 
    -- ui
    "https://github.com/shortcuts/no-neck-pain.nvim",
-   "https://github.com/rachartier/tiny-cmdline.nvim",
    "https://github.com/rachartier/tiny-code-action.nvim",
 
    "https://github.com/andrewferrier/debugprint.nvim",
@@ -79,6 +79,9 @@ vim.pack.add({
    "https://github.com/NicholasZolton/neojj",
 
    "https://github.com/glacambre/firenvim",
+
+   "https://github.com/nvim-lua/plenary.nvim",
+   "https://github.com/nvim-telescope/telescope.nvim",
 }, { load = selective_load })
 
 require("_mini")
@@ -249,9 +252,7 @@ vim.schedule(function()
 
    vim.pack.add({
       "https://github.com/xieyonn/spinner.nvim",
-      "https://github.com/nvim-telescope/telescope.nvim",
       "https://github.com/neovim/nvim-lspconfig",
-      "https://github.com/nvim-lua/plenary.nvim",
       "https://github.com/igorlfs/nvim-lsp-file-operations",
    })
 
@@ -288,6 +289,7 @@ require("experiments")
 
 local servers = {
    "rime_ls",
+   "lua_ls",
    -- "emmylua_ls",
    "gopls",
    "nixd",
@@ -298,7 +300,6 @@ local servers = {
    "ruff",
    "ts_ls",
    "copilot",
-   "lua_ls",
    -- "markdown_oxide"
    -- "marksman",
    -- "dummy_ls",

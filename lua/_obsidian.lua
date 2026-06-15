@@ -2,7 +2,7 @@ vim.opt.rtp:append("~/Plugins/obsidian.nvim")
 vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
 vim.opt.rtp:append("~/Plugins/scribe.nvim/")
--- vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
+vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
 -- vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
 -- vim.opt.rtp:append("~/Plugins/irc.nvim")
 
@@ -13,6 +13,12 @@ vim.lsp.semantic_tokens.enable(true, { bufnr = buf })
 
 pcall(function()
    require("scribe").setup({})
+
+   local actions = require("obsidian.actions")
+   local stop_recording = actions.stop_recording
+   actions.stop_recording = function()
+      stop_recording(require("obsidian.transcribe").whisper)
+   end
 end)
 
 pcall(function()
@@ -108,10 +114,14 @@ local workspaces = {
          daily_notes = { enabeld = false },
       },
    },
-   vim.uv.fs_stat("~/quarto-blog/posts/") ~= nil and {
+   {
       name = "blog",
-      path = "~/quarto-blog/posts/",
-   } or nil,
+      path = "~/Documents/blog/posts/",
+   },
+   -- vim.uv.fs_stat("~/quarto-blog/posts/") ~= nil and {
+   --    name = "blog",
+   --    path = "~/quarto-blog/posts/",
+   -- } or nil,
    -- {
    --    name = "config",
    --    path = "~/.config/nvim/",
@@ -172,9 +182,8 @@ local function sort_backlink_matches(matches)
 end
 
 obsidian.setup({
-   audio_recorder = {
-      run_callback_on_stop = true,
-      callback = require("obsidian.transcribe").whisper,
+   image = {
+      enabeld = true,
    },
 
    files = {
@@ -377,8 +386,8 @@ obsidian.setup({
    picker = {
       -- enabled = false,
       -- name = "mini.pick",
-      -- name = "snacks.pick",
-      name = "fzf-lua",
+      name = "snacks.pick",
+      -- name = "fzf-lua",
       -- name = "telescope.nvim",
    },
 
