@@ -27,50 +27,6 @@ local cjk_ranges = {
    { 0x30000, 0x3134f },
 }
 
-local cjk_open = {
-   [0x3008] = true, -- 〈
-   [0x300a] = true, -- 《
-   [0x300c] = true, -- 「
-   [0x300e] = true, -- 『
-   [0x3010] = true, -- 【
-   [0x3014] = true, -- 〔
-   [0xff08] = true, -- （
-   [0xff3b] = true, -- ［
-   [0xff5b] = true, -- ｛
-}
-
-local cjk_close = {
-   [0x3009] = true, -- 〉
-   [0x300b] = true, -- 》
-   [0x300d] = true, -- 」
-   [0x300f] = true, -- 』
-   [0x3011] = true, -- 】
-   [0x3015] = true, -- 〕
-   [0xff09] = true, -- ）
-   [0xff3d] = true, -- ］
-   [0xff5d] = true, -- ｝
-}
-
-local ascii_open = {
-   [0x28] = true, -- (
-   [0x5b] = true, -- [
-   [0x7b] = true, -- {
-   [0x3c] = true, -- <
-}
-
-local ascii_close = {
-   [0x29] = true, -- )
-   [0x5d] = true, -- ]
-   [0x7d] = true, -- }
-   [0x3e] = true, -- >
-}
-
-local ascii_prefix = {
-   [0x23] = true, -- #
-   [0x24] = true, -- $
-   [0x40] = true, -- @
-}
-
 ---@param code integer
 ---@return boolean
 local function is_cjk(code)
@@ -80,13 +36,13 @@ end
 ---@param code integer
 ---@return boolean
 local function is_cjk_left_boundary(code)
-   return is_cjk(code) or cjk_close[code] == true
+   return is_cjk(code)
 end
 
 ---@param code integer
 ---@return boolean
 local function is_cjk_right_boundary(code)
-   return is_cjk(code) or cjk_open[code] == true
+   return is_cjk(code)
 end
 
 ---@param code integer
@@ -116,7 +72,6 @@ local function is_ascii_token_char(code)
       or code == 0x25 -- %
       or code == 0x26 -- &
       or code == 0x3d -- =
-      or ascii_prefix[code] == true
 end
 
 ---@param s string
@@ -197,14 +152,10 @@ local function needs_space(chars, idx)
 
    if is_cjk_left_boundary(left) then
       return is_ascii_core(right)
-         or ascii_open[right] == true
-         or (ascii_prefix[right] == true and has_ascii_core_after(chars, idx + 1))
    end
 
    if is_cjk_right_boundary(right) then
-      return is_ascii_core(left)
-         or ascii_close[left] == true
-         or (is_ascii_token_char(left) and has_ascii_core_before(chars, idx))
+      return is_ascii_core(left) or (is_ascii_token_char(left) and has_ascii_core_before(chars, idx))
    end
 
    return false
@@ -230,48 +181,62 @@ function M.spacing_text(text)
    return table.concat(out)
 end
 
----@param text string
----@return integer?
-local function first_char_code(text)
-   local chars = utf8_chars(text)
-   return chars[1] and chars[1].code or nil
-end
-
----@param text string
----@return integer?
-local function last_char_code(text)
-   local chars = utf8_chars(text)
-   return chars[#chars] and chars[#chars].code or nil
-end
-
 ---@param chunks table[]
 ---@return string
 local function join_markdown_chunks(chunks)
    local out = {}
-   local last_kind = nil
 
    for _, chunk in ipairs(chunks) do
-      if chunk.text ~= "" then
-         local prev = out[#out]
-         if prev then
-            local left = last_char_code(prev)
-            local right = first_char_code(chunk.text)
-
-            if left and right and not is_space(left) and not is_space(right) then
-               if chunk.kind == "raw" and is_cjk_left_boundary(left) then
-                  out[#out + 1] = " "
-               elseif last_kind == "raw" and is_cjk_right_boundary(right) then
-                  out[#out + 1] = " "
-               end
-            end
-         end
-
-         out[#out + 1] = chunk.text
-         last_kind = chunk.kind
-      end
+      out[#out + 1] = chunk.text
    end
 
    return table.concat(out)
+end
+
+---@param best_start integer?
+---@param best_end integer?
+---@param start integer?
+---@param finish integer?
+---@return integer?, integer?
+local function earlier_span(best_start, best_end, start, finish)
+   if start and (not best_start or start < best_start) then
+      return start, finish
+   end
+   return best_start, best_end
+end
+
+---@param text string
+---@param pos integer
+---@return integer?, integer?
+local function find_dollar_span(text, pos)
+   local start, finish, marker = text:find("(%$+)", pos)
+   if not start then
+      return nil, nil
+   end
+
+   local close_start, close_end = text:find(marker, finish + 1, true)
+   if not close_start then
+      return nil, nil
+   end
+
+   return start, close_end
+end
+
+---@param text string
+---@param pos integer
+---@return integer?, integer?
+local function find_next_raw_span(text, pos)
+   local best_start, best_end = text:find("%a[%w%+%.%-]*://%S+", pos)
+   best_start, best_end = earlier_span(best_start, best_end, text:find("!%[%[.-%]%]", pos))
+   best_start, best_end = earlier_span(best_start, best_end, text:find("%[%[.-%]%]", pos))
+   best_start, best_end = earlier_span(best_start, best_end, text:find("!%b[]%b()", pos))
+   best_start, best_end = earlier_span(best_start, best_end, text:find("%b[]%b()", pos))
+   best_start, best_end = earlier_span(best_start, best_end, text:find("%b[]", pos))
+   best_start, best_end = earlier_span(best_start, best_end, text:find("<!%-%-.-%-%->", pos))
+   best_start, best_end = earlier_span(best_start, best_end, text:find("<[^%s][^>]->", pos))
+   best_start, best_end = earlier_span(best_start, best_end, find_dollar_span(text, pos))
+
+   return best_start, best_end
 end
 
 ---@param chunks table[]
@@ -280,15 +245,15 @@ local function push_text_chunks(chunks, text)
    local pos = 1
 
    while true do
-      local url_start, url_end = text:find("%a[%w%+%.%-]*://%S+", pos)
-      if not url_start then
+      local raw_start, raw_end = find_next_raw_span(text, pos)
+      if not raw_start then
          chunks[#chunks + 1] = { kind = "text", text = M.spacing_text(text:sub(pos)) }
          break
       end
 
-      chunks[#chunks + 1] = { kind = "text", text = M.spacing_text(text:sub(pos, url_start - 1)) }
-      chunks[#chunks + 1] = { kind = "raw", text = text:sub(url_start, url_end) }
-      pos = url_end + 1
+      chunks[#chunks + 1] = { kind = "text", text = M.spacing_text(text:sub(pos, raw_start - 1)) }
+      chunks[#chunks + 1] = { kind = "raw", text = text:sub(raw_start, raw_end) }
+      pos = raw_end + 1
    end
 end
 
@@ -331,6 +296,7 @@ end
 function M.format_lines(lines)
    local formatted = {}
    local in_fence = false
+   local in_math_fence = false
    local in_frontmatter = false
 
    for i, line in ipairs(lines) do
@@ -345,7 +311,10 @@ function M.format_lines(lines)
       elseif is_fence(line) then
          formatted[i] = line
          in_fence = not in_fence
-      elseif in_fence then
+      elseif line:match("^%s*%$%$%s*$") then
+         formatted[i] = line
+         in_math_fence = not in_math_fence
+      elseif in_fence or in_math_fence then
          formatted[i] = line
       else
          formatted[i] = M.spacing_markdown_line(line)

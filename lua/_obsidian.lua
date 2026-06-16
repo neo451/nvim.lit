@@ -4,22 +4,8 @@ vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
 vim.opt.rtp:append("~/Plugins/scribe.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
 -- vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
--- vim.opt.rtp:append("~/Plugins/irc.nvim")
 
 local obsidian = require("obsidian")
-local buf = vim.api.nvim_get_current_buf()
-
-vim.lsp.semantic_tokens.enable(true, { bufnr = buf })
-
-pcall(function()
-   require("scribe").setup({})
-
-   local actions = require("obsidian.actions")
-   local stop_recording = actions.stop_recording
-   actions.stop_recording = function()
-      stop_recording(require("obsidian.transcribe").whisper)
-   end
-end)
 
 pcall(function()
    require("obsidian-cite").setup({
@@ -101,85 +87,47 @@ vim.filetype.add({
    },
 })
 
-local workspaces = {
-   {
-      name = "notes",
-      path = "~/Documents/Notes/",
-   },
-   {
-      name = "skills",
-      path = "~/.agents/skills/",
-      overrides = {
-         templates = { enabeld = false },
-         daily_notes = { enabeld = false },
-      },
-   },
-   {
-      name = "blog",
-      path = "~/Documents/blog/posts/",
-   },
-   -- vim.uv.fs_stat("~/quarto-blog/posts/") ~= nil and {
-   --    name = "blog",
-   --    path = "~/quarto-blog/posts/",
-   -- } or nil,
-   -- {
-   --    name = "config",
-   --    path = "~/.config/nvim/",
-   -- },
-   -- {
-   --    name = "auto",
-   --    path = function()
-   --       local path = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-   --       local prev = ""
-   --       while path ~= "" and path ~= prev do
-   --          if vim.uv.fs_stat(path .. "/.obsidian") then
-   --             return path
-   --          end
-   --          prev, path = path, vim.fs.dirname(path)
-   --       end
-   --       return nil
-   --    end,
-   -- },
+local handlers = {
+   jisho = function(uri)
+      local query = uri:gsub(vim.pesc("jisho://"), "")
+      vim.cmd("Jisho " .. query)
+   end,
+   man = function(uri)
+      local query = uri:gsub(vim.pesc("man://"), "")
+      vim.cmd("Man " .. query)
+   end,
+   rfc = function(uri, overridden)
+      local rfc_number = uri:gsub(vim.pesc("rfc://"), "")
+      rfc_number = tonumber(rfc_number)
+      local url = "https://www.rfc-editor.org/rfc/rfc" .. rfc_number .. ".txt"
+      overridden(url, { cmd = { "zen-beta" } })
+   end,
 }
+
+vim.ui.open = (function(overridden)
+   return function(uri, opt)
+      local ok, scheme = require("obsidian.util").is_uri(uri)
+      if ok and handlers[scheme] then
+         return handlers[scheme](uri, overridden)
+      end
+      if vim.endswith(uri, ".pdf") then
+         opt = { cmd = { "zathura" } } -- override open app
+      end
+      if require("obsidian").api.get_os() == "Wsl" then
+         opt = { cmd = { "wsl-open" } }
+      else
+         opt = { cmd = { "zen-beta" } }
+      end
+      return overridden(uri, opt)
+   end
+end)(vim.ui.open)
 
 require("obsidian.due_display")
 require("obsidian.yaml_vim_options")
 require("obsidian.yazi_attachment")
-local _actions = require("obsidian._actions")
 local ut = require("obsidian._utils")
 
 vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
-
----@type table<string, obsidian.BacklinkMatch[]>
-local linked_mentions_cache = {}
-
----@param match obsidian.BacklinkMatch
----@return string, integer, integer, string
-local function backlink_sort_key(match)
-   local rel_path = obsidian.Path.new(match.path):vault_relative_path() or tostring(match.path)
-   return rel_path, match.line or 0, match.start or 0, match.text or ""
-end
-
----@param matches obsidian.BacklinkMatch[]
----@return obsidian.BacklinkMatch[]
-local function sort_backlink_matches(matches)
-   table.sort(matches, function(a, b)
-      local a_path, a_line, a_start, a_text = backlink_sort_key(a)
-      local b_path, b_line, b_start, b_text = backlink_sort_key(b)
-
-      if a_path ~= b_path then
-         return a_path < b_path
-      elseif a_line ~= b_line then
-         return a_line < b_line
-      elseif a_start ~= b_start then
-         return a_start < b_start
-      else
-         return a_text < b_text
-      end
-   end)
-
-   return matches
-end
 
 obsidian.setup({
    image = {
@@ -189,9 +137,7 @@ obsidian.setup({
    files = {
       trash = "local",
    },
-   bookmarks = {
-      group = true,
-   },
+
    cache = {
       enabled = true,
       backend = "memory",
@@ -211,25 +157,7 @@ obsidian.setup({
    footer = {
       format = "{{status}}\n{{linked_mentions}}",
       substitutions = {
-         linked_mentions = function(note, update)
-            local path = tostring(note.path)
-            if update or linked_mentions_cache[path] == nil then
-               linked_mentions_cache[path] = sort_backlink_matches(note:backlinks({}))
-            end
-            local matches = linked_mentions_cache[path]
-
-            if #matches == 0 then
-               return {}
-            end
-
-            local lines = { "Linked Mentions", "" }
-            for _, match in ipairs(matches) do
-               local rel_path = obsidian.Path.new(match.path):vault_relative_path() or tostring(match.path)
-               lines[#lines + 1] = string.format("%s: %s", rel_path, match.text or "")
-            end
-
-            return lines
-         end,
+         linked_mentions = require("obsidian._linked_mentions"),
       },
    },
 
@@ -242,63 +170,8 @@ obsidian.setup({
    },
 
    callbacks = {
-      ---@param note obsidian.Note
       enter_note = function(note)
-         local actions = require("obsidian.actions")
-
-         if vim.b[note.bufnr].obsidian_help then
-            vim.bo[note.bufnr].readonly = false
-         end
-
-         pcall(function()
-            vim.keymap.set("n", "<C-a>", function()
-               require("obsidian.api").image_bigger()
-            end, { desc = "Obsidian image bigger", buffer = true })
-
-            vim.keymap.set("n", "<C-x>", function()
-               require("obsidian.api").image_smaller()
-            end, { desc = "Obsidian image smaller", buffer = true })
-         end)
-
-         vim.keymap.set("x", "<leader>ol", actions.link_new, { desc = "Link new" })
-         vim.keymap.set("x", "<leader>oL", actions.link, { desc = "Link" })
-
-         pcall(function()
-            vim.keymap.set("n", "<leader>xt", _actions.process_image, { buffer = true })
-         end)
-
-         vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = true })
-         vim.keymap.set("n", "<leader>p", function()
-            if pcall(require, "obsidian.paste") then
-               return "<cmd>Obsidian paste<cr>"
-            else
-               return "<cmd>Obsidian paste_img<cr>"
-            end
-         end, { buffer = true, expr = true })
-
-         vim.keymap.set("n", "<leader>;", obsidian.api.add_property, { buffer = true })
-         -- vim.keymap.set("n", "<leader>S", actions.start_presentation, { buffer = true })
-
-         pcall(function()
-            vim.keymap.set("n", "<leader>il", actions.insert_link, {
-               buffer = true,
-            })
-            vim.keymap.set("n", "<leader>it", actions.insert_tag, {
-               buffer = true,
-            })
-            vim.keymap.set("n", "<leader>ta", actions.tag_note, {
-               buffer = true,
-            })
-         end)
-
-         vim.keymap.set("n", "<leader>cb", obsidian.api.set_checkbox, { buffer = true, desc = "Obsidian set checkbox" })
-
-         vim.keymap.set(
-            { "n", "x" },
-            "<leader>cc",
-            obsidian.api.toggle_checkbox,
-            { buffer = true, desc = "Obsidian toggle checkbox" }
-         )
+         require("obsidian.enter_note")(note)
       end,
    },
 
@@ -324,17 +197,9 @@ obsidian.setup({
          return out
       end,
       enabled = function(path)
-         if tostring(path):find("draft") then
-            return false
-         end
          if vim.endswith(tostring(path), ".qmd") then
             return false
          end
-
-         if Obsidian.workspace.name == "wiki" then
-            return false
-         end
-
          return true
       end,
    },
@@ -344,15 +209,11 @@ obsidian.setup({
    link = {
       resolve = "strict",
       format = "shortest",
-      -- style = "markdown",
-      -- format = "absolute",
-      -- format = "relative",
    },
 
    ---@param id string
-   ---@param dir obsidian.Path
    ---@return string
-   note_id_func = function(id, dir)
+   note_id_func = function(id)
       return id
    end,
 
@@ -367,12 +228,7 @@ obsidian.setup({
 
    open = {
       use_advanced_uri = false,
-      schemes = {
-         "zotero",
-         "jisho",
-         "man",
-         "rfc",
-      },
+      schemes = { "zotero", "jisho", "man", "rfc" },
    },
 
    daily_notes = {
@@ -385,8 +241,8 @@ obsidian.setup({
 
    picker = {
       -- enabled = false,
-      -- name = "mini.pick",
       name = "snacks.pick",
+      -- name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",
    },
@@ -414,5 +270,36 @@ obsidian.setup({
       template = "default.md",
    },
 
-   workspaces = workspaces,
+   workspaces = {
+      {
+         name = "notes",
+         path = "~/Documents/Notes/",
+      },
+      {
+         name = "skills",
+         path = "~/.agents/skills/",
+         overrides = {
+            templates = { enabeld = false },
+            daily_notes = { enabeld = false },
+         },
+      },
+      {
+         name = "blog",
+         path = "~/Documents/blog/posts/",
+      },
+      -- {
+      --    name = "auto",
+      --    path = function()
+      --       local path = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+      --       local prev = ""
+      --       while path ~= "" and path ~= prev do
+      --          if vim.uv.fs_stat(path .. "/.obsidian") then
+      --             return path
+      --          end
+      --          prev, path = path, vim.fs.dirname(path)
+      --       end
+      --       return nil
+      --    end,
+      -- },
+   },
 })

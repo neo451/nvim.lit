@@ -8,7 +8,7 @@ local function whisper(ctx)
    vim.ui.select({
       { label = "Auto detect", value = nil },
       { label = "English", value = "en" },
-      { label = "Chinese (Simplified)", value = "zh", prompt = "请使用简体中文转写。" },
+      { label = "Chinese (Simplified)", value = "zh" },
    }, {
       prompt = "Whisper language:",
       format_item = function(item)
@@ -33,9 +33,6 @@ local function whisper(ctx)
 
       if choice.value then
          vim.list_extend(args, { "-F", "language=" .. choice.value })
-      end
-      if choice.prompt then
-         vim.list_extend(args, { "-F", "prompt=" .. choice.prompt })
       end
 
       vim.system(args, { text = true }, function(obj)

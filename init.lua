@@ -84,6 +84,8 @@ vim.pack.add({
    "https://github.com/nvim-telescope/telescope.nvim",
 }, { load = selective_load })
 
+-- vim.opt.rtp:append("~/Plugins/irc.nvim")
+
 require("_mini")
 require("_treesitter")
 
@@ -289,8 +291,8 @@ require("experiments")
 
 local servers = {
    "rime_ls",
-   "lua_ls",
-   -- "emmylua_ls",
+   -- "lua_ls",
+   "emmylua_ls",
    "gopls",
    "nixd",
    "zls",

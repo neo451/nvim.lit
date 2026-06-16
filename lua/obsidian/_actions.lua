@@ -347,6 +347,169 @@ local function cleanup_footnotes(bufnr)
    end
 end
 
+local function trim(text)
+   return text:match("^%s*(.-)%s*$")
+end
+
+local function split_markdown_table_row(line)
+   local text = trim(line)
+   if text:sub(1, 1) == "|" then
+      text = text:sub(2)
+   end
+   if text:sub(-1) == "|" then
+      text = text:sub(1, -2)
+   end
+
+   local cells = {}
+   local cell = {}
+   local escaped = false
+   for i = 1, #text do
+      local char = text:sub(i, i)
+      if char == "|" and not escaped then
+         cells[#cells + 1] = trim(table.concat(cell))
+         cell = {}
+      else
+         cell[#cell + 1] = char
+      end
+
+      if char == "\\" and not escaped then
+         escaped = true
+      else
+         escaped = false
+      end
+   end
+   cells[#cells + 1] = trim(table.concat(cell))
+
+   return cells
+end
+
+local function is_markdown_table_separator(line)
+   local cells = split_markdown_table_row(line)
+   if #cells == 0 then
+      return false
+   end
+
+   for _, cell in ipairs(cells) do
+      if not cell:match("^:?-+:?$") then
+         return false
+      end
+   end
+   return true
+end
+
+local function is_markdown_table_line(line)
+   return line:find("|", 1, true) ~= nil
+end
+
+local function find_markdown_table_bounds(bufnr)
+   local cursor = vim.api.nvim_win_get_cursor(0)[1]
+   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+   if not is_markdown_table_line(lines[cursor] or "") then
+      return nil
+   end
+
+   local start = cursor
+   while start > 1 and is_markdown_table_line(lines[start - 1]) do
+      start = start - 1
+   end
+
+   local finish = cursor
+   while finish < #lines and is_markdown_table_line(lines[finish + 1]) do
+      finish = finish + 1
+   end
+
+   local separator
+   for lnum = start, finish do
+      if is_markdown_table_separator(lines[lnum]) then
+         separator = lnum
+         break
+      end
+   end
+
+   if not separator then
+      return nil
+   end
+
+   return start, finish, separator, lines
+end
+
+local function markdown_table_to_list(bufnr, ordered, primary_index)
+   bufnr = bufnr or vim.api.nvim_get_current_buf()
+   local start, finish, separator, lines = find_markdown_table_bounds(bufnr)
+   if not start then
+      log.err("Cursor is not in a Markdown table")
+      return
+   end
+
+   local row_lines = {}
+   for lnum = separator + 1, finish do
+      if not is_markdown_table_separator(lines[lnum]) then
+         row_lines[#row_lines + 1] = lines[lnum]
+      end
+   end
+
+   if #row_lines == 0 then
+      log.err("Markdown table has no data rows")
+      return
+   end
+
+   local columns = split_markdown_table_row(row_lines[1])
+   if primary_index < 1 or primary_index > #columns then
+      log.err(string.format("Primary column index must be between 1 and %d", #columns))
+      return
+   end
+
+   local indent = (lines[start]:match("^%s*") or "")
+   local new_lines = {}
+   for row_index, line in ipairs(row_lines) do
+      columns = split_markdown_table_row(line)
+      local marker = ordered and (row_index .. ". ") or "- "
+      new_lines[#new_lines + 1] = indent .. marker .. (columns[primary_index] or "")
+
+      local child_indent = indent .. string.rep(" ", #marker)
+      for index, cell in ipairs(columns) do
+         if index ~= primary_index and cell ~= "" then
+            new_lines[#new_lines + 1] = child_indent .. "- " .. cell
+         end
+      end
+   end
+
+   vim.api.nvim_buf_set_lines(bufnr, start - 1, finish, false, new_lines)
+   log.info("Converted Markdown table to list")
+end
+
+local function prompt_markdown_table_to_list(bufnr)
+   bufnr = bufnr or vim.api.nvim_get_current_buf()
+   vim.ui.select({ "unordered", "ordered" }, { prompt = "List type:" }, function(choice)
+      if not choice then
+         log.info("Aborted")
+         return
+      end
+
+      local start, _, separator, lines = find_markdown_table_bounds(bufnr)
+      if not start then
+         log.err("Cursor is not in a Markdown table")
+         return
+      end
+      local header = split_markdown_table_row(lines[separator - 1] or "")
+
+      vim.ui.input({ prompt = string.format("Primary column index (1-%d): ", #header), default = "1" }, function(input)
+         if not input or input == "" then
+            log.info("Aborted")
+            return
+         end
+
+         local primary_index = tonumber(input)
+         if not primary_index or primary_index % 1 ~= 0 then
+            log.err("Primary column index must be a whole number")
+            return
+         end
+
+         markdown_table_to_list(bufnr, choice == "ordered", primary_index)
+      end)
+   end)
+end
+
 local function process_image()
    -- TODO: after link parsing recognize embeds, check if is image
    local link = obsidian.api.cursor_link()
@@ -387,11 +550,18 @@ pcall(function()
       title = "Clean up footnotes",
       fn = cleanup_footnotes,
    })
+
+   require("obsidian").code_action.add({
+      name = "markdown_table_to_list",
+      title = "Convert Markdown table to list",
+      fn = prompt_markdown_table_to_list,
+   })
 end)
 
 return {
    process_image = process_image,
    cleanup_footnotes = cleanup_footnotes,
    convert_markdown_footnotes = convert_markdown_footnotes,
+   markdown_table_to_list = prompt_markdown_table_to_list,
    capture_to_daily = capture_to_daily,
 }

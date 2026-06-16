@@ -1,5 +1,7 @@
 local log = require("obsidian.log")
 
+-- TODO: query should have whitespace on both sides, so that test don't match shortest
+
 return function()
    local note = require("obsidian").api.current_note()
    if not note then
