@@ -7,69 +7,29 @@ vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
 
 local obsidian = require("obsidian")
 
-pcall(function()
-   require("obsidian-cite").setup({
-      source = {
-         type = "better-bibtex-json",
-         path = "~/My Library.json",
-      },
-   })
-end)
+--- EXPERIMENTS ---
 
-pcall(function()
-   require("obsidian").register_command("heatmap", { nargs = 0 })
-end)
-
-pcall(function()
-   require("obsidian.spaced-repetition").setup({
-      auto_next_note = true,
-   })
-end)
-
-local mediaDB = require("obsidian.media-db")
-mediaDB.setup({
-   apis = {
-      omdb = { key = "debaf6f7" },
-      -- giant_bomb = { key = "0d3deb61eeed923a919def933ceeb4d168fa3f64" },
-      spotify = {
-         id = os.getenv("SPOTIFY_CLIENT_ID"),
-         secret = os.getenv("SPOTIFY_CLIENT_SECRET"),
-      },
-      open_library = { enabled = false },
-      google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
-   },
-   media_types = {
-      movie = {
-         field_mappings = {
-            director = { format = "[[%s]]" },
-            actors = { format = "[[%s]]" },
-         },
-      },
-      music = {
-         field_mappings = {
-            artists = { format = "[[%s]]" },
-         },
-         template = "music.md",
-      },
-   },
-})
-
-mediaDB.register_action("rym", function(model, _ctx)
-   local title = model.title or ""
-   local artist = (model.artists and model.artists[1]) or ""
-   local q = vim.uri_encode(title .. " " .. artist)
-   vim.ui.open("https://rateyourmusic.com/search?searchterm=" .. q)
-end)
-
-vim.keymap.set("n", "<leader>ry", function()
-   mediaDB.run_action("rym", { selecter = "type" })
-end)
-
+require("obsidian.due_display")
+require("obsidian.yaml_vim_options")
+require("obsidian.yazi_attachment")
+local ut = require("obsidian._utils")
+vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
 vim.filetype.add({
    extension = {
       base = "yaml",
    },
 })
+
+--- INTEGRATIONS ---
+
+require("obsidian").register_command("heatmap", { nargs = 0 })
+require("_obsidian_cite")
+require("obsidian.spaced-repetition").setup({
+   auto_next_note = true,
+})
+require("_obsidian_media_db")
+
+--- OPEN ---
 
 local handlers = {
    jisho = function(uri)
@@ -106,12 +66,7 @@ vim.ui.open = (function(overridden)
    end
 end)(vim.ui.open)
 
-require("obsidian.due_display")
-require("obsidian.yaml_vim_options")
-require("obsidian.yazi_attachment")
-local ut = require("obsidian._utils")
-
-vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
+--- SETUP ---
 
 obsidian.setup({
    image = {
@@ -132,9 +87,7 @@ obsidian.setup({
    },
 
    sync = {
-      -- backend = "git",
-      -- backend = "rclone",
-      -- trigger = "on_write",
+      -- trigger = "continuous",
       enabled = true,
    },
 
@@ -207,7 +160,7 @@ obsidian.setup({
    ui = { enable = false },
 
    checkbox = {
-      order = { " ", "x" },
+      order = { "", " ", "x" },
       create_new = true,
    },
 
@@ -226,7 +179,7 @@ obsidian.setup({
 
    picker = {
       -- enabled = false,
-      name = "snacks.pick",
+      name = "snacks.picker",
       -- name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",

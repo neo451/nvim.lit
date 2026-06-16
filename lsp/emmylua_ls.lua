@@ -16,17 +16,14 @@ local library = {
    vim.env.VIMRUNTIME,
    -- For LSP Settings Type Annotations: https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
    vim.api.nvim_get_runtime_file("lua/lspconfig", false)[1],
-   vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "mini.nvim"),
-   vim.fs.joinpath(vim.fn.stdpath("data"), "/site/pack/core/opt", "snacks.nvim"),
-   vim.api.nvim_get_runtime_file("lua/obsidian", false)[1],
 }
--- local PLUGIN_DIR = vim.fs.normalize("~/Plugins/")
---
--- if vim.uv.fs_stat(PLUGIN_DIR) ~= nil then
---    for name in vim.fs.dir(PLUGIN_DIR) do
---       table.insert(library, vim.fs.joinpath(PLUGIN_DIR, name))
---    end
--- end
+local PLUGIN_DIR = vim.fs.normalize("~/Plugins/")
+
+if vim.uv.fs_stat(PLUGIN_DIR) ~= nil then
+   for name in vim.fs.dir(PLUGIN_DIR) do
+      table.insert(library, vim.fs.joinpath(PLUGIN_DIR, name))
+   end
+end
 
 ---@type vim.lsp.Config
 return {
