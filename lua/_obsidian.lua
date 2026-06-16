@@ -21,22 +21,6 @@ pcall(function()
 end)
 
 pcall(function()
-   require("obsidian.lsp.watchfiles").register_handler(function(events, raw_changes)
-      for _, event in ipairs(events) do
-         if event.type == "renamed" then
-            print("rename", event.old_path, "->", event.new_path)
-         elseif event.type == "created" then
-            print("created", event.path)
-         elseif event.type == "deleted" then
-            print("deleted", event.path)
-         elseif event.type == "changed" then
-            print("changed", event.path)
-         end
-      end
-   end)
-end)
-
-pcall(function()
    require("obsidian.spaced-repetition").setup({
       auto_next_note = true,
    })
