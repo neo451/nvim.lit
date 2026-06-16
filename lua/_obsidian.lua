@@ -139,7 +139,8 @@ obsidian.setup({
    },
 
    footer = {
-      format = "{{status}}\n{{linked_mentions}}",
+      -- TODO: multiline footer
+      -- format = "{{status}}\n{{linked_mentions}}",
       substitutions = {
          linked_mentions = require("obsidian._linked_mentions"),
       },

@@ -4,7 +4,7 @@ local actions = require("obsidian.actions")
 
 ---@param note obsidian.Note
 return function(note)
-   require("obsidian.winbar") -- TODO: make only attach per note
+   -- require("obsidian.winbar") -- TODO: make only attach per note
    vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
    vim.wo.foldtext = "v:lua.vim.lsp.foldtext()"
    vim.wo.foldmethod = "expr"
