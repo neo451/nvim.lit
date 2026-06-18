@@ -88,6 +88,7 @@ obsidian.setup({
 
    sync = {
       -- trigger = "continuous",
+      configs = {},
       enabled = true,
    },
 
