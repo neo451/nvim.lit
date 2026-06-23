@@ -14,6 +14,18 @@ vim.keymap.set("n", "<leader>cl", function()
    vim.lsp.codelens.run({})
 end, { buf = 0 })
 
+local header_navigation = require("markdown-plus.headers.navigation")
+
+vim.keymap.set("n", "]]", function()
+   header_navigation.next_header()
+   vim.cmd("normal! zz")
+end, { buffer = true, desc = "Jump to next header" })
+
+vim.keymap.set("n", "[[", function()
+   header_navigation.prev_header()
+   vim.cmd("normal! zz")
+end, { buffer = true, desc = "Jump to previous header" })
+
 local ts = vim.treesitter
 
 ---@param node_type string | string[]
@@ -48,7 +60,8 @@ end
 vim.wo.conceallevel = 1
 vim.wo.spell = true
 vim.bo.shiftwidth = 2
-vim.b.pandoc_compiler_args = "--bibliography=$REF --citeproc"
+-- vim.b.pandoc_compiler_args = "--bibliography=$REF --citeproc"
+vim.b.pandoc_compiler_args = "--citeproc"
 vim.cmd("compiler pandoc")
 
 vim.keymap.set({ "i", "n" }, "<Tab>", function()

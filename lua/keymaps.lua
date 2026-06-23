@@ -26,8 +26,6 @@ set("n", "gra", function()
    end
 end)
 
-set("n", "<C-n>", require("obsidian._media").search, { desc = "New Media DB Entry" })
-
 set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
@@ -128,7 +126,6 @@ nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
 nmap_leader("od", "<cmd>Obsidian today<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
-nmap_leader("ou", require("obsidian._unique_note").create_and_append, "Obsidian unique note")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
 nmap_leader("O", "<cmd>Obsidian<cr>")
 nmap_leader("S", "<cmd>Obsidian sync<cr>")

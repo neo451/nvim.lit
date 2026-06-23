@@ -32,11 +32,12 @@ vim.pack.add({
    "https://github.com/folke/tokyonight.nvim",
    "https://github.com/catppuccin/nvim",
 
-   -- markdown
+   -- writing
    "https://github.com/MeanderingProgrammer/render-markdown.nvim",
    "https://github.com/YousefHadder/markdown-plus.nvim",
    "https://github.com/jmbuhr/otter.nvim",
    "https://github.com/quarto-dev/quarto-nvim",
+   "https://github.com/lervag/vimtex",
 
    -- "https://github.com/jalvesaq/zotcite",
 

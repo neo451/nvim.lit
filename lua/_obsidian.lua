@@ -73,17 +73,17 @@ obsidian.setup({
       enabeld = true,
    },
 
-   files = {
+   file = {
       trash = "local",
+      ignore_filters = {
+         "Archived/",
+         "Source/",
+      },
    },
 
    cache = {
       enabled = true,
-      backend = "memory",
-      ignore_patterns = {
-         "^%.agents/",
-         "^Archived/",
-      },
+      -- backend = "memory",
    },
 
    sync = {
@@ -111,6 +111,38 @@ obsidian.setup({
    callbacks = {
       enter_note = function(note)
          require("obsidian.enter_note")(note)
+      end,
+      create_note = function(note, opts)
+         local daily
+         if opts.scope ~= "plain" then
+            daily = require("obsidian.daily").today()
+            if not daily:exists() then
+               daily = daily:write()
+            end
+         end
+         ---@cast daily -nil
+         if opts.scope == "unique" then
+            local label = vim.trim(vim.fn.input("Label: "))
+            if label == "" then
+               return
+            end
+
+            note:add_alias(label)
+            note:write() -- persist the new alias/frontmatter
+
+            local link = note:format_link({ label = label })
+
+            daily:insert_text({ "- " .. link }, {
+               section = { header = "TIL", level = 2 },
+               placement = "bot",
+            })
+         elseif opts.scope == "media" then
+            local link = note:format_link()
+            daily:insert_text({ "- " .. link }, {
+               section = { header = "Media", level = 2 },
+               placement = "bot",
+            })
+         end
       end,
    },
 
@@ -168,6 +200,14 @@ obsidian.setup({
    open = {
       use_advanced_uri = false,
       schemes = { "zotero", "jisho", "man", "rfc" },
+
+      func = function(uri, opts)
+         if uri:match("%.pdf$") and opts and opts.params and opts.params.page then
+            vim.system({ "zathura", "--page=" .. opts.params.page, uri }, { detach = true })
+         else
+            vim.ui.open(uri)
+         end
+      end,
    },
 
    daily_notes = {
@@ -180,10 +220,10 @@ obsidian.setup({
 
    picker = {
       -- enabled = false,
-      name = "snacks.picker",
+      -- name = "snacks.picker",
       -- name = "mini.pick",
       -- name = "fzf-lua",
-      -- name = "telescope.nvim",
+      name = "telescope.nvim",
    },
 
    attachments = {
