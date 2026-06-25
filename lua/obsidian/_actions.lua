@@ -638,6 +638,147 @@ local function add_table_of_contents(bufnr)
    log.info("Added table of contents")
 end
 
+local half_width_punctuation = {
+   [","] = "，",
+   ["."] = "。",
+   ["?"] = "？",
+   ["!"] = "！",
+   [":"] = "：",
+   [";"] = "；",
+   ["("] = "（",
+   [")"] = "）",
+}
+
+local function convert_punctuation_text(text, opts)
+   opts = opts or {}
+   local count = 0
+   local converted = text:gsub(".", function(char)
+      if opts.skip_colon and char == ":" then
+         return char
+      end
+
+      local replacement = half_width_punctuation[char]
+      if replacement then
+         count = count + 1
+         return replacement
+      end
+      return char
+   end)
+
+   return converted, count
+end
+
+local function frontmatter_rows(lines)
+   local rows = {}
+   if lines[1] ~= "---" then
+      return rows
+   end
+
+   for lnum = 2, #lines do
+      if lines[lnum] == "---" then
+         for row = 1, lnum - 2 do
+            rows[row] = true
+         end
+         break
+      end
+   end
+
+   return rows
+end
+
+local function next_byte_col(line, col)
+   local byte = line:byte(col + 1)
+   if not byte then
+      return col
+   end
+
+   local len = 1
+   if byte >= 0xF0 then
+      len = 4
+   elseif byte >= 0xE0 then
+      len = 3
+   elseif byte >= 0xC0 then
+      len = 2
+   end
+
+   return math.min(col + len, #line)
+end
+
+local function visual_punctuation_range(bufnr, mode)
+   local anchor = vim.fn.getpos("v")
+   local cursor = vim.api.nvim_win_get_cursor(0)
+   local start_row = anchor[2] - 1
+   local start_col = math.max(anchor[3] - 1, 0)
+   local end_row = cursor[1] - 1
+   local end_col = cursor[2]
+
+   if start_row > end_row or (start_row == end_row and start_col > end_col) then
+      start_row, end_row = end_row, start_row
+      start_col, end_col = end_col, start_col
+   end
+
+   if mode == "V" then
+      return start_row, 0, end_row, -1
+   end
+   if mode == "\022" and start_col > end_col then
+      start_col, end_col = end_col, start_col
+   end
+
+   local end_line = vim.api.nvim_buf_get_lines(bufnr, end_row, end_row + 1, false)[1] or ""
+   return start_row, start_col, end_row, next_byte_col(end_line, end_col)
+end
+
+local function convert_half_width_punctuation(bufnr)
+   bufnr = bufnr or vim.api.nvim_get_current_buf()
+   local mode = vim.fn.mode()
+   local count = 0
+
+   if mode == "v" or mode == "V" or mode == "\022" then
+      local start_row, start_col, end_row, end_col = visual_punctuation_range(bufnr, mode)
+      local frontmatter = frontmatter_rows(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false))
+
+      if mode == "\022" then
+         local lines = vim.api.nvim_buf_get_lines(bufnr, start_row, end_row + 1, false)
+         for index, line in ipairs(lines) do
+            if start_col < #line then
+               local row = start_row + index - 1
+               local row_end_col = math.min(end_col, #line)
+               local text = line:sub(start_col + 1, row_end_col)
+               local converted, line_count = convert_punctuation_text(text, { skip_colon = frontmatter[row] })
+               count = count + line_count
+               if line_count > 0 then
+                  vim.api.nvim_buf_set_text(bufnr, row, start_col, row, row_end_col, { converted })
+               end
+            end
+         end
+      else
+         local lines = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
+         for index, line in ipairs(lines) do
+            local line_count
+            local row = start_row + index - 1
+            lines[index], line_count = convert_punctuation_text(line, { skip_colon = frontmatter[row] })
+            count = count + line_count
+         end
+         if count > 0 then
+            vim.api.nvim_buf_set_text(bufnr, start_row, start_col, end_row, end_col, lines)
+         end
+      end
+   else
+      local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+      local frontmatter = frontmatter_rows(lines)
+      for index, line in ipairs(lines) do
+         local line_count
+         lines[index], line_count = convert_punctuation_text(line, { skip_colon = frontmatter[index - 1] })
+         count = count + line_count
+      end
+      if count > 0 then
+         vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+      end
+   end
+
+   log.info(string.format("Converted %d punctuation mark(s)", count))
+end
+
 local function process_image()
    -- TODO: after link parsing recognize embeds, check if is image
    local link = obsidian.api.cursor_link()
@@ -690,6 +831,12 @@ pcall(function()
       title = "Add table of contents",
       fn = add_table_of_contents,
    })
+
+   require("obsidian").code_action.add({
+      name = "convert_half_width_punctuation",
+      title = "Convert half-width punctuation to full-width",
+      fn = convert_half_width_punctuation,
+   })
 end)
 
 return {
@@ -698,5 +845,6 @@ return {
    convert_markdown_footnotes = convert_markdown_footnotes,
    markdown_table_to_list = prompt_markdown_table_to_list,
    add_table_of_contents = add_table_of_contents,
+   convert_half_width_punctuation = convert_half_width_punctuation,
    capture_to_daily = capture_to_daily,
 }

@@ -50,7 +50,14 @@ set("x", "gp", '"+P', { desc = "Paste from system clipboard" })
 
 set("n", "<leader>U", "<cmd>Undotree<cr>", { desc = "Toggle UndoTree" })
 
-set("n", "<End>", "<cmd>restart<cr>")
+set("n", "<End>", function()
+   local file = vim.api.nvim_buf_get_name(0)
+   if file == "" then
+      vim.cmd("restart")
+   else
+      vim.cmd("restart edit " .. vim.fn.fnameescape(file))
+   end
+end)
 
 set("n", "<C-S-C>", function()
    local buf = vim.api.nvim_get_current_buf()
