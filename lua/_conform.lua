@@ -7,6 +7,7 @@ require("conform").setup({
       -- List of path patterns to exclude from formatting
       local exclude_patterns = {
          "/Templates/",
+         "/docs/Note.md",
       }
 
       for _, pattern in ipairs(exclude_patterns) do

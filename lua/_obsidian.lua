@@ -3,6 +3,7 @@ vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
 vim.opt.rtp:append("~/Plugins/scribe.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
+vim.opt.rtp:append("~/Plugins/calendar.nvim/")
 -- vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
 
 local obsidian = require("obsidian")
@@ -113,37 +114,40 @@ obsidian.setup({
          require("obsidian.enter_note")(note)
       end,
       create_note = function(note, opts)
-         local daily
-         if opts.scope ~= "plain" then
-            daily = require("obsidian.daily").today()
+         if opts.scope == "unique" or opts.scope == "media" then
+            local daily = require("obsidian.daily").today()
             if not daily:exists() then
                daily = daily:write()
             end
-         end
-         ---@cast daily -nil
-         if opts.scope == "unique" then
-            local label = vim.trim(vim.fn.input("Label: "))
-            if label == "" then
-               return
+
+            if opts.scope == "unique" then
+               local label = vim.trim(vim.fn.input("Title: "))
+               if label == "" then
+                  return
+               end
+
+               note:add_alias(label)
+               note:write() -- persist the new alias/frontmatter
+
+               local link = note:format_link({ label = label })
+               daily:insert_text({ "- " .. link }, {
+                  section = { header = "TIL", level = 2 },
+                  placement = "bot",
+               })
+            elseif opts.scope == "media" then
+               local link = note:format_link()
+               daily:insert_text({ "- " .. link }, {
+                  section = { header = "Media", level = 2 },
+                  placement = "bot",
+               })
             end
-
-            note:add_alias(label)
-            note:write() -- persist the new alias/frontmatter
-
-            local link = note:format_link({ label = label })
-
-            daily:insert_text({ "- " .. link }, {
-               section = { header = "TIL", level = 2 },
-               placement = "bot",
-            })
-         elseif opts.scope == "media" then
-            local link = note:format_link()
-            daily:insert_text({ "- " .. link }, {
-               section = { header = "Media", level = 2 },
-               placement = "bot",
-            })
          end
       end,
+   },
+
+   resolvers = {
+      attachment = require("obsidian.yazi_attachment"),
+      date = require("obsidian.calendar_date"),
    },
 
    frontmatter = {

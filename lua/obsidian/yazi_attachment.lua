@@ -2,8 +2,8 @@ local actions = require("obsidian.actions")
 local attachment = require("obsidian.attachment")
 local api = require("obsidian.api")
 
-local yazi = function(opts)
-   local bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
+local yazi = function(ctx, done)
+   local bufnr = ctx.bufnr or vim.api.nvim_get_current_buf()
    local tmp = vim.fn.tempname()
    local buf = vim.api.nvim_create_buf(false, true)
    local width = math.floor(vim.o.columns * 0.8)
@@ -25,7 +25,9 @@ local yazi = function(opts)
          if vim.uv.fs_stat(tmp) then
             local lines = vim.fn.readfile(tmp)
             if lines[1] then
-               attachment.add(lines[1], { insert = opts.insert, bufnr = bufnr })
+               done({
+                  path = lines[1],
+               })
             end
          end
       end,
@@ -33,17 +35,16 @@ local yazi = function(opts)
    vim.cmd("startinsert")
 end
 
-actions.add_attachment = function(_, opts)
-   opts = opts or {}
+return function(ctx, done)
    vim.ui.select({ "Remote url", "Local path" }, {}, function(item)
       if item == "Remote url" then
          local input = api.input("Url", {})
          if not input then
             return
          end
-         attachment.add(vim.trim(input), opts)
+         done(vim.trim(input))
       else
-         yazi(opts)
+         yazi(ctx, done)
       end
    end)
 end
