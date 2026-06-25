@@ -1,4 +1,8 @@
-local function whisper(ctx)
+local function whisper(path, ctx)
+   if not vim.fn.confirm("Transcribe?") then
+      return
+   end
+
    local key = vim.env.OPENAI_API_KEY
    if not key or key == "" then
       vim.notify("OPENAI_API_KEY is not set", vim.log.levels.ERROR)
@@ -28,7 +32,7 @@ local function whisper(ctx)
          "-F",
          "model=whisper-1",
          "-F",
-         "file=@" .. ctx.path,
+         "file=@" .. path,
       }
 
       if choice.value then

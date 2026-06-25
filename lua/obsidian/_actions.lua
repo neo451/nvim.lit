@@ -510,6 +510,134 @@ local function prompt_markdown_table_to_list(bufnr)
    end)
 end
 
+local function strip_markdown_heading(line)
+   local hashes, text = line:match("^%s*(#+)%s+(.-)%s*$")
+   if not hashes or #hashes > 6 then
+      return nil
+   end
+
+   return #hashes, text:gsub("%s+#+%s*$", "")
+end
+
+local function markdown_heading_slug(text)
+   local slug = text:lower()
+   slug = slug:gsub("[^%w%s%-\128-\255]", "")
+   slug = trim(slug):gsub("%s+", "-")
+   return slug
+end
+
+local function collect_markdown_headings(lines)
+   local headings = {}
+   local in_fence = false
+   local fence_marker
+
+   for lnum, line in ipairs(lines) do
+      local marker = line:match("^%s*(```+)") or line:match("^%s*(~~~+)")
+      if marker and (not in_fence or marker:sub(1, 1) == fence_marker) then
+         in_fence = not in_fence
+         fence_marker = in_fence and marker:sub(1, 1) or nil
+      elseif not in_fence then
+         local level, text = strip_markdown_heading(line)
+         if level and text ~= "" then
+            headings[#headings + 1] = { lnum = lnum, level = level, text = text }
+         end
+      end
+   end
+
+   return headings
+end
+
+local function toc_insert_lnum(lines, headings)
+   local content_start = 1
+   local has_frontmatter = false
+   if lines[1] == "---" then
+      for lnum = 2, #lines do
+         if lines[lnum] == "---" then
+            content_start = lnum + 1
+            has_frontmatter = true
+            break
+         end
+      end
+   end
+
+   if has_frontmatter then
+      while lines[content_start] == "" do
+         content_start = content_start + 1
+      end
+   end
+
+   if headings[1] and headings[1].level == 1 and headings[1].lnum == content_start then
+      return content_start + 1, true
+   end
+   return content_start, false
+end
+
+local function find_existing_toc(lines)
+   local start
+   for lnum, line in ipairs(lines) do
+      if line:match("^%s*<!%-%-toc:start%-%->%s*$") then
+         start = lnum
+      elseif start and line:match("^%s*<!%-%-toc:end%-%->%s*$") then
+         return start, lnum
+      end
+   end
+end
+
+local function build_table_of_contents(lines)
+   local headings = collect_markdown_headings(lines)
+   if #headings == 0 then
+      return nil
+   end
+
+   local min_level = headings[1].level
+   for _, heading in ipairs(headings) do
+      min_level = math.min(min_level, heading.level)
+   end
+
+   local slugs = {}
+   local toc = { "<!--toc:start-->" }
+   for _, heading in ipairs(headings) do
+      local base_slug = markdown_heading_slug(heading.text)
+      local slug = base_slug
+      if slugs[base_slug] then
+         slug = base_slug .. "-" .. slugs[base_slug]
+         slugs[base_slug] = slugs[base_slug] + 1
+      else
+         slugs[base_slug] = 1
+      end
+
+      toc[#toc + 1] = string.rep(" ", (heading.level - min_level) * 2) .. "- [" .. heading.text .. "](#" .. slug .. ")"
+   end
+   toc[#toc + 1] = "<!--toc:end-->"
+
+   return toc, headings
+end
+
+local function add_table_of_contents(bufnr)
+   bufnr = bufnr or vim.api.nvim_get_current_buf()
+   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+   local toc, headings = build_table_of_contents(lines)
+   if not toc then
+      log.err("No Markdown headings found")
+      return
+   end
+
+   local start, finish = find_existing_toc(lines)
+   if start then
+      vim.api.nvim_buf_set_lines(bufnr, start - 1, finish, false, toc)
+      log.info("Updated table of contents")
+      return
+   end
+
+   local lnum, after_heading = toc_insert_lnum(lines, headings)
+   local insert = vim.list_extend(after_heading and { "" } or {}, toc)
+   if lines[lnum] ~= "" then
+      insert[#insert + 1] = ""
+   end
+   vim.api.nvim_buf_set_lines(bufnr, lnum - 1, lnum - 1, false, insert)
+   log.info("Added table of contents")
+end
+
 local function process_image()
    -- TODO: after link parsing recognize embeds, check if is image
    local link = obsidian.api.cursor_link()
@@ -556,6 +684,12 @@ pcall(function()
       title = "Convert Markdown table to list",
       fn = prompt_markdown_table_to_list,
    })
+
+   require("obsidian").code_action.add({
+      name = "add_table_of_contents",
+      title = "Add table of contents",
+      fn = add_table_of_contents,
+   })
 end)
 
 return {
@@ -563,5 +697,6 @@ return {
    cleanup_footnotes = cleanup_footnotes,
    convert_markdown_footnotes = convert_markdown_footnotes,
    markdown_table_to_list = prompt_markdown_table_to_list,
+   add_table_of_contents = add_table_of_contents,
    capture_to_daily = capture_to_daily,
 }

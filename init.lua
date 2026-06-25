@@ -102,10 +102,10 @@ require("lz.n").load({
                   wo = { wrap = true },
                },
             },
-            notifier = {
-               enabled = true,
-               timeout = 3000,
-            },
+            -- notifier = {
+            --    enabled = true,
+            --    timeout = 3000,
+            -- },
          })
       end,
    },

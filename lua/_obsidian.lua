@@ -110,6 +110,11 @@ obsidian.setup({
    },
 
    callbacks = {
+      add_attachment = function(path, ctx)
+         if ctx.scope == "audio_recorder" then
+            require("obsidian.transcribe").whisper(path, ctx)
+         end
+      end,
       enter_note = function(note)
          require("obsidian.enter_note")(note)
       end,
@@ -224,10 +229,10 @@ obsidian.setup({
 
    picker = {
       -- enabled = false,
-      -- name = "snacks.picker",
+      name = "snacks.picker",
       -- name = "mini.pick",
       -- name = "fzf-lua",
-      name = "telescope.nvim",
+      -- name = "telescope.nvim",
    },
 
    attachments = {

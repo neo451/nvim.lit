@@ -4,6 +4,11 @@ require("obsidian").register_command("attachments", { nargs = 0 })
 require("obsidian").register_command("places", { nargs = "*" })
 require("obsidian").register_command("base", { nargs = "*" })
 require("obsidian").register_command("base_create", { nargs = "*" })
+require("obsidian").register_command("prompts", {
+   nargs = "*",
+   note_action = true,
+   complete = require("obsidian.commands.prompts").complete,
+})
 
 -- require("obsidian").register_command("ai_links", { nargs = "?", range = true })
 -- require("obsidian").register_command("panel", { nargs = 0 })
