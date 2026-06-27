@@ -457,6 +457,416 @@ local function create_note(filename, spec)
    return note
 end
 
+local function source_workspace(source_path)
+   if source_path ~= nil and source_path ~= "" then
+      local workspace = require("obsidian.api").find_workspace(source_path)
+      if workspace ~= nil then
+         return workspace
+      end
+   end
+
+   return Obsidian and Obsidian.workspace or nil
+end
+
+local function resolve_view_folder(folder, source_path)
+   local workspace = source_workspace(source_path)
+   if folder == nil or folder == "" then
+      if workspace ~= nil then
+         return tostring(workspace.root)
+      end
+      return vim.uv.cwd()
+   end
+
+   local Path = require("obsidian.path")
+   local path = Path.new(folder)
+   if path:is_absolute() then
+      return tostring(path)
+   end
+   if workspace ~= nil then
+      return tostring(workspace.root / folder)
+   end
+   return folder
+end
+
+local function list_note_paths(dir)
+   local paths = {}
+
+   local function scan(path)
+      local iter = vim.fs.dir(path)
+      if iter == nil then
+         return
+      end
+
+      for name, kind in iter do
+         if name:sub(1, 1) ~= "." then
+            local child = vim.fs.joinpath(path, name)
+            if kind == "directory" then
+               scan(child)
+            elseif kind == "file" and (name:match("%.md$") or name:match("%.markdown$") or name:match("%.qmd$")) then
+               paths[#paths + 1] = child
+            end
+         end
+      end
+   end
+
+   scan(dir)
+   table.sort(paths)
+   return paths
+end
+
+local function has_all_tags(note, tags)
+   for _, tag in ipairs(tags or {}) do
+      local wanted = clean_tag(tag)
+      local found = false
+      for _, note_tag in ipairs(note.tags or {}) do
+         if clean_tag(note_tag) == wanted then
+            found = true
+            break
+         end
+      end
+      if not found then
+         return false
+      end
+   end
+
+   return true
+end
+
+local function view_query(view)
+   local query = { folder = nil, tags = {} }
+
+   walk_filter(view.filter, function(node)
+      if node.type ~= "call" or node.receiver ~= "file" then
+         return
+      end
+
+      if node.method == "inFolder" and query.folder == nil then
+         query.folder = node.args[1]
+      elseif node.method == "hasTag" then
+         for _, tag in ipairs(node.args or {}) do
+            unique_append(query.tags, clean_tag(tag))
+         end
+      end
+   end)
+
+   return query
+end
+
+local function column_property(column)
+   if type(column) ~= "string" then
+      return nil
+   end
+   if column:match("^note%.") then
+      return column:gsub("^note%.", "", 1)
+   end
+   if not column:match("^[%w_]+%.") then
+      return column
+   end
+end
+
+local function column_label(column)
+   if column == "file.name" then
+      return "File"
+   elseif column == "file.path" then
+      return "Path"
+   elseif column == "file.folder" then
+      return "Folder"
+   elseif column == "file.tags" then
+      return "Tags"
+   elseif type(column) == "string" and column:match("^formula%.") then
+      return column:gsub("^formula%.", "", 1)
+   end
+
+   return column_property(column) or tostring(column)
+end
+
+local function stringify_value(value)
+   if value == nil or value == vim.NIL then
+      return ""
+   end
+
+   if type(value) ~= "table" then
+      return tostring(value)
+   end
+
+   local values = {}
+   if #value > 0 then
+      for _, item in ipairs(value) do
+         values[#values + 1] = stringify_value(item)
+      end
+   else
+      for key, item in pairs(value) do
+         values[#values + 1] = tostring(key) .. ": " .. stringify_value(item)
+      end
+      table.sort(values)
+   end
+
+   return table.concat(values, ", ")
+end
+
+local function relative_to_workspace(path, source_path)
+   local workspace = source_workspace(source_path)
+   if workspace == nil then
+      return path
+   end
+
+   local ok, rel = pcall(function()
+      return require("obsidian.path").new(path):relative_to(workspace.root)
+   end)
+   if ok and rel ~= nil then
+      return tostring(rel)
+   end
+   return path
+end
+
+local function note_value(note, column, source_path)
+   local path = note.path
+   if column == "file.name" then
+      return path and path.stem or note:display_name()
+   elseif column == "file.path" then
+      return path and relative_to_workspace(tostring(path), source_path) or ""
+   elseif column == "file.folder" then
+      if path == nil or path:parent() == nil then
+         return ""
+      end
+      return relative_to_workspace(tostring(path:parent()), source_path)
+   elseif column == "file.tags" then
+      return note.tags or {}
+   elseif type(column) == "string" and column:match("^formula%.") then
+      return ""
+   end
+
+   local prop = column_property(column)
+   if prop == nil then
+      return ""
+   elseif prop == "id" then
+      return note.id
+   elseif prop == "aliases" then
+      return note.aliases
+   elseif prop == "tags" then
+      return note.tags
+   end
+
+   return note.metadata and note.metadata[prop] or nil
+end
+
+local function display_width(text)
+   return vim.fn.strdisplaywidth(text)
+end
+
+local function truncate(text, width)
+   text = tostring(text or "")
+   if display_width(text) <= width then
+      return text
+   end
+   if width <= 1 then
+      return "…"
+   end
+
+   local out = {}
+   local used = 0
+   local i = 0
+   while i < vim.fn.strchars(text) do
+      local ch = vim.fn.strcharpart(text, i, 1)
+      local ch_width = display_width(ch)
+      if used + ch_width > width - 1 then
+         break
+      end
+      out[#out + 1] = ch
+      used = used + ch_width
+      i = i + 1
+   end
+
+   return table.concat(out) .. "…"
+end
+
+local function pad(text, width)
+   text = tostring(text or "")
+   return text .. string.rep(" ", math.max(width - display_width(text), 0))
+end
+
+local function configured_column_width(view, column)
+   local sizes = view.column_size or {}
+   local candidates = { column }
+   local prop = column_property(column)
+   if prop ~= nil then
+      candidates[#candidates + 1] = "note." .. prop
+   end
+
+   for _, key in ipairs(candidates) do
+      local px = tonumber(sizes[key])
+      if px ~= nil then
+         return math.max(6, math.floor(px / 8))
+      end
+   end
+end
+
+local function load_table_model(ast, view, source_path)
+   local columns = vim.deepcopy(view.order or {})
+   if vim.tbl_isempty(columns) then
+      columns = { "file.name" }
+   end
+
+   local query = view_query(view)
+   local folder = resolve_view_folder(query.folder, source_path)
+   local stat = vim.uv.fs_stat(folder)
+   if stat == nil or stat.type ~= "directory" then
+      error("base folder not found: " .. folder)
+   end
+
+   local Note = require("obsidian.note")
+   local rows = {}
+   for _, path in ipairs(list_note_paths(folder)) do
+      local ok, note = pcall(Note.from_file, path, { max_lines = 500 })
+      if ok and has_all_tags(note, query.tags) then
+         local values = {}
+         for _, column in ipairs(columns) do
+            values[#values + 1] = stringify_value(note_value(note, column, source_path))
+         end
+         rows[#rows + 1] = { note = note, path = tostring(note.path or path), values = values }
+      end
+   end
+
+   table.sort(rows, function(a, b)
+      return a.path < b.path
+   end)
+
+   return {
+      ast = ast,
+      view = view,
+      source_path = source_path,
+      folder = folder,
+      columns = columns,
+      rows = rows,
+   }
+end
+
+local function render_table_buffer(model)
+   local Morph = require("morph")
+   local h = Morph.h
+
+   local headers = vim.tbl_map(column_label, model.columns)
+   local widths = {}
+   for col, header in ipairs(headers) do
+      local width = display_width(header)
+      for _, row in ipairs(model.rows) do
+         width = math.max(width, display_width(row.values[col] or ""))
+      end
+
+      local configured = configured_column_width(model.view, model.columns[col])
+      widths[col] = configured and math.max(display_width(header), configured) or math.min(width, 36)
+   end
+
+   local function border(left, middle, right)
+      local parts = {}
+      for _, width in ipairs(widths) do
+         parts[#parts + 1] = string.rep("─", width + 2)
+      end
+      return h.Comment({}, left .. table.concat(parts, middle) .. right)
+   end
+
+   local function open_row(row)
+      vim.schedule(function()
+         require("obsidian.api").open_note(row.path, "edit")
+      end)
+   end
+
+   local function row_cells(row, is_header)
+      local out = { h.Comment({}, "│ ") }
+      for col = 1, #headers do
+         local text = is_header and headers[col] or row.values[col]
+         text = pad(truncate(text, widths[col]), widths[col])
+         if is_header then
+            out[#out + 1] = h.Constant({}, text)
+         else
+            out[#out + 1] = h("text", {
+               hl = col == 1 and "Identifier" or "Normal",
+               nmap = {
+                  ["<CR>"] = function()
+                     open_row(row)
+                     return ""
+                  end,
+               },
+            }, text)
+         end
+         out[#out + 1] = h.Comment({}, col == #headers and " │" or " │ ")
+      end
+      return out
+   end
+
+   local function BaseTable()
+      local out = { border("┌", "┬", "┐"), "\n", row_cells(nil, true), "\n", border("├", "┼", "┤") }
+      for _, row in ipairs(model.rows) do
+         out[#out + 1] = "\n"
+         out[#out + 1] = row_cells(row, false)
+      end
+      out[#out + 1] = "\n"
+      out[#out + 1] = border("└", "┴", "┘")
+      return out
+   end
+
+   local function App()
+      return {
+         h.Title({}, model.view.name or "Table"),
+         h.Comment({}, "  " .. #model.rows .. " notes · " .. relative_to_workspace(model.folder, model.source_path)),
+         "\n\n",
+         #model.rows == 0 and h.Comment({}, "No notes found.") or h(BaseTable, {}, {}),
+      }
+   end
+
+   vim.cmd.enew()
+   local bufnr = vim.api.nvim_get_current_buf()
+   local source_name = model.source_path ~= "" and vim.fs.basename(model.source_path) or "base"
+   pcall(vim.api.nvim_buf_set_name, bufnr, "Obsidian Base: " .. source_name .. " / " .. (model.view.name or "Table"))
+   vim.bo[bufnr].buftype = "nofile"
+   vim.bo[bufnr].bufhidden = "wipe"
+   vim.bo[bufnr].swapfile = false
+   vim.bo[bufnr].filetype = "obsidian-base-table"
+   vim.b[bufnr].obsidian_base_source = model.source_path
+   vim.b[bufnr].obsidian_base_view = model.view.name
+
+   vim.keymap.set("n", "q", function()
+      if #vim.api.nvim_list_wins() > 1 then
+         vim.cmd.close()
+      else
+         vim.cmd.bdelete({ bang = true })
+      end
+   end, { buffer = bufnr, silent = true })
+   Morph.new(bufnr):mount(h(App, {}, {}))
+   vim.bo[bufnr].modified = false
+end
+
+---Open the current .base table view as a rendered interactive table.
+---@param opts { source?: string, source_path?: string, view?: string }|nil
+function M.view(opts)
+   opts = opts or {}
+
+   local ok, ast_or_err = pcall(M.parse, opts.source or current_buffer_text())
+   if not ok then
+      notify("failed to parse base: " .. tostring(ast_or_err), vim.log.levels.ERROR)
+      return
+   end
+
+   local view = select_view(ast_or_err, opts.view)
+   if view == nil then
+      notify(opts.view and ("view not found: " .. opts.view) or "base has no views", vim.log.levels.ERROR)
+      return
+   end
+   if view.type ~= "table" then
+      notify("base view is not a table: " .. tostring(view.name or view.type), vim.log.levels.WARN)
+      return
+   end
+
+   local ok_model, model_or_err =
+      pcall(load_table_model, ast_or_err, view, opts.source_path or vim.api.nvim_buf_get_name(0))
+   if not ok_model then
+      notify("failed to load base table: " .. tostring(model_or_err), vim.log.levels.ERROR)
+      return
+   end
+
+   render_table_buffer(model_or_err)
+end
+
 ---Prompt for a filename and create a note matching the current .base view.
 ---@param opts { source?: string, view?: string, filename?: string, on_created?: fun(note: obsidian.Note) }|nil
 function M.create(opts)

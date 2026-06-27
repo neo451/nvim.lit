@@ -30,7 +30,7 @@
       "src": "https://github.com/gregorias/coop.nvim"
     },
     "debugprint.nvim": {
-      "rev": "c0a1d768e97d571d9c0b5357fddddf6005242915",
+      "rev": "e5fc856e67426521dbd0e46c160f8eafa753dec6",
       "src": "https://github.com/andrewferrier/debugprint.nvim"
     },
     "firenvim": {
@@ -42,7 +42,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "267f5db2aa2202b9f6cc7a50783f0ccd2121766c",
+      "rev": "b6f0392fe1645973c795b5bbbd8d6db466a5a25a",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "image.nvim": {
@@ -66,16 +66,20 @@
       "src": "https://github.com/viniciusteixeiradias/kanban.nvim"
     },
     "lz.n": {
-      "rev": "4bb6be03714bf68fd410b3c4f6fe5e062f594891",
+      "rev": "cd21cd6861c613a1e9285fdfd9b1d008eac9b7ec",
       "src": "https://github.com/lumen-oss/lz.n"
     },
     "markdown-plus.nvim": {
-      "rev": "320c5309705690be5929210b26c626405fd40b7a",
+      "rev": "003f5a83de9dad0c6a5a86c375745cb359e60d3a",
       "src": "https://github.com/YousefHadder/markdown-plus.nvim"
     },
     "mini.nvim": {
-      "rev": "1345d191bb3da9c7b0e977f4387c5761f9bff68d",
+      "rev": "1599a473aa6f5290a5d740b1144846e6f0c3963d",
       "src": "https://github.com/nvim-mini/mini.nvim"
+    },
+    "morph.nvim": {
+      "rev": "2f12c13865da83cc5b0a320f5e21231537118472",
+      "src": "https://github.com/jrop/morph.nvim"
     },
     "neojj": {
       "rev": "4e24d67ba032710c3a2d198fa7336760f28ed418",
@@ -94,7 +98,7 @@
       "src": "https://github.com/igorlfs/nvim-lsp-file-operations"
     },
     "nvim-lspconfig": {
-      "rev": "bfcc0171a43f22afa61d927ffe9fcb6cb85dc99e",
+      "rev": "3371bf298c1f56efc26771ee961f461176958fb5",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
@@ -143,11 +147,11 @@
       "src": "https://github.com/kkharji/sqlite.lua"
     },
     "telescope.nvim": {
-      "rev": "9377230aa5305d9e9aca4ed8dadf1070fb4aa9fc",
+      "rev": "427b576c16792edad01a92b89721d923c19ad60f",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "tiny-cmdline.nvim": {
-      "rev": "b1db8607a78f0c23b3bae08e079b1b7f147619d7",
+      "rev": "e247d9ee4c980734f8f8bf616d31e0ab7c27485d",
       "src": "https://github.com/rachartier/tiny-cmdline.nvim"
     },
     "tiny-code-action.nvim": {
@@ -171,7 +175,7 @@
       "src": "https://github.com/kristijanhusak/vim-dadbod-ui"
     },
     "vimtex": {
-      "rev": "63745fa542346e0f09a496d440645ef6ff75b62c",
+      "rev": "9388638aec092cceab6ac20dc08541f4e429e8ce",
       "src": "https://github.com/lervag/vimtex"
     }
   }
