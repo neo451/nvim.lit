@@ -79,12 +79,13 @@ obsidian.setup({
       ignore_filters = {
          "Archived/",
          "Source/",
+         ".trash/",
       },
    },
 
    cache = {
       enabled = true,
-      -- backend = "memory",
+      backend = "memory",
    },
 
    sync = {
@@ -225,6 +226,11 @@ obsidian.setup({
       folder = "Daily",
       default_tags = {},
       workdays_only = false,
+   },
+
+   quick_switch = {
+      show_existing_only = false,
+      show_attachments = true,
    },
 
    picker = {

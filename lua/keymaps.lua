@@ -41,6 +41,23 @@ end, { remap = true, expr = true })
 -- fix previous spell error
 set("i", "<C-l>", "<Esc>[s1z=`]a")
 
+-- Builtin completion: open the menu, then use <C-n>/<C-p> to move.
+set("i", "<C-n>", function()
+   if vim.fn.pumvisible() == 1 then
+      return "<C-n>"
+   end
+   vim.lsp.completion.get()
+   return ""
+end, { expr = true, desc = "Completion: next item" })
+
+set("i", "<C-p>", function()
+   if vim.fn.pumvisible() == 1 then
+      return "<C-p>"
+   end
+   vim.lsp.completion.get()
+   return ""
+end, { expr = true, desc = "Completion: previous item" })
+
 -- Copy/paste with system clipboard
 set({ "n", "x" }, "gY", '"+Y', { desc = "Copy to system clipboard" })
 set({ "n", "x" }, "gy", '"+y', { desc = "Copy to system clipboard" })

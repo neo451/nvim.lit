@@ -652,8 +652,15 @@ local half_width_punctuation = {
 local function convert_punctuation_text(text, opts)
    opts = opts or {}
    local count = 0
+   local col = 0
+   local list_marker_prefix = text:match("^(%s*%d+)%.%s+")
+   local list_marker_dot_col = list_marker_prefix and #list_marker_prefix + 1
    local converted = text:gsub(".", function(char)
+      col = col + 1
       if opts.skip_colon and char == ":" then
+         return char
+      end
+      if char == "." and col == list_marker_dot_col then
          return char
       end
 
