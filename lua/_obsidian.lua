@@ -83,9 +83,13 @@ obsidian.setup({
       },
    },
 
+   agenda = {
+      file = "Agenda.md",
+   },
+
    cache = {
       enabled = true,
-      backend = "memory",
+      -- backend = "memory",
    },
 
    sync = {
@@ -104,6 +108,7 @@ obsidian.setup({
 
    completion = {
       min_chars = 2,
+      match_case = false,
    },
 
    backlinks = {
@@ -153,7 +158,7 @@ obsidian.setup({
 
    resolvers = {
       attachment = require("obsidian.yazi_attachment"),
-      date = require("obsidian.calendar_date"),
+      -- date = require("obsidian.calendar_date"),
    },
 
    frontmatter = {
@@ -236,6 +241,7 @@ obsidian.setup({
    picker = {
       -- enabled = false,
       name = "snacks.picker",
+      -- name = "ui2",
       -- name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",

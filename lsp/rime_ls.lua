@@ -18,14 +18,19 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
 
+local rime_shared_data_dir = vim.env.RIME_DATA_DIR
+if not rime_shared_data_dir or rime_shared_data_dir == "" then
+   rime_shared_data_dir = "/usr/share/rime-data"
+end
+
 ---@type vim.lsp.Config
 return {
    name = "rime_ls",
    cmd = { "rime_ls" },
    init_options = {
       enabled = vim.g.rime_enabled,
-      shared_data_dir = "/usr/share/rime-data",
-      user_data_dir = "~/.local/share/rime-ls",
+      shared_data_dir = rime_shared_data_dir,
+      user_data_dir = vim.fn.expand("~/.local/share/rime-ls"),
       log_dir = "/tmp",
       max_candidates = 9,
       paging_characters = { ",", "." },
