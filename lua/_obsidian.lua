@@ -89,7 +89,7 @@ obsidian.setup({
 
    cache = {
       enabled = true,
-      -- backend = "memory",
+      backend = "memory",
    },
 
    sync = {
@@ -245,6 +245,7 @@ obsidian.setup({
       -- name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",
+      name = "ui2",
    },
 
    attachments = {

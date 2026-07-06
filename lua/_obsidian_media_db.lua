@@ -10,7 +10,7 @@ mediaDB.setup({
       },
       open_library = { enabled = false },
       google_books = { key = "AIzaSyBiJEfKGhJ8PMrb2lSrFMSNgYUbvqZdBaM" },
-      listennotes = { key = "3c4135a0486e48acab4fb5afdb5df944" },
+      -- listennotes = { key = "3c4135a0486e48acab4fb5afdb5df944" },
    },
    media_types = {
       movie = {

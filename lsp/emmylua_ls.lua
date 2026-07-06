@@ -17,6 +17,23 @@ local library = {
    -- For LSP Settings Type Annotations: https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
    vim.api.nvim_get_runtime_file("lua/lspconfig", false)[1],
 }
+
+-- Avoid a stale local build earlier in $PATH. On this Nix machine it points at
+-- an old glibc store path and fails direct execution.
+local emmylua_cmd = vim.fs.joinpath("/etc/profiles/per-user", vim.env.USER, "bin", "emmylua_ls")
+if vim.fn.executable(emmylua_cmd) ~= 1 then
+   emmylua_cmd = "emmylua_ls"
+end
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+   group = vim.api.nvim_create_augroup("emmylua_force_stop", { clear = true }),
+   callback = function()
+      for _, client in ipairs(vim.lsp.get_clients({ name = "emmylua_ls" })) do
+         client:stop(true)
+      end
+   end,
+})
+
 local PLUGIN_DIR = vim.fs.normalize("~/Plugins/")
 
 if vim.uv.fs_stat(PLUGIN_DIR) ~= nil then
@@ -27,7 +44,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-   cmd = { "emmylua_ls" },
+   cmd = { emmylua_cmd, "--communication", "stdio", "--editor", "neovim" },
    filetypes = { "lua" },
    root_markers = vim.fn.has("nvim-0.11.3") == 1 and { root_markers1, root_markers2, { ".git" } }
       or vim.list_extend(vim.list_extend(root_markers1, root_markers2), { ".git" }),
