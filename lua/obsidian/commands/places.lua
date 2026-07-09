@@ -1,6 +1,6 @@
 local M = {}
 
-M.PLACES_DIR = vim.fn.expand("~/Documents/Notes/Places")
+M.PLACES_DIR = vim.fn.expand("~/Documents/Notes/Entities/")
 
 local function trim(s)
    return (s:gsub("^%s+", ""):gsub("%s+$", ""))

@@ -96,6 +96,7 @@ obsidian.setup({
       -- trigger = "continuous",
       configs = {},
       enabled = true,
+      mode = "bidirectional",
    },
 
    footer = {
