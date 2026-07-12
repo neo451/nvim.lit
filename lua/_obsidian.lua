@@ -246,7 +246,6 @@ obsidian.setup({
       -- name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",
-      name = "ui2",
    },
 
    attachments = {

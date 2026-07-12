@@ -31,6 +31,7 @@ vim.pack.add({
    "https://github.com/stevearc/conform.nvim",
    "https://github.com/stevearc/oil.nvim",
    "https://github.com/folke/tokyonight.nvim",
+   "https://github.com/edeneast/nightfox.nvim",
    "https://github.com/catppuccin/nvim",
 
    -- writing
@@ -206,6 +207,12 @@ require("lz.n").load({
       "nvim",
       after = function()
          vim.cmd.colorscheme("catppuccin")
+      end,
+   },
+   {
+      "nightfox.nvim",
+      after = function()
+         vim.cmd.colorscheme("duskfox")
       end,
    },
    {

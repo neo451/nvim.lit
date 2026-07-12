@@ -1,6 +1,20 @@
 local pangu = require("pangu")
 
+local function format_special_links(line)
+   return line:gsub("【(.-)】%s*<?(https?://[^%s>]+)>?", function(desc, url)
+      local suffix = ""
+      while url:match("[.,;:!?)%]%}]$") do
+         suffix = url:sub(-1) .. suffix
+         url = url:sub(1, -2)
+      end
+
+      return "[" .. desc .. "](" .. url .. ")" .. suffix
+   end)
+end
+
 local function auto_url_line(line)
+   line = format_special_links(line)
+
    local parts = {}
    local index = 1
 

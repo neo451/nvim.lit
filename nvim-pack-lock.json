@@ -85,6 +85,10 @@
       "rev": "4e24d67ba032710c3a2d198fa7336760f28ed418",
       "src": "https://github.com/NicholasZolton/neojj"
     },
+    "nightfox.nvim": {
+      "rev": "4dacd3f0185a2227bdf3b6c0975a8f0bf87cac9a",
+      "src": "https://github.com/edeneast/nightfox.nvim"
+    },
     "no-neck-pain.nvim": {
       "rev": "0df6659e25401c3f3c40e82f1ddd48714b1a659c",
       "src": "https://github.com/shortcuts/no-neck-pain.nvim"
