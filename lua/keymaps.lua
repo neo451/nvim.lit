@@ -1,7 +1,6 @@
 local set = vim.keymap.set
 
 set("i", "jk", "<esc>l")
-vim.keymap.set("n", "<leader>dc", require("obsidian._actions").capture_to_daily)
 
 -- super help docs everywhere
 set("n", "vK", "<C-\\><C-N><Cmd>help!<CR>")
@@ -150,9 +149,26 @@ nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
 nmap_leader("od", "<cmd>Obsidian today<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
+nmap_leader("ou", "<cmd>Obsidian unique_note<cr>")
+nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
 nmap_leader("O", "<cmd>Obsidian<cr>")
-nmap_leader("S", "<cmd>Obsidian sync<cr>")
+nmap_leader("oc", require("obsidian._actions").capture_to_daily)
+
+local open_rym = function(model, _ctx)
+   local title = model.title or ""
+   local artist = (model.artists and model.artists[1]) or ""
+   local q = vim.uri_encode(title .. " " .. artist)
+   vim.ui.open("https://rateyourmusic.com/search?searchterm=" .. q)
+   require("obsidian.media-db.actions.note")(model, _ctx)
+end
+
+vim.keymap.set("n", "<leader>ry", function()
+   require("obsidian.media-db").run_action({
+      selecter = "type",
+      on_select = open_rym,
+   })
+end)
 
 -- u for "Neovim UI and highlights"
 nmap_leader("ui", vim.show_pos, "Inspect Pos")

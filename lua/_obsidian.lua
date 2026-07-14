@@ -154,6 +154,10 @@ obsidian.setup({
                })
             end
          end
+         if opts.source == "follow_link" and opts.parent_note then
+            note.metadata = note.metadata or {}
+            note.metadata.parent = opts.parent_note:format_link({ format = "shortest" })
+         end
       end,
    },
 
@@ -241,9 +245,9 @@ obsidian.setup({
 
    picker = {
       -- enabled = false,
-      name = "snacks.picker",
+      -- name = "snacks.picker",
       -- name = "ui2",
-      -- name = "mini.pick",
+      name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",
    },

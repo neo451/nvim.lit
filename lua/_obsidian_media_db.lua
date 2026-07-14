@@ -27,14 +27,3 @@ mediaDB.setup({
       },
    },
 })
-
-mediaDB.register_action("rym", function(model, _ctx)
-   local title = model.title or ""
-   local artist = (model.artists and model.artists[1]) or ""
-   local q = vim.uri_encode(title .. " " .. artist)
-   vim.ui.open("https://rateyourmusic.com/search?searchterm=" .. q)
-end)
-
-vim.keymap.set("n", "<leader>ry", function()
-   mediaDB.run_action("rym", { selecter = "type" })
-end)

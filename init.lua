@@ -100,14 +100,10 @@ require("lz.n").load({
             input = { enabled = true },
             statuscolumn = { enabled = true },
             styles = {
-               notification = {
-                  wo = { wrap = true },
-               },
+               notification = { wo = { wrap = true } },
             },
-            -- notifier = {
-            --    enabled = true,
-            --    timeout = 3000,
-            -- },
+            -- picker = { enabled = true },
+            notifier = { enabled = true, timeout = 3000 },
          })
       end,
    },

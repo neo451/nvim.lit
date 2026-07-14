@@ -144,7 +144,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
       -- end, { expr = true, desc = "Accept the current inline completion" })
       local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
 
-      if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, bufnr) then
+      if client:supports_method("textDocument/inlineCompletion", bufnr) then
          vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
          vim.keymap.set("i", "<Tab>", function()
             if not vim.lsp.inline_completion.get() then
@@ -160,9 +160,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
       end
 
       if client and client.name == "obsidian-ls" then
-         -- client.server_capabilities.completionProvider.triggerCharacters = chars -- HACK:
          vim.bo[bufnr].completeopt = "menuone,noselect,fuzzy,nosort" -- noselect to make sure no accidentally accept and create new notes, others are not strictly necessary, adjust to your taste, see `:h completeopt'
          vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       end
    end,
 })

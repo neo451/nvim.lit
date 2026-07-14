@@ -4,6 +4,7 @@ require("obsidian").register_command("attachments", { nargs = 0 })
 require("obsidian").register_command("places", { nargs = "*" })
 require("obsidian").register_command("base", { nargs = "*" })
 require("obsidian").register_command("base_create", { nargs = "*" })
+require("obsidian").register_command("cover_art", { nargs = "*" })
 require("obsidian").register_command("prompts", {
    nargs = "*",
    note_action = true,
