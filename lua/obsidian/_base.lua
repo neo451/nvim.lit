@@ -1180,15 +1180,17 @@ local function setup_table_keymaps(bufnr)
    map("E", M.open_source, "Edit base source")
    map("q", close_table_buffer, "Close base table")
    map("r", M.refresh, "Refresh base table")
-   map("a", function()
+   local create_for_current_view = function()
       local current = table_models[vim.api.nvim_get_current_buf()]
       if current ~= nil then
          M.create({ source_path = current.source_path, view = current.view.name })
       end
-   end, "Create note for base view")
+   end
+   map("c", create_for_current_view, "Create note for base view")
+   map("a", create_for_current_view, "Create note for base view")
    map("?", function()
       notify(
-         "keys: j/k rows, h/l columns, gg/G first/last, e/i edit property, <CR>/o open, v/s/t split, y/Y yank, a create, r refresh, E source, q close"
+         "keys: j/k rows, h/l columns, gg/G first/last, e/i edit property, <CR>/o open, v/s/t split, y/Y yank, c/a create, r refresh, E source, q close"
       )
    end, "Base table help")
 end
@@ -1727,9 +1729,5 @@ M.actions = {
    next = M.next_view,
    prev = M.prev_view,
 }
-
-function M.command(data)
-   M.actions.create({ view = data.args ~= "" and data.args or nil })
-end
 
 return M

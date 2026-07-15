@@ -4,6 +4,7 @@ local subcommands = {
    view = true,
    open = "view",
    create = true,
+   c = "create",
    new = "create",
    refresh = true,
    reload = "refresh",
