@@ -123,7 +123,7 @@ end
 do
    local ok, base = pcall(require, "obsidian._base")
    if ok then
-      base.setup_autocmd()
+      -- base.setup_autocmd()
    end
 end
 

@@ -9,7 +9,6 @@ return function(note)
    vim.wo.foldtext = "v:lua.vim.lsp.foldtext()"
    vim.wo.foldmethod = "expr"
    vim.wo.foldlevel = 99
-   vim.cmd("norm zx")
 
    local bufnr = note.bufnr
 

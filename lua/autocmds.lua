@@ -161,7 +161,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
       if client and client.name == "obsidian-ls" then
          vim.bo[bufnr].completeopt = "menuone,noselect,fuzzy,nosort" -- noselect to make sure no accidentally accept and create new notes, others are not strictly necessary, adjust to your taste, see `:h completeopt'
-         vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+         -- vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
          vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       end
    end,

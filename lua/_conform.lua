@@ -52,6 +52,7 @@ end
 local function auto_url_lines(lines)
    local formatted = {}
    local in_frontmatter = lines[1] and lines[1]:match("^%-%-%-%s*$") ~= nil
+   local in_footnote = false
 
    for index, line in ipairs(lines) do
       if in_frontmatter then
@@ -60,7 +61,17 @@ local function auto_url_lines(lines)
             in_frontmatter = false
          end
       else
-         formatted[index] = auto_url_line(line)
+         local is_footnote_def = line:match("^%s*%[%^[^%]]+%]:") ~= nil
+         local is_footnote_continuation = in_footnote
+            and (line:match("^%s*$") or line:match("^    ") or line:match("^\t"))
+
+         if is_footnote_def or is_footnote_continuation then
+            formatted[index] = line
+            in_footnote = true
+         else
+            formatted[index] = auto_url_line(line)
+            in_footnote = false
+         end
       end
    end
 
