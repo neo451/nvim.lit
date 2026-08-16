@@ -10,9 +10,7 @@ local obsidian = require("obsidian")
 
 --- EXPERIMENTS ---
 
-require("obsidian.due_display")
 require("obsidian.yaml_vim_options")
-require("obsidian.yazi_attachment")
 local ut = require("obsidian._utils")
 vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
 vim.filetype.add({
@@ -96,7 +94,7 @@ obsidian.setup({
       -- trigger = "continuous",
       configs = {},
       enabled = true,
-      mode = "bidirectional",
+      -- mode = "bidirectional",
    },
 
    footer = {

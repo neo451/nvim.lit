@@ -116,14 +116,30 @@ local function replace_markdown_footnote_refs(line, labels)
          else
             text, label, stop = rest:match("^(%b[])%[(%d+)%]()")
             next_char = stop and rest:sub(stop, stop) or ""
-            if label and labels[label] and prev ~= "!" and prev ~= "[" and next_char ~= "]" and not text:match("^%[%^") then
+            if
+               label
+               and labels[label]
+               and prev ~= "!"
+               and prev ~= "["
+               and next_char ~= "]"
+               and not text:match("^%[%^")
+            then
                out[#out + 1] = "[^" .. label .. "]"
                i = i + stop - 1
                count = count + 1
             else
                label, stop = rest:match("^%[(%d+)%]()")
                next_char = stop and rest:sub(stop, stop) or ""
-               if label and labels[label] and prev ~= "!" and prev ~= "[" and next_char ~= "(" and next_char ~= "[" and next_char ~= ":" and next_char ~= "]" then
+               if
+                  label
+                  and labels[label]
+                  and prev ~= "!"
+                  and prev ~= "["
+                  and next_char ~= "("
+                  and next_char ~= "["
+                  and next_char ~= ":"
+                  and next_char ~= "]"
+               then
                   out[#out + 1] = "[^" .. label .. "]"
                   i = i + stop - 1
                   count = count + 1
@@ -319,7 +335,13 @@ local function cleanup_footnotes(bufnr)
       if converted_refs + converted_defs == 0 then
          log.info("No footnote issues found")
       else
-         log.info(string.format("Converted %d Markdown footnote refs and %d definitions; no issues found", converted_refs, converted_defs))
+         log.info(
+            string.format(
+               "Converted %d Markdown footnote refs and %d definitions; no issues found",
+               converted_refs,
+               converted_defs
+            )
+         )
       end
       return
    end
@@ -815,11 +837,11 @@ local function process_image()
 end
 
 pcall(function()
-   require("obsidian").code_action.add({
-      name = "process_image",
-      title = "Process image (extract text, describe, or custom)",
-      fn = process_image,
-   })
+   -- require("obsidian").code_action.add({
+   --    name = "process_image",
+   --    title = "Process image (extract text, describe, or custom)",
+   --    fn = process_image,
+   -- })
 
    require("obsidian").code_action.add({
       name = "cleanup_footnotes",

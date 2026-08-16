@@ -23,7 +23,7 @@ mediaDB.setup({
          field_mappings = {
             artists = { format = "[[%s]]" },
          },
-         template = "music.md",
+         template = "music-media-db.md",
       },
    },
 })
