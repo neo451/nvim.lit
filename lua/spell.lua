@@ -41,12 +41,11 @@ local function get_spell_in_visual_region()
    local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = vim.fn.mode() })
    local results = {}
    for _, line in ipairs(lines) do
-      while true do
-         local word, type = unpack(vim.fn.spellbadword(line))
-         if word == "" or type ~= "bad" then
-            break
+      for _, match in ipairs(vim.spell.check(line)) do
+         local word, kind = unpack(match)
+         if kind == "bad" then
+            results[#results + 1] = word
          end
-         results[#results + 1] = word
       end
    end
    return results

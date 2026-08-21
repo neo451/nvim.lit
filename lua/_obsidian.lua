@@ -4,13 +4,14 @@ vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
 vim.opt.rtp:append("~/Plugins/scribe.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
 vim.opt.rtp:append("~/Plugins/calendar.nvim/")
--- vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
+vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
 
 local obsidian = require("obsidian")
 
 --- EXPERIMENTS ---
 
 require("obsidian.yaml_vim_options")
+require("nvim.sfx_player").setup()
 local ut = require("obsidian._utils")
 vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
 vim.filetype.add({
@@ -25,6 +26,8 @@ require("obsidian").register_command("heatmap", { nargs = 0 })
 require("_obsidian_cite")
 require("obsidian.spaced-repetition").setup({
    auto_next_note = true,
+   folders = { "Zettel", "JP/Cards" },
+   tags = { "review" },
 })
 require("_obsidian_media_db")
 
@@ -53,7 +56,10 @@ vim.ui.open = (function(overridden)
       if ok and handlers[scheme] then
          return handlers[scheme](uri, overridden)
       end
-      if vim.endswith(uri, ".pdf") then
+      if vim.endswith(uri, ".wav") or vim.endswith(uri, ".m4a") then
+         vim.cmd(":SfxPlayerOpen " .. uri)
+         return
+      elseif vim.endswith(uri, ".pdf") then
          opt = { cmd = { "zathura" } } -- override open app
       end
       if require("obsidian").api.get_os() == "Wsl" then
@@ -78,6 +84,7 @@ obsidian.setup({
          "Archived/",
          "Source/",
          ".trash/",
+         ".report/",
       },
    },
 
@@ -87,14 +94,18 @@ obsidian.setup({
 
    cache = {
       enabled = true,
-      backend = "memory",
+      -- backend = "memory",
    },
 
    sync = {
       -- trigger = "continuous",
-      configs = {},
+      configs = {
+         "core-plugin",
+         "core-plugin-data",
+      },
       enabled = true,
-      -- mode = "bidirectional",
+      mode = "bidirectional",
+      -- mode = "pull-only",
    },
 
    footer = {
@@ -115,6 +126,12 @@ obsidian.setup({
    },
 
    callbacks = {
+      post_setup = function()
+         -- require("obsidian.picker.mini").setup()
+         -- require("obsidian.picker.snacks").setup()
+         -- require("obsidian.picker.telescope").setup()
+         -- require("obsidian.picker.fzf").setup()
+      end,
       add_attachment = function(path, ctx)
          if ctx.scope == "audio_recorder" then
             require("obsidian.transcribe").whisper(path, ctx)
@@ -161,6 +178,28 @@ obsidian.setup({
 
    resolvers = {
       attachment = require("obsidian.yazi_attachment"),
+      -- hints = function(ctx, done)
+      --    local link_parser = require("obsidian.parse.refs")
+      --
+      --    local hints = {}
+      --
+      --    for row, line in ipairs(ctx.note.contents) do
+      --       local refs = link_parser.extract(line, {})
+      --       local row0 = row - 1
+      --       for _, ref in ipairs(refs) do
+      --          if vim.startswith(ref.raw, "!") then
+      --             table.insert(hints, {
+      --                range = ref.range,
+      --                position = { line = row0, character = ref.range.end_col },
+      --                label = " ▶",
+      --                paddingLeft = false,
+      --                paddingRight = true,
+      --             })
+      --          end
+      --       end
+      --    end
+      --    done(hints)
+      -- end,
       -- date = require("obsidian.calendar_date"),
    },
 
@@ -242,12 +281,12 @@ obsidian.setup({
    },
 
    picker = {
-      -- enabled = false,
+      name = false,
       -- name = "snacks.picker",
-      -- name = "ui2",
-      name = "mini.pick",
+      -- name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",
+      -- name = "ui2",
    },
 
    attachments = {
@@ -271,12 +310,17 @@ obsidian.setup({
 
    note = {
       template = "default.md",
+      identifiers = { "id", "aliases", "title" },
    },
 
    workspaces = {
       {
          name = "notes",
          path = "~/Documents/Notes/",
+      },
+      {
+         name = "vid-1",
+         path = "~/Documents/vid-1-ourbirthday/",
       },
       {
          name = "skills",

@@ -56,9 +56,15 @@ require("mini.diff").setup({})
 require("mini.git").setup({})
 require("mini.icons").setup()
 MiniIcons.mock_nvim_web_devicons()
--- require("mini.surround").setup({})
+
 require("mini.test").setup({})
-require("mini.pick").setup({})
+
+require("mini.pick").setup({
+   mappings = {
+      choose_marked = "<C-q>",
+   },
+})
+
 require("mini.extra").setup({})
 require("mini.hipatterns").setup({
    highlighters = {

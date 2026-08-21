@@ -62,6 +62,7 @@ vim.pack.add({
    -- ui
    "https://github.com/shortcuts/no-neck-pain.nvim",
    "https://github.com/rachartier/tiny-code-action.nvim",
+   "https://github.com/rachartier/tiny-cmdline.nvim",
 
    "https://github.com/andrewferrier/debugprint.nvim",
 
@@ -85,6 +86,9 @@ vim.pack.add({
 
    "https://github.com/nvim-lua/plenary.nvim",
    "https://github.com/nvim-telescope/telescope.nvim",
+
+   -- lib
+   "https://github.com/monok-robeto/nvim.sfx_player",
 }, { load = selective_load })
 
 -- vim.opt.rtp:append("~/Plugins/irc.nvim")
@@ -93,6 +97,14 @@ require("_mini")
 require("_treesitter")
 
 require("lz.n").load({
+   {
+      "tiny-code-action.nvim",
+      after = function()
+         require("tiny-code-action").setup({
+            picker = "snacks",
+         })
+      end,
+   },
    {
       "snacks.nvim",
       after = function()
@@ -296,8 +308,8 @@ require("experiments")
 
 local servers = {
    "rime_ls",
-   "lua_ls",
-   -- "emmylua_ls",
+   -- "lua_ls",
+   "emmylua_ls",
    "gopls",
    "nixd",
    "zls",

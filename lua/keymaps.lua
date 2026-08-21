@@ -58,7 +58,7 @@ set("i", "<C-p>", function()
 end, { expr = true, desc = "Completion: previous item" })
 
 -- Copy/paste with system clipboard
-set({ "n", "x" }, "gY", '"+Y', { desc = "Copy to system clipboard" })
+set({ "n", "x" }, "gY", '"+y$', { desc = "Copy to system clipboard" })
 set({ "n", "x" }, "gy", '"+y', { desc = "Copy to system clipboard" })
 set("n", "gp", '"+p', { desc = "Paste from system clipboard" })
 -- - Paste in Visual with `P` to not copy selected text (`:h v_P`)
@@ -152,23 +152,27 @@ nmap_leader("on", "<cmd>Obsidian new<cr>")
 nmap_leader("ou", "<cmd>Obsidian unique_note<cr>")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
-nmap_leader("O", "<cmd>Obsidian<cr>")
-nmap_leader("oc", require("obsidian._actions").capture_to_daily)
 
-local open_rym = function(model, _ctx)
-   local title = model.title or ""
-   local artist = (model.artists and model.artists[1]) or ""
-   local q = vim.uri_encode(title .. " " .. artist)
-   vim.ui.open("https://rateyourmusic.com/search?searchterm=" .. q)
-   require("obsidian.media-db.actions.note")(model, _ctx)
-end
+-- nmap_leader("om", "<cmd>Obsidian media_search<cr>")
 
-vim.keymap.set("n", "<leader>ry", function()
-   require("obsidian.media-db").run_action({
-      selecter = "type",
-      on_select = open_rym,
+nmap_leader("om", function()
+   local media_db = require("obsidian.media-db")
+   media_db.run_action({
+      on_select = function(model, _ctx)
+         if model.type == media_db.MediaType.Music then
+            local title = model.title or ""
+            local artist = (model.artists and model.artists[1]) or ""
+            local q = require("obsidian.util").urlencode(title .. " " .. artist)
+            local query = "https://rateyourmusic.com/search?searchterm=" .. q
+            vim.ui.open(query)
+            require("obsidian.media-db.actions.note")(model, _ctx)
+         end
+      end,
    })
 end)
+
+nmap_leader("O", "<cmd>Obsidian<cr>")
+nmap_leader("oc", require("obsidian._actions").capture_to_daily)
 
 -- u for "Neovim UI and highlights"
 nmap_leader("ui", vim.show_pos, "Inspect Pos")
