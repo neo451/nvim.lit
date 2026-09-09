@@ -1,5 +1,20 @@
 local set = vim.keymap.set
 
+local diy_search = require("qol.search")
+set({ "n", "x" }, diy_search.config.trigger, diy_search.query_browser, { remap = true })
+
+set("n", "<C-S-C>", function()
+   local buf = vim.api.nvim_get_current_buf()
+   local file = vim.api.nvim_buf_get_name(buf)
+
+   vim.ui.input({ prompt = "To copy: ", default = file }, function(input)
+      if input then
+         vim.fn.setreg("+", input)
+         vim.notify("Copied filename to clipboard", 2)
+      end
+   end)
+end)
+
 set("i", "jk", "<esc>l")
 
 -- super help docs everywhere
@@ -29,8 +44,6 @@ set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true
 set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 set({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
-
-set({ "n", "x" }, "<C-S-;>", require("qol.search").query_browser, { remap = true })
 
 -- mini version control!
 set("n", "ycc", function()
@@ -75,18 +88,6 @@ set("n", "<End>", function()
    end
 end)
 
-set("n", "<C-S-C>", function()
-   local buf = vim.api.nvim_get_current_buf()
-   local file = vim.api.nvim_buf_get_name(buf)
-
-   vim.ui.input({ prompt = "To copy: ", default = file }, function(input)
-      if input then
-         vim.fn.setreg("+", input)
-         vim.notify("Copied filename to clipboard", 2)
-      end
-   end)
-end)
-
 --search within visual selection - this is magic
 set("x", "/", "<Esc>/\\%V")
 
@@ -118,9 +119,7 @@ end
 nmap_leader("<leader>x", function()
    local file = vim.fn.expand("%")
    local base = vim.fs.basename(file)
-   if vim.endswith(base, ".qml") then
-      vim.system({ "qs" })
-   elseif vim.startswith(base, "test_") then
+   if vim.startswith(base, "test_") then
       return "<cmd>lua MiniTest.run_file()<cr>"
    elseif vim.endswith(base, "_spec.lua") then
       local has_neotest, neotest = pcall(require, "neotest")
@@ -151,9 +150,6 @@ nmap_leader("od", "<cmd>Obsidian today<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
 nmap_leader("ou", "<cmd>Obsidian unique_note<cr>")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
-nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
-
--- nmap_leader("om", "<cmd>Obsidian media_search<cr>")
 
 nmap_leader("om", function()
    local media_db = require("obsidian.media-db")
@@ -164,9 +160,8 @@ nmap_leader("om", function()
             local artist = (model.artists and model.artists[1]) or ""
             local q = require("obsidian.util").urlencode(title .. " " .. artist)
             local query = "https://rateyourmusic.com/search?searchterm=" .. q
-            vim.ui.open(query)
-            require("obsidian.media-db.actions.note")(model, _ctx)
          end
+         require("obsidian.media-db.actions.note")(model, _ctx)
       end,
    })
 end)
@@ -265,7 +260,7 @@ end, "Hide Notifications")
 
 set("n", "<leader>fp", function()
    Snacks.picker.projects()
-end, { desc = "Find Prject" })
+end, { desc = "Find Project" })
 
 set("n", "<leader>fR", function()
    Snacks.picker.resume()

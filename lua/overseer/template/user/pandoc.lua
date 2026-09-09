@@ -14,7 +14,7 @@ return {
             "--output",
             output_file,
             file,
-            -- "--bibliorgraphy=$REF",
+            -- "--bibliography=$REF",
          },
       }
    end,

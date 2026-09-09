@@ -14,6 +14,7 @@ require("obsidian.yaml_vim_options")
 require("nvim.sfx_player").setup()
 local ut = require("obsidian._utils")
 vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
+
 vim.filetype.add({
    extension = {
       base = "yaml",
@@ -74,8 +75,11 @@ end)(vim.ui.open)
 --- SETUP ---
 
 obsidian.setup({
+   spell = {
+      enabled = true,
+   },
    image = {
-      enabeld = true,
+      enabled = true,
    },
 
    file = {
@@ -104,11 +108,12 @@ obsidian.setup({
          "core-plugin-data",
       },
       enabled = true,
-      mode = "bidirectional",
+      -- mode = "bidirectional",
       -- mode = "pull-only",
    },
 
    footer = {
+      enabled = true,
       -- TODO: multiline footer
       -- format = "{{status}}\n{{linked_mentions}}",
       substitutions = {
@@ -178,6 +183,7 @@ obsidian.setup({
 
    resolvers = {
       attachment = require("obsidian.yazi_attachment"),
+      bookmark = require("obsidian.yazi_attachment"),
       -- hints = function(ctx, done)
       --    local link_parser = require("obsidian.parse.refs")
       --
@@ -206,10 +212,6 @@ obsidian.setup({
    frontmatter = {
       func = function(note)
          local out = require("obsidian.builtin").frontmatter(note)
-         if note.metadata and note.metadata.progress then
-            local res = ut.count_checkbox(note)
-            out.progress = string.format("%d/%d", res.done, res.total)
-         end
          if vim.tbl_isempty(note.aliases) then
             out.aliases = nil
          end
@@ -281,9 +283,9 @@ obsidian.setup({
    },
 
    picker = {
-      name = false,
+      -- name = false,
       -- name = "snacks.picker",
-      -- name = "mini.pick",
+      name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",
       -- name = "ui2",
@@ -318,16 +320,16 @@ obsidian.setup({
          name = "notes",
          path = "~/Documents/Notes/",
       },
-      {
-         name = "vid-1",
-         path = "~/Documents/vid-1-ourbirthday/",
-      },
+      -- {
+      --    name = "vid-1",
+      --    path = "~/Documents/vid-1-ourbirthday/",
+      -- },
       {
          name = "skills",
          path = "~/.agents/skills/",
          overrides = {
-            templates = { enabeld = false },
-            daily_notes = { enabeld = false },
+            templates = { enabled = false },
+            daily_notes = { enabled = false },
          },
       },
       {

@@ -13,16 +13,16 @@ mediaDB.setup({
       -- listennotes = { key = "3c4135a0486e48acab4fb5afdb5df944" },
    },
    media_types = {
-      movie = {
-         field_mappings = {
-            director = { format = "[[%s]]" },
-            actors = { format = "[[%s]]" },
-         },
-      },
+      -- movie = {
+      --    field_mappings = {
+      --       director = { format = "[[%s]]" },
+      --       actors = { format = "[[%s]]" },
+      --    },
+      -- },
       music = {
-         field_mappings = {
-            artists = { format = "[[%s]]" },
-         },
+         -- field_mappings = {
+         --    artists = { format = "[[%s]]" },
+         -- },
          template = "music-media-db.md",
       },
    },

@@ -54,7 +54,7 @@ end
 
 local function run_ollama(path, prompt)
    local spinner = require("spinner")
-   local cmds = { "ollama", "run", "qwen3-vl:2b", path, prompt, "--hidethinking" }
+   local cmds = { "ollama", "run", "qwen3-vl:2b", path, prompt, "--think=false" }
    -- local cmds = { "tesseract", path, "stdout", "-l", "chi_sim" }
 
    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -815,8 +815,8 @@ local function process_image()
       log.err("Not on a link")
       return
    end
-   local locaction = obsidian.util.parse_link(link)
-   local path = obsidian.api.resolve_attachment_path(locaction)
+   local location = obsidian.util.parse_link(link)
+   local path = obsidian.api.resolve_attachment_path(location)
    if not path then
       return
    end

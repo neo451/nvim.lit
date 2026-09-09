@@ -1,12 +1,5 @@
 vim.loader.enable()
 
-local selective_load = function(plug_data)
-   if (plug_data.spec.data or {}).skip_load then
-      return
-   end
-   vim.cmd.packadd(plug_data.spec.name)
-end
-
 -- pcall(function()
 --    vim.opt.rtp:append("~/.local/share/nvim/site/pack/core/opt/jieba-lua/packages/lua-utf8/")
 --    vim.opt.rtp:append("~/.local/share/nvim/site/pack/core/opt/jieba-lua/packages/wordmotion.nvim/")
@@ -82,14 +75,14 @@ vim.pack.add({
    -- jj
    "https://github.com/NicholasZolton/neojj",
 
-   "https://github.com/glacambre/firenvim",
-
    "https://github.com/nvim-lua/plenary.nvim",
    "https://github.com/nvim-telescope/telescope.nvim",
 
    -- lib
    "https://github.com/monok-robeto/nvim.sfx_player",
-}, { load = selective_load })
+
+   -- "https://github.com/glacambre/firenvim",
+}, { load = false })
 
 -- vim.opt.rtp:append("~/Plugins/irc.nvim")
 
@@ -97,6 +90,21 @@ require("_mini")
 require("_treesitter")
 
 require("lz.n").load({
+   {
+      "fzf-lua",
+      after = function()
+         -- require("fzf-lua").setup({
+         --    "fzf-tmux",
+         --    files = {
+         --       previewer = false,
+         --       fzf_opts = {
+         --          ["--tmux"] = "center",
+         --          ["--keep-right"] = "",
+         --       },
+         --    },
+         -- })
+      end,
+   },
    {
       "tiny-code-action.nvim",
       after = function()
@@ -116,6 +124,7 @@ require("lz.n").load({
             },
             -- picker = { enabled = true },
             notifier = { enabled = true, timeout = 3000 },
+            image = { enabled = true },
          })
       end,
    },
@@ -313,20 +322,24 @@ local servers = {
    "gopls",
    "nixd",
    "zls",
-   "ts_ls",
    "qmlls",
-   -- "pyright",
    "ruff",
    "ts_ls",
    "copilot",
+   -- "pyright",
    -- "markdown_oxide"
    -- "marksman",
    -- "dummy_ls",
    -- "harper_ls",
 }
 
+-- require("lspconfig").setup({})
+
 for _, name in ipairs(servers) do
-   pcall(vim.lsp.enable, name)
+   local _, err = pcall(vim.lsp.enable, name)
+   if err ~= nil then
+      vim.notify(err)
+   end
 end
 
 --- TODO: lazy and other capabilities

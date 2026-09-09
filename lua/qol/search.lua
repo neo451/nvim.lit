@@ -1,4 +1,5 @@
 --- TODO: a complete function for prefix
+
 local config = {
    trigger = "<C-S-;>",
    default_engine = "google",
@@ -44,7 +45,7 @@ local function query_browser(input)
    if viz then
       default = viz.selection
    else
-      default = vim.fn.expand("<cWORD>")
+      default = vim.bo.filetype == "markdown" and vim.fn.expand("<cWORD>") or nil
    end
 
    vim.ui.input({
@@ -61,4 +62,5 @@ end
 
 return {
    query_browser = query_browser,
+   config = config,
 }

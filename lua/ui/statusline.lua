@@ -195,7 +195,12 @@ return {
       local active_win = vim.fn.win_getid()
       local status_win = vim.g.statusline_winid
       if status_win ~= active_win then
-         return "Statusline for inactive windows"
+         -- Dimmed variant for non-active windows.
+         local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(statusline_bufnr()), ":t")
+         if name == "" then
+            name = "[No Name]"
+         end
+         return "%#StatusLineDim# " .. name .. " "
       end
       return table.concat({
          mode_component(),
@@ -203,7 +208,7 @@ return {
          file_component(),
          "%=",
          diagnostic_component(),
-         obsidian_daily(),
+         -- obsidian_daily(),
          obsidian_status(),
          obsidian_sync(),
          rime_statusline(),

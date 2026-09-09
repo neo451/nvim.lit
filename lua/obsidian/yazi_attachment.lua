@@ -1,9 +1,6 @@
-local actions = require("obsidian.actions")
-local attachment = require("obsidian.attachment")
 local api = require("obsidian.api")
 
 local yazi = function(ctx, done)
-   local bufnr = ctx.bufnr or vim.api.nvim_get_current_buf()
    local tmp = vim.fn.tempname()
    local buf = vim.api.nvim_create_buf(false, true)
    local width = math.floor(vim.o.columns * 0.8)

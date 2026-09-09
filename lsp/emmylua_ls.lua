@@ -35,6 +35,7 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 })
 
 local PLUGIN_DIR = vim.fs.normalize("~/Plugins/")
+local obsidian_nvim_path = vim.fs.joinpath(PLUGIN_DIR, "obsidian.nvim")
 
 if vim.uv.fs_stat(PLUGIN_DIR) ~= nil then
    for name in vim.fs.dir(PLUGIN_DIR) do
@@ -45,20 +46,23 @@ end
 ---@type vim.lsp.Config
 return {
    cmd = { emmylua_cmd, "--communication", "stdio", "--editor", "neovim" },
+   cmd_env = vim.uv.fs_stat(obsidian_nvim_path) and { OBSIDIAN_NVIM_PATH = obsidian_nvim_path } or nil,
    filetypes = { "lua" },
-   root_markers = vim.fn.has("nvim-0.11.3") == 1 and { root_markers1, root_markers2, { ".git" } }
-      or vim.list_extend(vim.list_extend(root_markers1, root_markers2), { ".git" }),
+   root_markers = { root_markers1, root_markers2, { ".git" } },
    workspace_required = false,
 
-   on_init = function(client)
+   before_init = function(params, config)
       -- If the workspace has its own emmylua_ls/lua_ls config file, defer to it.
-      if client.workspace_folders then
-         local path = client.workspace_folders[1].name
-         if
-            path ~= vim.fn.stdpath("config")
-            and (vim.uv.fs_stat(path .. "/.emmyrc.json") or vim.uv.fs_stat(path .. "/.luarc.json"))
-         then
-            client.config.settings = {}
+      local path = params.rootPath
+      if
+         type(path) == "string"
+         and path ~= vim.fn.stdpath("config")
+         and (vim.uv.fs_stat(path .. "/.emmyrc.json") or vim.uv.fs_stat(path .. "/.luarc.json"))
+      then
+         -- Neovim copies this table onto the client before before_init runs, so
+         -- clear it in place instead of replacing config.settings.
+         for key in pairs(config.settings) do
+            config.settings[key] = nil
          end
       end
    end,

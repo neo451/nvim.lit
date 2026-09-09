@@ -36,8 +36,6 @@ o.iskeyword = "@,48-57,_,192-255,-" -- Treat dash as `word` textobject part
 
 -- builtin completion
 o.complete = ".,w,b,kspell" -- Use less sources
-o.completeopt = "menuone,noselect,fuzzy,nosort" -- Use custom behavior
-
 -- search
 o.ignorecase = true
 
@@ -58,14 +56,13 @@ o.autowrite = true
 -- o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
 
 -- completion
-o.completeopt = "menu,menuone"
+o.completeopt = "menu,menuone,noselect,popup,fuzzy"
 -- o.wildmode = "longest:full,full" -- Command-line completion mode
 vim.cmd([[set wildmode=noselect:lastused,full]])
 
 -- undo
 o.undofile = true
 o.undolevels = 10000
-o.updatetime = 200 -- Save swap file and trigger CursorHold
 
 o.formatoptions = "jcroqlnt" -- Format options
 
@@ -73,8 +70,6 @@ o.formatoptions = "jcroqlnt" -- Format options
 o.spelllang = "en,cjk"
 o.spellfile = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.add")
 vim.g.spell_aff = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.aff")
-
-vim.cmd([[set completeopt+=menuone,noselect,popup]])
 
 vim.diagnostic.config({
    -- virtual_text = {

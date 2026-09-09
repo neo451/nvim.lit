@@ -34,9 +34,8 @@ return function(note)
       end, { desc = "Obsidian image smaller", buffer = bufnr })
    end)
 
-   -- TODO: normal mode counterparts
-   vim.keymap.set("x", "<leader>ol", actions.link_new, { desc = "Link new" })
-   vim.keymap.set("x", "<leader>oL", actions.link, { desc = "Link" })
+   vim.keymap.set({ "n", "x" }, "<leader>ol", actions.link_new, { desc = "Link new" })
+   vim.keymap.set({ "n", "x" }, "<leader>oL", actions.link, { desc = "Link" })
 
    vim.keymap.set("n", "<leader>xt", _actions.process_image, { buffer = bufnr })
 

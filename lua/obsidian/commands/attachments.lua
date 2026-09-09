@@ -25,23 +25,15 @@ return function()
    end
    walk(Obsidian.dir)
 
-   vim.ui.select(attachments, {
+   require("obsidian.picker").select(attachments, {
       format_item = function(item)
          return vim.fs.basename(item)
       end,
-      preview_item = function(item)
-         -- local buf = vim.api.nvim_create_buf(false, true)
-         local buf = vim.fn.bufadd(item)
-         vim.fn.bufload(buf)
-         vim.bo[buf].buflisted = false
-
-         return { buf = buf }
-      end,
-   }, function(item, idx)
-      if not item then
-         return
+      preview_item = require("obsidian.util").preview_path,
+   }, function(items)
+      if #items > 0 then
+         vim.cmd.edit(items[1])
+         -- vim.ui.open(items[1])
       end
    end)
-
-   -- picker.pick(attachments)
 end
