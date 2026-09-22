@@ -113,9 +113,9 @@ require("conform").setup({
          end,
       },
       auto_url = {
-         format = function(_, _, lines, callback)
-            callback(nil, auto_url_lines(lines))
-         end,
+         -- format = function(_, _, lines, callback)
+         --    callback(nil, auto_url_lines(lines))
+         -- end,
       },
    },
 })

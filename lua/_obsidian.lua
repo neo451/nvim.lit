@@ -10,6 +10,16 @@ local obsidian = require("obsidian")
 
 --- EXPERIMENTS ---
 
+vim.api.nvim_create_autocmd("User", {
+   pattern = "ObsidianHover",
+   callback = function(ev)
+      local ok, image = pcall(require, "snacks.image")
+      if ok then
+         image.doc.attach(ev.data.buf)
+      end
+   end,
+})
+
 require("obsidian.yaml_vim_options")
 require("nvim.sfx_player").setup()
 local ut = require("obsidian._utils")
@@ -53,7 +63,7 @@ local handlers = {
 
 vim.ui.open = (function(overridden)
    return function(uri, opt)
-      local ok, scheme = require("obsidian.util").is_uri(uri)
+      local ok, scheme = require("obsidian.uri").is_uri(uri)
       if ok and handlers[scheme] then
          return handlers[scheme](uri, overridden)
       end
@@ -65,8 +75,6 @@ vim.ui.open = (function(overridden)
       end
       if require("obsidian").api.get_os() == "Wsl" then
          opt = { cmd = { "wsl-open" } }
-      else
-         opt = { cmd = { "zen-beta" } }
       end
       return overridden(uri, opt)
    end
@@ -75,21 +83,19 @@ end)(vim.ui.open)
 --- SETUP ---
 
 obsidian.setup({
-   spell = {
+   treesitter = {
       enabled = true,
+      auto_install = true,
+   },
+   browser_editor = {
+      profile = "user", -- or "minimal" (default)
    },
    image = {
       enabled = true,
    },
 
    file = {
-      trash = "local",
-      ignore_filters = {
-         "Archived/",
-         "Source/",
-         ".trash/",
-         ".report/",
-      },
+      ignore_filters = { "Archived/", "Source/", ".trash/", ".report/" },
    },
 
    agenda = {
@@ -97,7 +103,7 @@ obsidian.setup({
    },
 
    cache = {
-      enabled = true,
+      enabled = false,
       -- backend = "memory",
    },
 
@@ -132,6 +138,21 @@ obsidian.setup({
 
    callbacks = {
       post_setup = function()
+         pcall(function()
+            local remote = require("obsidian.remote-vault")
+            remote.setup({
+               vaults = {
+                  remote.adapters.github({
+                     path = vim.fn.expand("~/remote-vaults/github-issues"),
+                     repo = "obsidian-nvim/obsidian.nvim",
+                  }),
+                  remote.adapters.feed({
+                     path = vim.fn.expand("~/remote-vaults/rss"),
+                     query = "+unread",
+                  }),
+               },
+            })
+         end)
          -- require("obsidian.picker.mini").setup()
          -- require("obsidian.picker.snacks").setup()
          -- require("obsidian.picker.telescope").setup()
@@ -153,7 +174,7 @@ obsidian.setup({
             end
 
             if opts.scope == "unique" then
-               local label = vim.trim(vim.fn.input("Title: "))
+               local label = not tonumber(note.title) and note.title or vim.trim(vim.fn.input("Title: "))
                if label == "" then
                   return
                end
@@ -284,8 +305,8 @@ obsidian.setup({
 
    picker = {
       -- name = false,
-      -- name = "snacks.picker",
-      name = "mini.pick",
+      name = "snacks.picker",
+      -- name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",
       -- name = "ui2",
@@ -296,7 +317,7 @@ obsidian.setup({
          vim.ui.open(uri)
       end,
       confirm_img_paste = true,
-      folder = "./Attachments",
+      folder = "Attachments",
    },
 
    templates = {

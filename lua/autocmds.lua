@@ -2,6 +2,45 @@ local function augroup(name)
    return vim.api.nvim_create_augroup("auto_" .. name, { clear = true })
 end
 
+vim.api.nvim_create_autocmd("TermOpen", {
+   command = "setlocal signcolumn=auto",
+})
+vim.api.nvim_create_autocmd("TermOpen", {
+   command = "setlocal statusline=%{b:term_title}",
+})
+vim.api.nvim_create_autocmd("TermClose", {
+   command = "echom 'Terminal exited with status '..v:event.status",
+})
+
+local ns = vim.api.nvim_create_namespace("my.terminal.prompt")
+vim.api.nvim_create_autocmd("TermRequest", {
+   callback = function(ev)
+      if string.match(ev.data.sequence, "^\027]133;A") then
+         local lnum = ev.data.cursor[1]
+         vim.api.nvim_buf_set_extmark(ev.buf, ns, lnum - 1, 0, {
+            sign_text = "▶",
+            sign_hl_group = "SpecialChar",
+         })
+      end
+   end,
+})
+
+vim.api.nvim_create_autocmd("TermRequest", {
+   desc = "Handles OSC 7 dir change requests",
+   callback = function(ev)
+      local val, n = string.gsub(ev.data.sequence, "\027]7;file://[^/]*", "")
+      if n > 0 then
+         -- OSC 7: dir-change
+         local dir = val
+         if vim.fn.isdirectory(dir) == 0 then
+            vim.notify("invalid dir: " .. dir)
+            return
+         end
+         vim.cmd.bcd(dir)
+      end
+   end,
+})
+
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
    group = augroup("checktime"),
@@ -185,7 +224,9 @@ vim.api.nvim_create_autocmd("LspProgress", {
 vim.api.nvim_create_autocmd("FileType", {
    desc = "Start treesitter",
    callback = function(ev)
+      -- if vim.bo[ev.buf].filetype == "markdown" then
       pcall(vim.treesitter.start, ev.buf)
+      -- end
    end,
 })
 
@@ -216,14 +257,3 @@ vim.api.nvim_create_autocmd("FileType", {
 --       vim.lsp.buf.document_highlight()
 --    end,
 -- })
-
-vim.api.nvim_create_autocmd("User", {
-   pattern = "TSUpdate",
-   callback = function()
-      vim.fn.setenv("EXTENSION_TAGS", "1")
-      vim.fn.setenv("EXTENSION_WIKI_LINK", "1")
-      local p = require("nvim-treesitter.parsers")
-      p.markdown_inline.install_info.generate = true
-      p.markdown_inline.install_info.generate_from_json = false
-   end,
-})

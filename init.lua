@@ -10,6 +10,8 @@ vim.pack.add({
    "https://github.com/jrop/morph.nvim",
    "https://github.com/viniciusteixeiradias/kanban.nvim",
 
+   "https://github.com/MagicDuck/grug-far.nvim",
+
    "https://github.com/lumen-oss/lz.n",
    "https://github.com/folke/snacks.nvim",
    "https://github.com/rafamadriz/friendly-snippets",
@@ -28,7 +30,10 @@ vim.pack.add({
    "https://github.com/catppuccin/nvim",
 
    -- writing
-   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+   -- "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+   "https://github.com/techwizrd/render-latex.nvim",
+   -- "https://github.com/pxwg/math-conceal.nvim",
+   -- "https://github.com/OXY2DEV/markview.nvim",
    "https://github.com/YousefHadder/markdown-plus.nvim",
    "https://github.com/jmbuhr/otter.nvim",
    "https://github.com/quarto-dev/quarto-nvim",
@@ -55,7 +60,6 @@ vim.pack.add({
    -- ui
    "https://github.com/shortcuts/no-neck-pain.nvim",
    "https://github.com/rachartier/tiny-code-action.nvim",
-   "https://github.com/rachartier/tiny-cmdline.nvim",
 
    "https://github.com/andrewferrier/debugprint.nvim",
 
@@ -217,19 +221,31 @@ require("lz.n").load({
    {
       "tokyonight.nvim",
       after = function()
-         -- vim.cmd.colorscheme("tokyonight")
+         vim.cmd.colorscheme("tokyonight")
       end,
    },
+   -- {
+   --    "nvim",
+   --    after = function()
+   --       vim.cmd.colorscheme("catppuccin")
+   --    end,
+   -- },
+   -- {
+   --    "nightfox.nvim",
+   --    after = function()
+   --       vim.cmd.colorscheme("duskfox")
+   --    end,
+   -- },
    {
-      "nvim",
+      "render-markdown.nvim",
+
       after = function()
-         vim.cmd.colorscheme("catppuccin")
-      end,
-   },
-   {
-      "nightfox.nvim",
-      after = function()
-         vim.cmd.colorscheme("duskfox")
+         require("render-markdown").setup({
+            html = {
+               comment = { conceal = false },
+            },
+            latex = { enabled = false },
+         })
       end,
    },
    {

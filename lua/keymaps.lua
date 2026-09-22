@@ -141,37 +141,16 @@ end, "", { expr = true })
 --- zen mode (no neck pain)
 nmap_leader("<leader>z", "<cmd>NoNeckPain<cr>")
 
-nmap_leader("qc", "<cmd>cclose<cr>")
-nmap_leader("qo", "<cmd>copen<cr>")
-
 nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
 nmap_leader("od", "<cmd>Obsidian today<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
 nmap_leader("ou", "<cmd>Obsidian unique_note<cr>")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
-
-nmap_leader("om", function()
-   local media_db = require("obsidian.media-db")
-   media_db.run_action({
-      on_select = function(model, _ctx)
-         if model.type == media_db.MediaType.Music then
-            local title = model.title or ""
-            local artist = (model.artists and model.artists[1]) or ""
-            local q = require("obsidian.util").urlencode(title .. " " .. artist)
-            local query = "https://rateyourmusic.com/search?searchterm=" .. q
-         end
-         require("obsidian.media-db.actions.note")(model, _ctx)
-      end,
-   })
-end)
+nmap_leader("om", "<cmd>Obsidian media_search<cr>")
 
 nmap_leader("O", "<cmd>Obsidian<cr>")
 nmap_leader("oc", require("obsidian._actions").capture_to_daily)
-
--- u for "Neovim UI and highlights"
-nmap_leader("ui", vim.show_pos, "Inspect Pos")
-nmap_leader("uI", "<cmd>InspectTree<cr>", "Inspect Tree")
 
 nmap_leader("go", function()
    MiniDiff.toggle_overlay(0)
@@ -181,9 +160,9 @@ nmap_leader("gg", function()
    Snacks.lazygit()
 end, "Open Lazygit")
 
--- t is for 'Terminal'
-nmap_leader("tT", "<Cmd>horizontal term<CR>", "Terminal (horizontal)")
-nmap_leader("tt", "<Cmd>vertical term<CR>", "Terminal (vertical)")
+nmap_leader("gd", function()
+   vim.cmd("CodeDiff main")
+end, "Open Lazygit")
 
 -- b is for 'Buffer'
 local new_scratch_buffer = function()
@@ -194,26 +173,6 @@ nmap_leader("ba", "<Cmd>b#<CR>", "alternate")
 nmap_leader("bs", new_scratch_buffer, "scratch")
 set("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
-
--- e is for 'Explore' and 'Edit'
-local explore_quickfix = function()
-   for _, win_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-      if vim.fn.getwininfo(win_id).quickfix == 1 then
-         return vim.cmd("cclose")
-      end
-   end
-   vim.cmd("copen")
-end
-
-nmap_leader("ei", "<Cmd>edit $MYVIMRC<CR>", "init.lua")
-nmap_leader("ep", "<Cmd>edit ~/.config/nvim/init.md<cr>", "plugins")
-nmap_leader("eq", explore_quickfix, "quickfix")
--- nmap_leader("ed", "<Cmd>lua MiniFiles.open()<CR>", "Directory")
--- nmap_leader("ef", explore_at_file, "File directory")
--- nmap_leader("em", edit_plugin_file("30_mini.lua"), "MINI config")
--- nmap_leader("en", "<Cmd>lua MiniNotify.show_history()<CR>", "Notifications")
--- nmap_leader("eo", edit_plugin_file("10_options.lua"), "Options config")
--- nmap_leader("ep", edit_plugin_file("40_plugins.lua"), "Plugins config")
 
 -- Create a new tab
 nmap_leader("tn", "<Cmd>tabnew<CR>", "New [t]ab")

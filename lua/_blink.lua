@@ -37,6 +37,9 @@ require("blink.cmp").setup({
                   if item.kind == require("blink.cmp.types").CompletionItemKind.Snippet then
                      item.score_offset = item.score_offset - 3
                   end
+                  if item.client_name == "obsidian-ls" then
+                     item.score_offset = item.score_offset + 100
+                  end
                end
                -- you can define your own filter for rime item
                return items
