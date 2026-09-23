@@ -103,7 +103,7 @@ obsidian.setup({
    },
 
    cache = {
-      enabled = false,
+      enabled = true,
       -- backend = "memory",
    },
 

@@ -53,6 +53,10 @@ o.splitbelow = true
 
 -- editing
 o.autowrite = true
+-- Obsidian Headless watches the vault and can capture Neovim's transient
+-- `filename~` write-back files as real notes.
+o.backup = false
+o.writebackup = false
 -- o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
 
 -- completion
