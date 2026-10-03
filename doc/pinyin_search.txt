@@ -1,0 +1,66 @@
+*pinyin_search.txt*  Pinyin-aware Chinese search
+
+                                                *PinyinSearch*
+Pinyin search keeps Vim's familiar `/`, `?`, `n`, and `N` workflow while
+matching Chinese characters by spelling.  The built-in tables are:
+
+- `full`: Hanyu Pinyin (`nihaoshijie` matches `你好世界`)
+- `xiaohe`: 小鹤双拼 (`nihcuijp` matches `你好世界`)
+
+The implementation is intentionally small and dependency-free.  It uses
+Neovim's `vim.ui.input()`, namespaces/extmarks, and the Lua API rather than
+replacing the editor's search engine or invoking an external process.  When
+`vim.ui.input()` is provided by Snacks, the `highlight` callback gives live
+match preview while typing; native input UIs simply ignore that optional
+callback.  The character readings are bundled, so searching does not depend
+on Rime being installed at runtime.
+
+`:nohl`, `:noh`, and `:nohlsearch` clear the plugin's match extmarks as well as
+Neovim's normal search highlighting.  The confirmed match list is retained,
+so `n` and `N` can still navigate after clearing highlights.
+
+The 小鹤 conversion follows the algebra in Rime's
+`double_pinyin_flypy.schema.yaml`; Rime is used as a spelling-table reference,
+not as a runtime dependency.  Neovim's `ds-pinyin-lsp` is useful for entering
+Chinese without an IME, but it is an input/completion integration rather than
+buffer search, so this module keeps the two concerns separate.
+
+                                                *pinyin-search-custom-table*
+A custom table is a Lua table mapping a character to one spelling, or to a
+list of spellings.  Register it in your config before calling `setup()`:
+
+>lua
+local pinyin = require("qol.pinyin_search")
+pinyin.setup({
+   tables = {
+      my_table = {
+         ["你"] = "ni",
+         ["好"] = { "hao", "hx" },
+      },
+   },
+   schemes = { "full", "xiaohe", "my_table" },
+})
+<
+
+A table value may also be a function returning the character-to-spelling
+map.  This makes larger or generated dictionaries lazy:
+
+>lua
+pinyin.setup({
+   tables = {
+      generated = function()
+         return require("my_spelling_data")
+      end,
+   },
+})
+<
+
+The public Lua entry points are:
+
+- `require("qol.pinyin_search").search()`
+- `require("qol.pinyin_search").next(1)` / `.next(-1)`
+- `require("qol.pinyin_search").setup(opts)`
+
+The bundled full-reading data was generated from the local Rime Luna Pinyin
+character dictionary.  The table module is separate from the matcher so other
+spelling systems can be added without changing search behavior.

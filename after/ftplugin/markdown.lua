@@ -1,5 +1,25 @@
 require("markdown-plus").setup({})
 
+-- Keep jieba's replacements for Vim word motions local to Markdown buffers.
+-- The dictionary is initialized lazily on the first motion.
+local jieba_motion = require("wordmotion.nvim.jieba")
+local jieba_keymaps = {
+   w = { { "n", "x" }, { true, true } },
+   b = { { "n", "x" }, { true, false } },
+   e = { { "n", "x" }, { false, true } },
+   ge = { { "n", "x" }, { false, false } },
+   iw = { { "x" }, { false } },
+   aw = { { "x" }, { true } },
+}
+
+for lhs, keymap in pairs(jieba_keymaps) do
+   local args = keymap[2]
+   vim.keymap.set(keymap[1], lhs, function()
+      jieba_motion.init()
+      jieba_motion.motion:keymap(unpack(args))
+   end, { buffer = true, noremap = true, desc = "Jieba word motion" })
+end
+
 vim.wo.conceallevel = 3
 
 vim.lsp.codelens.enable(true, { bufnr = 0 })

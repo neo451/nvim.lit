@@ -41,6 +41,14 @@ require("obsidian.spaced-repetition").setup({
    tags = { "review" },
 })
 require("_obsidian_media_db")
+require("obsidian.entities").setup({
+   folder = "Entities",
+   templates = {
+      place = "entities/place.md",
+      person = "entities/person.md",
+      thing = "entities/thing.md",
+   },
+})
 
 --- OPEN ---
 
@@ -95,7 +103,12 @@ obsidian.setup({
    },
 
    file = {
-      ignore_filters = { "Archived/", "Source/", ".trash/", ".report/" },
+      ignore_filters = {
+         "Archived/",
+         "Source/",
+         ".trash/",
+         ".report/",
+      },
    },
 
    agenda = {

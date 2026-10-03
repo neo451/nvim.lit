@@ -1,5 +1,14 @@
 local set = vim.keymap.set
 
+local pinyin_search = require("qol.pinyin_search")
+-- `/` remains a familiar search entry point, but understands both full pinyin
+-- and 小鹤双拼. `:PinyinSearch` and the Lua API are available too.
+pinyin_search.setup()
+set("n", "/", pinyin_search.search, { desc = "Pinyin search" })
+set("n", "?", function()
+   pinyin_search.search({ direction = -1 })
+end, { desc = "Pinyin search backwards" })
+
 local diy_search = require("qol.search")
 set({ "n", "x" }, diy_search.config.trigger, diy_search.query_browser, { remap = true })
 
@@ -16,6 +25,7 @@ set("n", "<C-S-C>", function()
 end)
 
 set("i", "jk", "<esc>l")
+vim.keymap.set({ "n", "t" }, "<leader>T", "<cmd>lua Snacks.terminal()<cr>")
 
 -- super help docs everywhere
 set("n", "vK", "<C-\\><C-N><Cmd>help!<CR>")
@@ -95,10 +105,20 @@ set("x", "/", "<Esc>/\\%V")
 set("n", "J", "mzJ`z:delmarks z<cr>")
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-set("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
+set("n", "n", function()
+   if pinyin_search.next(1) then
+      return
+   end
+   vim.cmd.normal({ args = { vim.v.searchforward == 1 and "n" or "N" }, bang = true })
+end, { desc = "Next Search Result" })
 set("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
 set("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-set("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev Search Result" })
+set("n", "N", function()
+   if pinyin_search.next(-1) then
+      return
+   end
+   vim.cmd.normal({ args = { vim.v.searchforward == 1 and "N" or "n" }, bang = true })
+end, { desc = "Prev Search Result" })
 set("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
 set("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
 

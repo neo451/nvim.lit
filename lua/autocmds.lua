@@ -2,6 +2,36 @@ local function augroup(name)
    return vim.api.nvim_create_augroup("auto_" .. name, { clear = true })
 end
 
+-- Neovim's default SwapExists handler calls vim.notify() synchronously. A
+-- notification UI such as Snacks may open/change a buffer at that point, which
+-- is forbidden during SwapExists and raises E812. Preserve the default choice,
+-- but defer the notification until :edit has finished switching buffers.
+vim.api.nvim_create_autocmd("SwapExists", {
+   group = vim.api.nvim_create_augroup("nvim.swapfile", { clear = true }),
+   pattern = "*",
+   desc = "Ignore swapfiles owned by a running Nvim without changing buffers during SwapExists",
+   callback = function()
+      local info = vim.fn.swapinfo(vim.v.swapname)
+      local passwd = vim.uv.os_get_passwd()
+      local user = passwd and passwd.username
+      local is_windows = vim.fn.has("win32") == 1
+      if info.error or info.pid <= 0 or (not is_windows and (not user or info.user ~= user)) then
+         vim.v.swapchoice = ""
+         return
+      end
+
+      vim.v.swapchoice = "e"
+      local pid = info.pid
+      vim.schedule(function()
+         vim.notify(
+            ("W325: Ignoring swapfile from Nvim process %d"):format(pid),
+            vim.log.levels.WARN,
+            { _truncate = true }
+         )
+      end)
+   end,
+})
+
 vim.api.nvim_create_autocmd("TermOpen", {
    command = "setlocal signcolumn=auto",
 })

@@ -1,9 +1,18 @@
 vim.loader.enable()
 
--- pcall(function()
---    vim.opt.rtp:append("~/.local/share/nvim/site/pack/core/opt/jieba-lua/packages/lua-utf8/")
---    vim.opt.rtp:append("~/.local/share/nvim/site/pack/core/opt/jieba-lua/packages/wordmotion.nvim/")
--- end)
+-- cppjieba is distributed as a LuaRock; expose its Lua wrapper and native
+-- module without adding the rock's plugin directory (which creates global
+-- word-motion mappings).
+local rocks = vim.fs.joinpath(vim.fn.stdpath("data"), "rocks")
+local rocks_lua = vim.fs.joinpath(rocks, "share", "lua", "5.1")
+local rocks_lib = vim.fs.joinpath(rocks, "lib", "lua", "5.1")
+package.path = rocks_lua .. "/?.lua;" .. rocks_lua .. "/?/init.lua;" .. package.path
+package.cpath = rocks_lib .. "/?.so;" .. package.cpath
+
+-- Binary rocks cannot discover libstdc++ through Nix's dynamic linker path.
+if vim.env.NIX_LD_LIBRARY_PATH then
+   package.loadlib(vim.fs.joinpath(vim.env.NIX_LD_LIBRARY_PATH, "libstdc++.so.6"), "*")
+end
 
 vim.pack.add({
    -- try
@@ -44,8 +53,6 @@ vim.pack.add({
    -- language
    "https://github.com/atusy/budoux.lua",
    "https://github.com/Imngzx/jisho.nvim",
-   -- "https://github.com/neo451/jieba-lua",
-   -- "https://github.com/neo451/jieba.nvim",
 
    --- db
    "https://github.com/tpope/vim-dadbod",
@@ -88,6 +95,18 @@ vim.pack.add({
    -- "https://github.com/glacambre/firenvim",
 }, { load = false })
 
+-- jieba.nvim's plugin script installs global mappings. Expose only its Lua
+-- modules (not its plugin directory); Markdown installs buffer-local mappings
+-- in after/ftplugin/markdown.lua instead.
+vim.pack.add({
+   { src = "https://github.com/neo451/jieba.nvim", name = "jieba.nvim" },
+}, {
+   load = function(plugin)
+      local path = vim.fs.joinpath(plugin.path, "lua")
+      package.path = package.path .. ";" .. path .. "/?.lua;" .. path .. "/?/init.lua"
+   end,
+})
+
 -- vim.opt.rtp:append("~/Plugins/irc.nvim")
 
 require("_mini")
@@ -119,6 +138,15 @@ require("lz.n").load({
    },
    {
       "snacks.nvim",
+      keys = {
+         -- {
+         --    "<leader>T",
+         --    function()
+         --       ---@diagnostic disable-next-line: undefined-global
+         --       Snacks.terminal()
+         --    end,
+         -- },
+      },
       after = function()
          require("snacks").setup({
             input = { enabled = true },
