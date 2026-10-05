@@ -9,11 +9,3 @@ require("obsidian").register_command("base", {
    nargs = "*",
    complete = require("obsidian.commands.base").complete,
 })
-
-require("obsidian").register_command("cover_art", { nargs = "*" })
-
-require("obsidian").register_command("prompts", {
-   nargs = "*",
-   note_action = true,
-   complete = require("obsidian.commands.prompts").complete,
-})

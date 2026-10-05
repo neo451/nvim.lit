@@ -95,6 +95,14 @@ obsidian.setup({
       enabled = true,
       auto_install = true,
    },
+
+   img = {
+      enabled = true,
+      picker = {
+         enabled = true,
+      },
+   },
+
    browser_editor = {
       profile = "user", -- or "minimal" (default)
    },

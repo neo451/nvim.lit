@@ -311,9 +311,8 @@ require("lz.n").load({
 
 require("_obsidian")
 
--- vim.opt.rtp:append("~/Plugins/feed.nvim/")
--- vim.cmd.packadd("feed.nvim")
--- require("_feed")
+vim.opt.rtp:append("~/Plugins/feed.nvim/")
+require("_feed")
 
 vim.schedule(function()
    vim.cmd("packadd nvim.undotree")
