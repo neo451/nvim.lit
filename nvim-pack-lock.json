@@ -65,10 +65,6 @@
       "rev": "8a525c91044bcfb4290fc37db0cf6e83ddc88695",
       "src": "https://github.com/Imngzx/jisho.nvim"
     },
-    "kanban.nvim": {
-      "rev": "e6c9e96c0fcfd1086533178b28d9da7b73493a1f",
-      "src": "https://github.com/viniciusteixeiradias/kanban.nvim"
-    },
     "lz.n": {
       "rev": "33f2475ea88935569394e92e0ff45e16211a1906",
       "src": "https://github.com/lumen-oss/lz.n"
@@ -88,10 +84,6 @@
     "mini.nvim": {
       "rev": "81ed10ebe1144b0eb9a7f289ffae000c22772c20",
       "src": "https://github.com/nvim-mini/mini.nvim"
-    },
-    "morph.nvim": {
-      "rev": "52cd40dbcfca61d3fea37485b3b6424898fedabe",
-      "src": "https://github.com/jrop/morph.nvim"
     },
     "neojj": {
       "rev": "d84589a265c44b5183887a43a456fe14550c0b56",

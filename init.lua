@@ -15,10 +15,6 @@ if vim.env.NIX_LD_LIBRARY_PATH then
 end
 
 vim.pack.add({
-   -- try
-   "https://github.com/jrop/morph.nvim",
-   "https://github.com/viniciusteixeiradias/kanban.nvim",
-
    "https://github.com/MagicDuck/grug-far.nvim",
 
    "https://github.com/lumen-oss/lz.n",
