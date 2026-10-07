@@ -38,7 +38,7 @@ local rime_on_attach = function(client, bufnr)
    end
 
    vim.keymap.set("n", "<leader>rr", toggle_rime, { buffer = bufnr, desc = "Toggle [R]ime" })
-   vim.keymap.set("i", "<C-x>", toggle_rime, { buffer = bufnr, desc = "Toggle Rime" })
+   vim.keymap.set("i", "<C-g>r", toggle_rime, { buffer = bufnr, desc = "Toggle Rime" })
    vim.keymap.set("n", "<leader>rs", sync_rime, { buffer = bufnr, desc = "[R]ime [S]ync" })
    vim.api.nvim_clear_autocmds({ group = trigger_group, buffer = bufnr })
    vim.api.nvim_create_autocmd("BufEnter", {
@@ -64,8 +64,7 @@ return {
       shared_data_dir = rime_shared_data_dir,
       user_data_dir = rime_user_data_dir,
       log_dir = "/tmp",
-      max_candidates = 9,
-      paging_characters = { "-", "=", ",", "." },
+      paging_characters = {},
       trigger_characters = {},
       schema_trigger_character = "&",
       max_tokens = 0,

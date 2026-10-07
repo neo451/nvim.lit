@@ -36,47 +36,6 @@ local function capture_to_daily(text, open)
    end)
 end
 
-local function new_spinner(bufnr, row, col)
-   local id = string.format("extmark-spinner-%d-%d-%d", bufnr, row, col)
-   require("spinner").config(id, {
-      kind = "extmark",
-      bufnr = bufnr, -- must be provided
-      row = row, -- must be provided, which line, 0-based
-      col = col, -- must be provided, which col, 0-based
-
-      ns = vim.api.nvim_create_namespace("ext-spinner"), -- namespace, optional
-      hl_group = "Spinner", -- hl_group for text, optional
-   })
-   return id
-end
-
--- TODO: handle the clipboard image, and make a floating window to edit the text before putting
-
-local function run_ollama(path, prompt)
-   local spinner = require("spinner")
-   local cmds = { "ollama", "run", "qwen3-vl:2b", path, prompt, "--think=false" }
-   -- local cmds = { "tesseract", path, "stdout", "-l", "chi_sim" }
-
-   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-   row = row - 1 -- 0-based
-   local id = new_spinner(vim.api.nvim_get_current_buf(), row, col)
-   spinner.start(id)
-
-   vim.system(
-      cmds,
-      {},
-      vim.schedule_wrap(function(out)
-         if out.code ~= 0 then
-            log.err("Failed to process image:", out.stderr)
-            return
-         end
-         spinner.stop(id)
-         vim.fn.setreg('"', out.stdout)
-         log.info('output saved to register "')
-      end)
-   )
-end
-
 local function parse_obsidian_footnote_def(line)
    local label, stop = line:match("^%s*%[%^([^%]]+)%]:()")
    return label, stop
@@ -808,41 +767,7 @@ local function convert_half_width_punctuation(bufnr)
    log.info(string.format("Converted %d punctuation mark(s)", count))
 end
 
-local function process_image()
-   -- TODO: after link parsing recognize embeds, check if is image
-   local link = obsidian.api.cursor_link()
-   if not link then
-      log.err("Not on a link")
-      return
-   end
-   local location = obsidian.util.parse_link(link)
-   local path = obsidian.api.resolve_attachment_path(location)
-   if not path then
-      return
-   end
-
-   local choice = vim.fn.confirm("Process image:", "&Extract text\n&Describe image\n&Custom prompt", 1)
-   if choice == 1 then
-      run_ollama(path, "extract_text")
-   elseif choice == 2 then
-      run_ollama(path, "describe_image")
-   elseif choice == 3 then
-      vim.ui.input({ prompt = "Custom prompt: " }, function(input)
-         if not input or input == "" then
-            return
-         end
-         run_ollama(path, input)
-      end)
-   end
-end
-
 pcall(function()
-   -- require("obsidian").code_action.add({
-   --    name = "process_image",
-   --    title = "Process image (extract text, describe, or custom)",
-   --    fn = process_image,
-   -- })
-
    require("obsidian").code_action.add({
       name = "cleanup_footnotes",
       title = "Clean up footnotes",

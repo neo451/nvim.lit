@@ -22,8 +22,8 @@ vim.api.nvim_create_autocmd("User", {
 
 require("obsidian.yaml_vim_options")
 require("nvim.sfx_player").setup()
-local ut = require("obsidian._utils")
-vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
+-- local ut = require("obsidian._utils")
+-- vim.keymap.set({ "i", "t" }, "<C-S-x>", ut.create_new_from_picker_prompt)
 
 vim.filetype.add({
    extension = {

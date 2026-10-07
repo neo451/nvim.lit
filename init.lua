@@ -16,6 +16,9 @@ end
 
 vim.pack.add({
    "https://github.com/MagicDuck/grug-far.nvim",
+   "https://github.com/xieyonn/spinner.nvim",
+   "https://github.com/neovim/nvim-lspconfig",
+   "https://github.com/igorlfs/nvim-lsp-file-operations",
 
    "https://github.com/lumen-oss/lz.n",
    "https://github.com/folke/snacks.nvim",
@@ -316,12 +319,6 @@ vim.schedule(function()
    vim.cmd("packadd nvim.tohtml")
    vim.cmd("packadd nohlsearch")
    vim.cmd("packadd cfilter")
-
-   vim.pack.add({
-      "https://github.com/xieyonn/spinner.nvim",
-      "https://github.com/neovim/nvim-lspconfig",
-      "https://github.com/igorlfs/nvim-lsp-file-operations",
-   })
 
    -- require("lsp-file-operations").setup({})
    --

@@ -114,6 +114,20 @@ end
 
 local daily_cache = { path = nil, mtime = -1, text = "" }
 
+local function count_checkbox(note)
+   local done = 0
+   local total = 0
+   for _, line in ipairs(note.contents) do
+      if util.is_checkbox(line) then
+         total = total + 1
+         if line:match("%[x%]") then
+            done = done + 1
+         end
+      end
+   end
+   return { total = total, done = done }
+end
+
 local obsidian_daily = function()
    local ok_d, daily = pcall(require, "obsidian.daily")
    if not ok_d then
@@ -134,7 +148,7 @@ local obsidian_daily = function()
       local Note = require("obsidian").Note
       local ok_n, note = pcall(Note.from_file, path)
       if ok_n and note then
-         local res = require("obsidian._utils").count_checkbox(note)
+         local res = count_checkbox(note)
          if res.total > 0 then
             text = string.format("Daily: %d/%d ", res.done, res.total)
          end

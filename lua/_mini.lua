@@ -51,7 +51,8 @@ miniclue.setup({
       { mode = "x", keys = "z" },
    },
 })
-require("mini.ai").setup({})
+-- require("mini.ai").setup({})
+require("mini.surround").setup()
 require("mini.diff").setup({})
 require("mini.git").setup({})
 require("mini.icons").setup()
