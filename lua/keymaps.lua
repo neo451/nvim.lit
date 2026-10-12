@@ -25,7 +25,7 @@ set("n", "<C-S-C>", function()
 end)
 
 set("i", "jk", "<esc>l")
-vim.keymap.set({ "n", "t" }, "<leader>T", "<cmd>lua Snacks.terminal()<cr>")
+vim.keymap.set({ "n", "t" }, "<localleader>T", "<cmd>lua Snacks.terminal()<cr>")
 
 -- super help docs everywhere
 set("n", "vK", "<C-\\><C-N><Cmd>help!<CR>")

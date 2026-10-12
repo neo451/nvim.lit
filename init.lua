@@ -381,6 +381,7 @@ end
 --- TODO: lazy and other capabilities
 
 require("autocmds")
+require("pomodoro").setup()
 require("keymaps")
 
 vim.opt.statusline = "%!v:lua.require'ui.statusline'.render()"

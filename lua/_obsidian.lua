@@ -98,9 +98,6 @@ obsidian.setup({
 
    img = {
       enabled = true,
-      picker = {
-         enabled = true,
-      },
    },
 
    browser_editor = {

@@ -1,0 +1,82 @@
+*pomodoro*  Focus / break cycle for this Neovim configuration
+
+CONTENTS                                                  *pomodoro-contents*
+
+  1. Commands ........................................... |pomodoro-commands|
+  2. Lua API ............................................ |pomodoro-api|
+  3. Configuration ...................................... |pomodoro-configuration|
+  4. Windows notifications .............................. |pomodoro-windows|
+
+==============================================================================
+1. COMMANDS                                                *pomodoro-commands*
+
+The module is loaded from |init.lua| and provides one command with subcommands:
+
+    :Pomodoro start       Start a new cycle at the Focus phase
+    :Pomodoro pause       Pause the current phase
+    :Pomodoro resume      Resume a paused phase
+    :Pomodoro stop        Stop the cycle
+    :Pomodoro status      Show the current phase and remaining time
+
+Calling |:Pomodoro| without an argument is equivalent to |:Pomodoro status|.
+A running or paused cycle must be stopped before starting a fresh one. The
+cycle proceeds automatically: Focus, Short Break, Focus, Short Break, Focus,
+Short Break, Focus, Long Break, then repeats until stopped.
+
+Time spent while the machine sleeps counts. If Neovim is suspended past a phase
+boundary, elapsed phases are caught up when Neovim resumes. The timer is local
+to this Neovim process; quitting Neovim ends it.
+
+==============================================================================
+2. LUA API                                                     *pomodoro-api*
+
+    require("pomodoro").setup(opts)
+    require("pomodoro").start()
+    require("pomodoro").pause()
+    require("pomodoro").resume()
+    require("pomodoro").stop()
+    require("pomodoro").get_status()
+
+|get_status()| returns a table with `status` (`idle`, `running`, `paused`, or
+`stopped`), `phase` (name, kind, duration, and index), and `remaining_seconds`.
+The phase and remaining time are nil when no cycle is active.
+
+==============================================================================
+3. CONFIGURATION                                      *pomodoro-configuration*
+
+Defaults are 25 minutes of focus, 5-minute short breaks, a 15-minute long
+break after every four focus phases. The notification channels are independently
+selectable; Neovim notifications are enabled by default and system notifications
+are disabled by default.
+
+Example (add alongside the module setup in |init.lua|):
+
+    require("pomodoro").setup({
+      focus_minutes = 25,
+      short_break_minutes = 5,
+      long_break_minutes = 15,
+      long_break_every = 4,
+      notify = {
+        nvim = true,
+        system = false,
+      },
+    })
+
+==============================================================================
+4. WINDOWS NOTIFICATIONS                                      *pomodoro-windows*
+
+The optional Windows system-notification backend launches `powershell.exe`
+through WSL interop and uses the BurntToast PowerShell module. Install BurntToast
+in Windows PowerShell for the current Windows user:
+
+    Install-Module BurntToast -Scope CurrentUser
+
+Then enable the system channel in the module configuration:
+
+    notify = { nvim = true, system = true }
+
+If the PowerShell executable or BurntToast module is unavailable, the module
+reports the failure through |vim.notify()|. Notification delivery can still be
+blocked by Windows notification or Focus Assist settings.
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
