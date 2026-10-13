@@ -124,15 +124,15 @@ return function(note)
       vim.bo[bufnr].readonly = false
    end
 
-   pcall(function()
+   if require("obsidian.actions").increment ~= nil then
       vim.keymap.set("n", "<C-a>", function()
-         require("obsidian.api").image_bigger()
+         require("obsidian.actions").increment()
       end, { desc = "Obsidian image bigger", buffer = bufnr })
 
       vim.keymap.set("n", "<C-x>", function()
-         require("obsidian.api").image_smaller()
+         require("obsidian.actions").decrement()
       end, { desc = "Obsidian image smaller", buffer = bufnr })
-   end)
+   end
 
    vim.keymap.set({ "n", "x" }, "<leader>ol", actions.link_new, { desc = "Link new" })
    require("obsidian.actions.process_image")

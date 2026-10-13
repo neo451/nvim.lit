@@ -1,4 +1,5 @@
-vim.opt.rtp:append("~/Plugins/obsidian.nvim")
+-- vim.opt.rtp:append("~/Plugins/obsidian.nvim")
+vim.opt.rtp:append("~/Plugins/obsidian.nvim-worktrees/footer-compact/")
 vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
 vim.opt.rtp:append("~/Plugins/scribe.nvim/")
@@ -78,7 +79,7 @@ vim.ui.open = (function(overridden)
       if vim.endswith(uri, ".wav") or vim.endswith(uri, ".m4a") then
          vim.cmd(":SfxPlayerOpen " .. uri)
          return
-      elseif vim.endswith(uri, ".pdf") then
+      elseif vim.endswith(uri, ".pdf") and not vim.startswith(uri, "http") then
          opt = { cmd = { "zathura" } } -- override open app
       end
       if require("obsidian").api.get_os() == "Wsl" then
@@ -221,6 +222,31 @@ obsidian.setup({
    },
 
    resolvers = {
+      -- footer_options = function(ctx, done)
+      --    done({ virt_text = ctx.lines[1], virt_text_pos = "eol_right_align" })
+      -- end,
+      footer_content = function(ctx, done)
+         local note = require("obsidian.note").from_buffer(ctx.bufnr)
+         if not note then
+            done({})
+            return
+         end
+
+         note:backlinks_async({}, function(matches)
+            -- local lines = { { "", "Comment" } }
+            local lines = {}
+            for _, match in ipairs(matches) do
+               local text = string.format(
+                  "%s [%d]: %s",
+                  tostring(require("obsidian.path").new(match.path):vault_relative_path()),
+                  match.line,
+                  match.text
+               )
+               lines[#lines + 1] = { { text, "Comment" } }
+            end
+            done(lines)
+         end)
+      end,
       attachment = require("obsidian.yazi_attachment"),
       bookmark = require("obsidian.yazi_attachment"),
       -- hints = function(ctx, done)
