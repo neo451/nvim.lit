@@ -60,8 +60,81 @@ set("n", "ycc", function()
    return "yy" .. vim.v.count1 .. "gcc']p"
 end, { remap = true, expr = true })
 
--- fix previous spell error
-set("i", "<C-l>", "<Esc>[s1z=`]a")
+local function accept_previous_inlay_hint()
+   local ok, inlay_hints = pcall(require, "obsidian.inlay_hints")
+   if not ok or not vim.lsp.inlay_hint or type(vim.lsp.inlay_hint.get) ~= "function" then
+      return false
+   end
+
+   local bufnr = vim.api.nvim_get_current_buf()
+   local win = vim.api.nvim_get_current_win()
+   local cursor = vim.api.nvim_win_get_cursor(win)
+   local cursor_position = { line = cursor[1] - 1, character = cursor[2] }
+   local candidates = {}
+
+   local function position_before_or_at(left, right)
+      return left.line < right.line or (left.line == right.line and left.character <= right.character)
+   end
+
+   for _, item in ipairs(vim.lsp.inlay_hint.get({ bufnr = bufnr })) do
+      local client = vim.lsp.get_client_by_id(item.client_id)
+      local hint = item.inlay_hint
+      local range = type(hint.data) == "table" and hint.data.range or nil
+      if
+         client
+         and client.name == "obsidian-ls"
+         and type(range) == "table"
+         and range.start
+         and range["end"]
+         and position_before_or_at(range["end"], cursor_position)
+      then
+         candidates[#candidates + 1] = range
+      end
+   end
+
+   if #candidates == 0 then
+      return false
+   end
+
+   table.sort(candidates, function(left, right)
+      local left_end = left["end"]
+      local right_end = right["end"]
+      return left_end.line > right_end.line
+         or (left_end.line == right_end.line and left_end.character > right_end.character)
+   end)
+
+   local namespace = vim.api.nvim_create_namespace("accept-previous-inlay-hint")
+   local cursor_mark =
+      vim.api.nvim_buf_set_extmark(bufnr, namespace, cursor_position.line, cursor_position.character, {})
+   for _, candidate in ipairs(candidates) do
+      local start = candidate.start
+      local moved = pcall(vim.api.nvim_win_set_cursor, win, { start.line + 1, start.character })
+      if moved and not vim.tbl_isempty(inlay_hints.get_actionable_obsidian(bufnr)) and inlay_hints.accept(bufnr) then
+         vim.schedule(function()
+            if not vim.api.nvim_buf_is_valid(bufnr) then
+               return
+            end
+            local position = vim.api.nvim_buf_get_extmark_by_id(bufnr, namespace, cursor_mark, {})
+            if #position == 2 and vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == bufnr then
+               vim.api.nvim_win_set_cursor(win, { position[1] + 1, position[2] })
+            end
+            vim.api.nvim_buf_del_extmark(bufnr, namespace, cursor_mark)
+         end)
+         return true
+      end
+   end
+
+   vim.api.nvim_win_set_cursor(win, cursor)
+   vim.api.nvim_buf_del_extmark(bufnr, namespace, cursor_mark)
+   return false
+end
+
+-- Accept the nearest link-suggestion hint, or fix the previous spell error.
+set("i", "<C-l>", function()
+   if not accept_previous_inlay_hint() then
+      vim.api.nvim_feedkeys(vim.keycode("<Esc>[s1z=`]a"), "n", false)
+   end
+end, { desc = "Accept previous inlay hint or fix previous spelling" })
 
 -- Builtin completion: open the menu, then use <C-n>/<C-p> to move.
 set("i", "<C-n>", function()
