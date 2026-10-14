@@ -1,22 +1,7 @@
 vim.loader.enable()
 
--- cppjieba is distributed as a LuaRock; expose its Lua wrapper and native
--- module without adding the rock's plugin directory (which creates global
--- word-motion mappings).
-local rocks = vim.fs.joinpath(vim.fn.stdpath("data"), "rocks")
-local rocks_lua = vim.fs.joinpath(rocks, "share", "lua", "5.1")
-local rocks_lib = vim.fs.joinpath(rocks, "lib", "lua", "5.1")
-package.path = rocks_lua .. "/?.lua;" .. rocks_lua .. "/?/init.lua;" .. package.path
-package.cpath = rocks_lib .. "/?.so;" .. package.cpath
-
--- Binary rocks cannot discover libstdc++ through Nix's dynamic linker path.
-if vim.env.NIX_LD_LIBRARY_PATH then
-   package.loadlib(vim.fs.joinpath(vim.env.NIX_LD_LIBRARY_PATH, "libstdc++.so.6"), "*")
-end
-
 vim.pack.add({
    "https://github.com/MagicDuck/grug-far.nvim",
-   "https://github.com/xieyonn/spinner.nvim",
    "https://github.com/neovim/nvim-lspconfig",
    "https://github.com/igorlfs/nvim-lsp-file-operations",
 
@@ -38,36 +23,27 @@ vim.pack.add({
    "https://github.com/catppuccin/nvim",
 
    -- writing
-   -- "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
    "https://github.com/techwizrd/render-latex.nvim",
-   -- "https://github.com/pxwg/math-conceal.nvim",
    -- "https://github.com/OXY2DEV/markview.nvim",
    "https://github.com/YousefHadder/markdown-plus.nvim",
    "https://github.com/jmbuhr/otter.nvim",
    "https://github.com/quarto-dev/quarto-nvim",
-   "https://github.com/lervag/vimtex",
-
-   -- "https://github.com/jalvesaq/zotcite",
+   "https://github.com/jalvesaq/zotcite",
 
    -- language
    "https://github.com/atusy/budoux.lua",
    "https://github.com/Imngzx/jisho.nvim",
 
    --- db
-   "https://github.com/tpope/vim-dadbod",
-   "https://github.com/kristijanhusak/vim-dadbod-ui",
-   "https://github.com/kristijanhusak/vim-dadbod-completion",
    "https://github.com/kkharji/sqlite.lua",
 
    -- git
    "https://github.com/esmuellert/codediff.nvim",
-   "https://github.com/noamsto/resolved.nvim",
 
    -- ui
    "https://github.com/shortcuts/no-neck-pain.nvim",
    "https://github.com/rachartier/tiny-code-action.nvim",
-
-   "https://github.com/andrewferrier/debugprint.nvim",
 
    -- treesitter
    {
@@ -75,12 +51,9 @@ vim.pack.add({
       version = "main",
    },
 
-   -- image
-   "https://github.com/3rd/image.nvim",
-
    -- lib
-   "https://github.com/gregorias/coop.nvim",
    "https://github.com/ibhagwan/fzf-lua",
+   "https://github.com/xieyonn/spinner.nvim",
 
    -- jj
    "https://github.com/NicholasZolton/neojj",
@@ -106,71 +79,23 @@ vim.pack.add({
    end,
 })
 
--- vim.opt.rtp:append("~/Plugins/irc.nvim")
-
 require("_mini")
 require("_treesitter")
+require("snacks").setup({
+   -- picker = { enabled = true },
+   notifier = { enabled = true, timeout = 3000 },
+   input = { enabled = true },
+   statuscolumn = { enabled = true },
+})
 
 require("lz.n").load({
-   {
-      "fzf-lua",
-      after = function()
-         -- require("fzf-lua").setup({
-         --    "fzf-tmux",
-         --    files = {
-         --       previewer = false,
-         --       fzf_opts = {
-         --          ["--tmux"] = "center",
-         --          ["--keep-right"] = "",
-         --       },
-         --    },
-         -- })
-      end,
-   },
+   { "render-markdown.nvim" },
    {
       "tiny-code-action.nvim",
       after = function()
          require("tiny-code-action").setup({
             picker = "snacks",
          })
-      end,
-   },
-   {
-      "snacks.nvim",
-      keys = {
-         -- {
-         --    "<leader>T",
-         --    function()
-         --       ---@diagnostic disable-next-line: undefined-global
-         --       Snacks.terminal()
-         --    end,
-         -- },
-      },
-      after = function()
-         require("snacks").setup({
-            input = { enabled = true },
-            statuscolumn = { enabled = true },
-            styles = {
-               notification = { wo = { wrap = true } },
-            },
-            -- picker = { enabled = true },
-            notifier = { enabled = true, timeout = 3000 },
-            image = { enabled = true },
-         })
-      end,
-   },
-   {
-      "agentic.nvim",
-      keys = {
-         { "<localleader>A", desc = "Toggle Agentic Chat" },
-         { "<localleader>aa", mode = { "n", "v" }, desc = "Add file or selection to Agentic to Context" },
-         { "<localleader>an", mode = { "n", "v", "i" }, desc = "[N]ew Agentic Session" },
-         { "<localleader>as", mode = { "n", "v" }, desc = "Agentic Restore session" },
-         { "<localleader>ad", desc = "Add current line diagnostic to Agentic" },
-         { "<localleader>aD", desc = "Add all buffer diagnostics to Agentic" },
-      },
-      after = function()
-         require("_agentic")
       end,
    },
    {
@@ -181,15 +106,7 @@ require("lz.n").load({
       end,
    },
    {
-      "debugprint.nvim",
-      keys = { "g?v" },
-      after = function()
-         require("debugprint").setup({})
-      end,
-   },
-   {
       "jisho.nvim",
-      -- cmd = "Jisho",
       after = function()
          require("jisho").setup({})
       end,
@@ -246,36 +163,6 @@ require("lz.n").load({
       end,
    },
    {
-      "tokyonight.nvim",
-      after = function()
-         vim.cmd.colorscheme("tokyonight")
-      end,
-   },
-   -- {
-   --    "nvim",
-   --    after = function()
-   --       vim.cmd.colorscheme("catppuccin")
-   --    end,
-   -- },
-   -- {
-   --    "nightfox.nvim",
-   --    after = function()
-   --       vim.cmd.colorscheme("duskfox")
-   --    end,
-   -- },
-   {
-      "render-markdown.nvim",
-
-      after = function()
-         require("render-markdown").setup({
-            html = {
-               comment = { conceal = false },
-            },
-            latex = { enabled = false },
-         })
-      end,
-   },
-   {
       "jisho",
       cmd = "Jisho",
       after = function()
@@ -300,12 +187,6 @@ require("lz.n").load({
          require("codediff").setup({})
       end,
    },
-   {
-      "image.nvim",
-      after = function()
-         -- require("image").setup({})
-      end,
-   },
 })
 
 require("_obsidian")
@@ -313,63 +194,44 @@ require("_obsidian")
 vim.opt.rtp:append("~/Plugins/feed.nvim/")
 require("_feed")
 
-vim.schedule(function()
-   vim.cmd("packadd nvim.undotree")
-   vim.cmd("packadd nvim.difftool")
-   vim.cmd("packadd nvim.tohtml")
-   vim.cmd("packadd nohlsearch")
-   vim.cmd("packadd cfilter")
+vim.cmd("packadd nvim.undotree")
+vim.cmd("packadd nvim.difftool")
+vim.cmd("packadd nvim.tohtml")
+vim.cmd("packadd nohlsearch")
+vim.cmd("packadd cfilter")
 
-   -- require("lsp-file-operations").setup({})
-   --
-   -- local lspconfig = require("lspconfig")
-   --
-   -- -- Set global defaults for all servers
-   -- lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
-   --    capabilities = vim.tbl_deep_extend(
-   --       "force",
-   --       vim.lsp.protocol.make_client_capabilities(),
-   --       -- returns configured operations if setup() was already called
-   --       -- or default operations if not
-   --       require("lsp-file-operations").default_capabilities()
-   --    ),
-   -- })
-
-   -- vim.cmd("packadd coop.nvim")
-
-   -- vim.opt.rtp:append("~/Plugins/diy.nvim/")
-   -- vim.opt.rtp:append("~/Plugins/nldates.nvim/")
-   -- vim.opt.rtp:append("~/Plugins/templater.nvim/")
-   -- vim.opt.rtp:append("~/Plugins/dict-lsp.nvim/")
-   -- require("dict-lsp")
-   -- vim.opt.rtp:append("~/Plugins/obpilot/")
-   -- require("obpilot")
-   -- vim.opt.rtp:append("~/Plugins/calendar.nvim/")
-   -- vim.opt.rtp:append("~/Plugins/nvim-treesitter/")
-end)
+-- require("lsp-file-operations").setup({})
+--
+-- local lspconfig = require("lspconfig")
+--
+-- -- Set global defaults for all servers
+-- lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
+--    capabilities = vim.tbl_deep_extend(
+--       "force",
+--       vim.lsp.protocol.make_client_capabilities(),
+--       -- returns configured operations if setup() was already called
+--       -- or default operations if not
+--       require("lsp-file-operations").default_capabilities()
+--    ),
+-- })
 
 require("options")
 require("experiments")
 
+vim.lsp.enable("rime_ls")
+vim.lsp.enable("emmylua_ls")
+
 local servers = {
-   "rime_ls",
-   -- "lua_ls",
-   "emmylua_ls",
    "gopls",
    "nixd",
-   "zls",
-   "qmlls",
    "ruff",
    "ts_ls",
    "copilot",
    -- "pyright",
    -- "markdown_oxide"
    -- "marksman",
-   -- "dummy_ls",
    -- "harper_ls",
 }
-
--- require("lspconfig").setup({})
 
 for _, name in ipairs(servers) do
    local _, err = pcall(vim.lsp.enable, name)
@@ -378,16 +240,18 @@ for _, name in ipairs(servers) do
    end
 end
 
---- TODO: lazy and other capabilities
-
 require("autocmds")
 require("pomodoro").setup()
 require("keymaps")
 
-vim.opt.statusline = "%!v:lua.require'ui.statusline'.render()"
+-- vim.opt.statusline = "%!v:lua.require'ui.statusline'.render()"
 
 require("vim._core.ui2").enable({
    msg = {
       targets = "msg",
    },
 })
+
+-- vim.cmd.colorscheme("duskfox")
+-- vim.cmd.colorscheme("tokyonight")
+vim.cmd.colorscheme("catppuccin")

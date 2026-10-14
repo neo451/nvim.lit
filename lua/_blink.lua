@@ -1,3 +1,6 @@
+-- if true then
+--    return
+-- end
 local function is_rime_item(item)
    return item.client_name == "rime_ls"
 end

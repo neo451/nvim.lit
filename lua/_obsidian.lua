@@ -2,9 +2,10 @@ vim.opt.rtp:append("~/Plugins/obsidian.nvim")
 vim.opt.rtp:append("~/Plugins/obsidian.nvim-worktrees/footer-compact/")
 vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
-vim.opt.rtp:append("~/Plugins/scribe.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
 vim.opt.rtp:append("~/Plugins/calendar.nvim/")
+-- vim.opt.rtp:append("~/Plugins/nldates.nvim/")
+-- vim.opt.rtp:append("~/Plugins/templater.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-cite.nvim/")
 
 local obsidian = require("obsidian")
@@ -128,10 +129,7 @@ obsidian.setup({
 
    sync = {
       -- trigger = "continuous",
-      configs = {
-         "core-plugin",
-         "core-plugin-data",
-      },
+      configs = {}, -- "core-plugin", "core-plugin-data",
       enabled = true,
       -- mode = "bidirectional",
       -- mode = "pull-only",
