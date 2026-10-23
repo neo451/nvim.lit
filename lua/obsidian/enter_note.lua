@@ -139,6 +139,7 @@ return function(note)
    require("obsidian.actions.copy_location")
    require("obsidian.actions.insert_song")
    require("obsidian.actions.promote_tag")
+   require("obsidian.actions.paste_url")
    -- vim.keymap.set({ "n", "x" }, "<leader>oL", actions._link, { desc = "Link" })
 
    -- vim.keymap.set("n", "<leader>xt", _actions.process_image, { buffer = bufnr })

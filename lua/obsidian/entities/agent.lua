@@ -42,7 +42,7 @@ function M.run(opts)
    local root = api.resolve_workspace_dir(opts.path)
    local vault = vim.fs.normalize(tostring(root))
    local target_path = vim.fs.normalize(opts.path)
-   local target = assert(util.relpath(vault, target_path))
+   local target = assert(vim.fs.relpath(vault, target_path))
 
    local argv = {
       "pi",

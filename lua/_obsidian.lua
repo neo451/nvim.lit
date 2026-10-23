@@ -1,5 +1,4 @@
 vim.opt.rtp:append("~/Plugins/obsidian.nvim")
-vim.opt.rtp:append("~/Plugins/obsidian.nvim-worktrees/footer-compact/")
 vim.opt.rtp:append("~/Plugins/obsidian-media-db.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-heatmap.nvim/")
 vim.opt.rtp:append("~/Plugins/obsidian-spaced-repetition.nvim/")
@@ -96,6 +95,19 @@ obsidian.setup({
    treesitter = {
       enabled = true,
       auto_install = true,
+   },
+
+   -- search = {
+   --    sort_by = "frecency",
+   -- },
+
+   picker = {
+      -- name = false,
+      name = "snacks.picker",
+      -- name = "mini.pick",
+      -- name = "fzf-lua",
+      -- name = "telescope.nvim",
+      -- name = "ui2",
    },
 
    img = {
@@ -343,15 +355,6 @@ obsidian.setup({
    quick_switch = {
       show_existing_only = false,
       show_attachments = true,
-   },
-
-   picker = {
-      -- name = false,
-      name = "snacks.picker",
-      -- name = "mini.pick",
-      -- name = "fzf-lua",
-      -- name = "telescope.nvim",
-      -- name = "ui2",
    },
 
    attachments = {
