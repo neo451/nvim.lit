@@ -35,6 +35,7 @@ vim.filetype.add({
 --- INTEGRATIONS ---
 
 require("obsidian").register_command("heatmap", { nargs = 0 })
+require("obsidian").register_command("revisit", { nargs = "?" })
 require("_obsidian_cite")
 require("obsidian.spaced-repetition").setup({
    auto_next_note = true,
@@ -281,7 +282,7 @@ obsidian.setup({
       --    end
       --    done(hints)
       -- end,
-      -- date = require("obsidian.calendar_date"),
+      date = require("obsidian.calendar_date"),
    },
 
    frontmatter = {

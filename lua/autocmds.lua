@@ -192,6 +192,8 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
    end,
 })
 
+local lsp_document_highlight_group = augroup("lsp_document_highlight")
+
 vim.api.nvim_create_autocmd("LspAttach", {
    desc = "Attach lsp stuff",
    callback = function(ev)
@@ -212,6 +214,46 @@ vim.api.nvim_create_autocmd("LspAttach", {
       --    end
       -- end, { expr = true, desc = "Accept the current inline completion" })
       local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+
+      if client:supports_method("textDocument/documentHighlight", bufnr) then
+         vim.api.nvim_clear_autocmds({ group = lsp_document_highlight_group, buffer = bufnr })
+         vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+            group = lsp_document_highlight_group,
+            buffer = bufnr,
+            desc = "Highlight references under the cursor",
+            callback = function()
+               vim.lsp.buf.document_highlight()
+            end,
+         })
+         vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+            group = lsp_document_highlight_group,
+            buffer = bufnr,
+            desc = "Clear document highlights",
+            callback = function()
+               vim.lsp.util.buf_clear_references(bufnr)
+            end,
+         })
+         vim.api.nvim_create_autocmd("LspDetach", {
+            group = lsp_document_highlight_group,
+            buffer = bufnr,
+            desc = "Clear document highlights when the last provider detaches",
+            callback = function()
+               vim.schedule(function()
+                  if not vim.api.nvim_buf_is_valid(bufnr) then
+                     return
+                  end
+                  local clients = vim.lsp.get_clients({
+                     bufnr = bufnr,
+                     method = "textDocument/documentHighlight",
+                  })
+                  if #clients == 0 then
+                     vim.lsp.util.buf_clear_references(bufnr)
+                     vim.api.nvim_clear_autocmds({ group = lsp_document_highlight_group, buffer = bufnr })
+                  end
+               end)
+            end,
+         })
+      end
 
       if client:supports_method("textDocument/inlineCompletion", bufnr) then
          vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
@@ -259,31 +301,3 @@ vim.api.nvim_create_autocmd("FileType", {
       -- end
    end,
 })
-
--- vim.api.new_autocmd("CursorMoved", {
---    desc = "Highlight references under cursor",
---    callback = function(ev)
---       if vim.bo.filetype == "markdown" then
---          return
---       end
---
---       if vim.fn.mode == "i" then
---          return
---       end
---
---       local current_word = vim.fn.expand("<cword>")
---       if vim.b.current_word and vim.b.current_word == current_word then
---          return
---       end
---
---       vim.b.current_word = current_word
---
---       local clients = vim.lsp.get_clients({ buffer = ev.buf, method = "textDocument/documentHighlight" })
---       if #clients == 0 then
---          return
---       end
---
---       vim.lsp.buf.clear_references()
---       vim.lsp.buf.document_highlight()
---    end,
--- })

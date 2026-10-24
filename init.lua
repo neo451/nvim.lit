@@ -220,6 +220,7 @@ require("experiments")
 
 vim.lsp.enable("rime_ls")
 vim.lsp.enable("emmylua_ls")
+vim.lsp.enable("pele")
 
 local servers = {
    "gopls",

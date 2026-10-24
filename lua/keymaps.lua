@@ -236,7 +236,7 @@ nmap_leader("<leader>z", "<cmd>NoNeckPain<cr>")
 
 nmap_leader("oS", "<cmd>Obsidian search<cr>")
 nmap_leader("os", "<cmd>Obsidian quick_switch<cr>")
-nmap_leader("od", "<cmd>Obsidian today<cr>")
+nmap_leader("od", "<cmd>Obsidian daily today<cr>")
 nmap_leader("on", "<cmd>Obsidian new<cr>")
 nmap_leader("ou", "<cmd>Obsidian unique_note<cr>")
 nmap_leader("ow", "<cmd>Obsidian workspace<cr>")
