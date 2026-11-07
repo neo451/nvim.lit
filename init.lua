@@ -15,14 +15,10 @@ vim.pack.add({
    "https://github.com/nvim-mini/mini.nvim",
    "https://github.com/carlos-algms/agentic.nvim",
    "https://github.com/stevearc/quicker.nvim",
-   "https://github.com/stevearc/conform.nvim",
    "https://github.com/stevearc/oil.nvim",
    "https://github.com/folke/tokyonight.nvim",
    "https://github.com/edeneast/nightfox.nvim",
    "https://github.com/catppuccin/nvim",
-   "https://github.com/WTFox/luna.nvim",
-   "https://github.com/neg-serg/neg.nvim",
-   "https://github.com/ntk148v/lauds",
 
    -- writing
    -- "https://github.com/MeanderingProgrammer/render-markdown.nvim",
@@ -55,18 +51,14 @@ vim.pack.add({
 
    -- lib
    "https://github.com/ibhagwan/fzf-lua",
-   "https://github.com/xieyonn/spinner.nvim",
 
    -- jj
    "https://github.com/NicholasZolton/neojj",
 
-   "https://github.com/nvim-lua/plenary.nvim",
-   "https://github.com/nvim-telescope/telescope.nvim",
-
    -- lib
    "https://github.com/monok-robeto/nvim.sfx_player",
-
-   -- "https://github.com/glacambre/firenvim",
+   "https://github.com/nvim-lua/plenary.nvim",
+   "https://github.com/nvim-telescope/telescope.nvim",
 }, { load = false })
 
 -- jieba.nvim's plugin script installs global mappings. Expose only its Lua
@@ -92,12 +84,72 @@ require("snacks").setup({
 
 require("lz.n").load({
    {
+      "obsidian.nvim",
+      ft = "markdown",
+      cmd = "Obsidian",
+      after = function()
+         require("_obsidian")
+      end,
+   },
+   {
       "tiny-code-action.nvim",
       after = function()
          require("tiny-code-action").setup({
             picker = "snacks",
          })
       end,
+   },
+   {
+      "agentic.nvim",
+      filetypes = { "lua", "markdown" },
+      after = function()
+         ---@diagnostic disable-next-line: param-type-mismatch, missing-fields
+         require("agentic").setup({ provider = "pi-acp" })
+      end,
+      keys = {
+         {
+            "<C-\\>",
+            function()
+               require("agentic").toggle()
+            end,
+            mode = { "n", "v", "i" },
+            desc = "Toggle Agentic Chat",
+         },
+         {
+            "<C-'>",
+            function()
+               require("agentic").add_selection_or_file_to_context()
+            end,
+            mode = { "n", "v" },
+            desc = "Add file or selection to Agentic to Context",
+         },
+         {
+            "<A-i>r", -- ai Restore
+            function()
+               require("agentic").restore_session()
+            end,
+            desc = "Agentic Restore session",
+            silent = true,
+            mode = { "n", "v", "i" },
+         },
+         {
+            "<leader>ad", -- ai Diagnostics
+
+            function()
+               require("agentic").add_current_line_diagnostics()
+            end,
+            desc = "Add current line diagnostic to Agentic",
+            mode = { "n" },
+         },
+         {
+            "<leader>aD", -- ai all Diagnostics
+            function()
+               require("agentic").add_buffer_diagnostics()
+            end,
+            desc = "Add all buffer diagnostics to Agentic",
+            mode = { "n" },
+         },
+      },
    },
    {
       "blink.cmp",
@@ -157,13 +209,6 @@ require("lz.n").load({
       end,
    },
    {
-      "conform.nvim",
-      event = "BufEnter",
-      after = function()
-         require("_conform")
-      end,
-   },
-   {
       "jisho",
       cmd = "Jisho",
       after = function()
@@ -189,8 +234,6 @@ require("lz.n").load({
       end,
    },
 })
-
-require("_obsidian")
 
 vim.opt.rtp:append("~/Plugins/feed.nvim/")
 require("_feed")

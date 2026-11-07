@@ -21,22 +21,6 @@
       "rev": "09d9ebef2cc5a5c04db7a349cd6c61bdf84ecc8e",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
-    "conform.nvim": {
-      "rev": "016802de402556da54c36bd7359b441266b01cdd",
-      "src": "https://github.com/stevearc/conform.nvim"
-    },
-    "coop.nvim": {
-      "rev": "26df3be54846ed44b5a9d7749f7780049931b8a8",
-      "src": "https://github.com/gregorias/coop.nvim"
-    },
-    "debugprint.nvim": {
-      "rev": "957093d8b695aa4cc18c18f421ef0cb6c7380c59",
-      "src": "https://github.com/andrewferrier/debugprint.nvim"
-    },
-    "firenvim": {
-      "rev": "302c105ff79c51d3d362eb37210f95f65285926d",
-      "src": "https://github.com/glacambre/firenvim"
-    },
     "friendly-snippets": {
       "rev": "b4d01b0fdf3c9a549961c2f9ffe8dc09be166219",
       "src": "https://github.com/rafamadriz/friendly-snippets"
@@ -49,14 +33,6 @@
       "rev": "91b7e58b6ffc6ddad5acb7a7c1df21257724449e",
       "src": "https://github.com/MagicDuck/grug-far.nvim"
     },
-    "image.nvim": {
-      "rev": "365e2ace0f619164ae6fd2f6f1d2807775dd6849",
-      "src": "https://github.com/3rd/image.nvim"
-    },
-    "jieba-lua": {
-      "rev": "21b778eb623b475cb693d2f7ecc9e6033b39c3a1",
-      "src": "https://github.com/neo451/jieba-lua"
-    },
     "jieba.nvim": {
       "rev": "adfb101e645f790acce3e6787e08a85429a31ed4",
       "src": "https://github.com/neo451/jieba.nvim"
@@ -64,18 +40,6 @@
     "jisho.nvim": {
       "rev": "461222564d154c5e3fe45d3f19403934b4b81f44",
       "src": "https://github.com/Imngzx/jisho.nvim"
-    },
-    "kanban.nvim": {
-      "rev": "e6c9e96c0fcfd1086533178b28d9da7b73493a1f",
-      "src": "https://github.com/viniciusteixeiradias/kanban.nvim"
-    },
-    "lauds": {
-      "rev": "3753daebf9fd10709cb98ac484d39c7af2ed33f1",
-      "src": "https://github.com/ntk148v/lauds"
-    },
-    "luna.nvim": {
-      "rev": "727c19334528e1b8939f518d1ea43c4e62d98f91",
-      "src": "https://github.com/WTFox/luna.nvim"
     },
     "lz.n": {
       "rev": "c368ae2c6cc6b58a598adcee2cbfc36d341053f2",
@@ -92,10 +56,6 @@
     "mini.nvim": {
       "rev": "9b132c10d34675315327a7d58cc6684cb4e8faf2",
       "src": "https://github.com/nvim-mini/mini.nvim"
-    },
-    "neg.nvim": {
-      "rev": "f6c50c5d2f3866534e165fdd357abf5769e9e0d9",
-      "src": "https://github.com/neg-serg/neg.nvim"
     },
     "neojj": {
       "rev": "d84589a265c44b5183887a43a456fe14550c0b56",
@@ -150,17 +110,9 @@
       "rev": "129bce432c822300ad8b0c5f573fcf4ef42d4e52",
       "src": "https://github.com/techwizrd/render-latex.nvim"
     },
-    "render-markdown.nvim": {
-      "rev": "8e8795368391036643b622875a6da6a51bcd33f4",
-      "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
-    },
     "snacks.nvim": {
       "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
       "src": "https://github.com/folke/snacks.nvim"
-    },
-    "spinner.nvim": {
-      "rev": "d0ff69542de176963a4da68e55b6020c095296b4",
-      "src": "https://github.com/xieyonn/spinner.nvim"
     },
     "sqlite.lua": {
       "rev": "50092d60feb242602d7578398c6eb53b4a8ffe7b",
@@ -170,10 +122,6 @@
       "rev": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
-    "tiny-cmdline.nvim": {
-      "rev": "ac9c6557c66da6308eb523643df8778f3cbe652f",
-      "src": "https://github.com/rachartier/tiny-cmdline.nvim"
-    },
     "tiny-code-action.nvim": {
       "rev": "91a9c32228e9a7761d241023d9ebb9d11d8fb10d",
       "src": "https://github.com/rachartier/tiny-code-action.nvim"
@@ -181,18 +129,6 @@
     "tokyonight.nvim": {
       "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",
       "src": "https://github.com/folke/tokyonight.nvim"
-    },
-    "vim-dadbod": {
-      "rev": "6d1d41da4873a445c5605f2005ad2c68c99d8770",
-      "src": "https://github.com/tpope/vim-dadbod"
-    },
-    "vim-dadbod-completion": {
-      "rev": "8c65c6b02e8434e5360fc78097e489c05e899697",
-      "src": "https://github.com/kristijanhusak/vim-dadbod-completion"
-    },
-    "vim-dadbod-ui": {
-      "rev": "afd07819d8efcefc3317205b855ad4e3513b0011",
-      "src": "https://github.com/kristijanhusak/vim-dadbod-ui"
     },
     "zotcite": {
       "rev": "f57a5ebc67bd7768da1abd5ba270ec7426b32c6a",

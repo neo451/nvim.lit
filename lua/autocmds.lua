@@ -2,6 +2,20 @@ local function augroup(name)
    return vim.api.nvim_create_augroup("auto_" .. name, { clear = true })
 end
 
+vim.api.nvim_create_autocmd("BufWritePost", {
+   pattern = "*.lua",
+   callback = function(args)
+      if
+         #vim.lsp.get_clients({
+            bufnr = args.buf,
+            method = "textDocument/formatting",
+         }) > 0
+      then
+         vim.system({ "stylua", vim.api.nvim_buf_get_name(args.buf) })
+      end
+   end,
+})
+
 -- Neovim's default SwapExists handler calls vim.notify() synchronously. A
 -- notification UI such as Snacks may open/change a buffer at that point, which
 -- is forbidden during SwapExists and raises E812. Preserve the default choice,

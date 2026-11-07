@@ -228,7 +228,9 @@ nmap_leader("nS", function()
 end)
 
 nmap_leader("O", "<cmd>Obsidian<cr>")
-nmap_leader("oc", require("obsidian._actions").capture_to_daily)
+nmap_leader("oc", function()
+   require("obsidian._actions").capture_to_daily()
+end)
 
 nmap_leader("go", function()
    MiniDiff.toggle_overlay(0)
