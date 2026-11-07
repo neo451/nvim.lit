@@ -1,3 +1,6 @@
+vim.lsp.enable("rime_ls")
+-- vim.lsp.enable("pele")
+
 require("markdown-plus").setup({})
 -- require("render-markdown").setup({
 --    html = {

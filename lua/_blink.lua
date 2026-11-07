@@ -87,6 +87,23 @@ local function get_rime_item_indexes(count, items)
    return indexes
 end
 
+-- rime-ls processes a trailing number as a candidate selection. Once it
+-- responds with the single committed candidate, accept it immediately instead
+-- of requiring a second space/Enter press.
+require("blink.cmp.completion.list").show_emitter:on(function(event)
+   if not vim.g.rime_enabled then
+      return
+   end
+   local cursor_col = event.context.cursor[2]
+   if event.context.line:sub(cursor_col, cursor_col):match("%d") == nil then
+      return
+   end
+   local indexes = get_rime_item_indexes(2, event.items)
+   if #indexes == 1 then
+      require("blink.cmp").accept({ index = indexes[1], force = true })
+   end
+end)
+
 require("blink.cmp").setup({
    keymap = {
       preset = "default",
@@ -172,7 +189,7 @@ require("blink.cmp").setup({
          "buffer",
       },
       per_filetype = {
-         gitcommit = { "lsp", "dictionary" },
+         gitcommit = { "snippets" },
          markdown = { "lsp", "dictionary" },
          plaintex = { "lsp", "dictionary" },
          quarto = { "lsp", "dictionary" },
@@ -226,20 +243,3 @@ require("blink.cmp").setup({
       },
    },
 })
-
--- rime-ls processes a trailing number as a candidate selection. Once it
--- responds with the single committed candidate, accept it immediately instead
--- of requiring a second space/Enter press.
-require("blink.cmp.completion.list").show_emitter:on(function(event)
-   if not vim.g.rime_enabled then
-      return
-   end
-   local cursor_col = event.context.cursor[2]
-   if event.context.line:sub(cursor_col, cursor_col):match("%d") == nil then
-      return
-   end
-   local indexes = get_rime_item_indexes(2, event.items)
-   if #indexes == 1 then
-      require("blink.cmp").accept({ index = indexes[1], force = true })
-   end
-end)

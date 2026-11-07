@@ -2,7 +2,6 @@ vim.loader.enable()
 
 vim.pack.add({
    "https://github.com/MagicDuck/grug-far.nvim",
-   "https://github.com/neovim/nvim-lspconfig",
    "https://github.com/igorlfs/nvim-lsp-file-operations",
 
    "https://github.com/lumen-oss/lz.n",
@@ -203,28 +202,11 @@ vim.cmd("packadd nohlsearch")
 vim.cmd("packadd cfilter")
 
 -- require("lsp-file-operations").setup({})
---
--- local lspconfig = require("lspconfig")
---
--- -- Set global defaults for all servers
--- lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
---    capabilities = vim.tbl_deep_extend(
---       "force",
---       vim.lsp.protocol.make_client_capabilities(),
---       -- returns configured operations if setup() was already called
---       -- or default operations if not
---       require("lsp-file-operations").default_capabilities()
---    ),
--- })
 
 require("options")
 require("experiments")
 
-vim.lsp.enable("rime_ls")
-vim.lsp.enable("emmylua_ls")
-vim.lsp.enable("pele")
-
-local servers = {
+vim.lsp.enable({
    "gopls",
    "nixd",
    "ruff",
@@ -234,14 +216,7 @@ local servers = {
    -- "markdown_oxide"
    -- "marksman",
    -- "harper_ls",
-}
-
-for _, name in ipairs(servers) do
-   local _, err = pcall(vim.lsp.enable, name)
-   if err ~= nil then
-      vim.notify(err)
-   end
-end
+})
 
 require("autocmds")
 require("pomodoro").setup()
