@@ -1,10 +1,10 @@
 require("markdown-plus").setup({})
-require("render-markdown").setup({
-   html = {
-      comment = { conceal = false },
-   },
-   latex = { enabled = false },
-})
+-- require("render-markdown").setup({
+--    html = {
+--       comment = { conceal = false },
+--    },
+--    latex = { enabled = false },
+-- })
 
 require("_jieba")
 

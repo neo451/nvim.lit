@@ -43,6 +43,12 @@ if vim.uv.fs_stat(PLUGIN_DIR) ~= nil then
    end
 end
 
+-- vim.pack keeps plugins under stdpath("data"), which is outside ~/Plugins
+-- and is not included in Neovim's runtime file list when an opt plugin is unloaded.
+for _, plugin in ipairs(vim.pack.get()) do
+   table.insert(library, plugin.path)
+end
+
 ---@type vim.lsp.Config
 return {
    cmd = { emmylua_cmd, "--communication", "stdio", "--editor", "neovim" },

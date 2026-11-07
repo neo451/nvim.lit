@@ -236,28 +236,28 @@ obsidian.setup({
       -- footer_options = function(ctx, done)
       --    done({ virt_text = ctx.lines[1], virt_text_pos = "eol_right_align" })
       -- end,
-      footer_content = function(ctx, done)
-         local note = require("obsidian.note").from_buffer(ctx.bufnr)
-         if not note then
-            done({})
-            return
-         end
-
-         note:backlinks_async({}, function(matches)
-            -- local lines = { { "", "Comment" } }
-            local lines = {}
-            for _, match in ipairs(matches) do
-               local text = string.format(
-                  "%s [%d]: %s",
-                  tostring(require("obsidian.path").new(match.path):vault_relative_path()),
-                  match.line,
-                  match.text
-               )
-               lines[#lines + 1] = { { text, "Comment" } }
-            end
-            done(lines)
-         end)
-      end,
+      -- footer_content = function(ctx, done)
+      --    local note = require("obsidian.note").from_buffer(ctx.bufnr)
+      --    if not note then
+      --       done({})
+      --       return
+      --    end
+      --
+      --    note:backlinks_async({}, function(matches)
+      --       -- local lines = { { "", "Comment" } }
+      --       local lines = {}
+      --       for _, match in ipairs(matches) do
+      --          local text = string.format(
+      --             "%s [%d]: %s",
+      --             tostring(require("obsidian.path").new(match.path):vault_relative_path()),
+      --             match.line,
+      --             match.text
+      --          )
+      --          lines[#lines + 1] = { { text, "Comment" } }
+      --       end
+      --       done(lines)
+      --    end)
+      -- end,
       attachment = require("obsidian.yazi_attachment"),
       bookmark = require("obsidian.yazi_attachment"),
       -- hints = function(ctx, done)

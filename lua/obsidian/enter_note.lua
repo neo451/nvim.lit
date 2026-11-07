@@ -34,7 +34,7 @@ local function item_range(lines, start)
 end
 
 local function archive_path(note, bufnr)
-   local path = tostring(note.path or require("obsidian.path").buffer(bufnr))
+   local path = note.path
    if path == "" then
       return
    end
@@ -105,14 +105,8 @@ return function(note)
 
    vim.lsp.semantic_tokens.enable(true, { bufnr = bufnr })
 
-   _G.obsidian_unlink = function()
-      require("obsidian.actions").unlink()
-   end
-   vim.keymap.set("n", "dl", function()
-      vim.go.operatorfunc = "v:lua.obsidian_unlink"
-      return "g@l"
-      -- return require("obsidian.textobj").dl_expr()
-   end, { buffer = true, expr = true, desc = "Obsidian Delete Link" })
+   vim.keymap.set({ "n", "x" }, "<leader>ol", actions.link_new, { desc = "Link new" })
+   vim.keymap.set({ "n", "x" }, "<leader>oL", actions.link, { desc = "Link" })
 
    pcall(function()
       vim.keymap.set("v", "<leader>nd", function()
@@ -124,17 +118,6 @@ return function(note)
       vim.bo[bufnr].readonly = false
    end
 
-   if require("obsidian.actions").increment ~= nil then
-      vim.keymap.set("n", "<C-a>", function()
-         require("obsidian.actions").increment()
-      end, { desc = "Obsidian image bigger", buffer = bufnr })
-
-      vim.keymap.set("n", "<C-x>", function()
-         require("obsidian.actions").decrement()
-      end, { desc = "Obsidian image smaller", buffer = bufnr })
-   end
-
-   vim.keymap.set({ "n", "x" }, "<leader>ol", actions.link_new, { desc = "Link new" })
    require("obsidian.actions.process_image")
    require("obsidian.actions.copy_location")
    require("obsidian.actions.insert_song")

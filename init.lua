@@ -21,11 +21,14 @@ vim.pack.add({
    "https://github.com/folke/tokyonight.nvim",
    "https://github.com/edeneast/nightfox.nvim",
    "https://github.com/catppuccin/nvim",
+   "https://github.com/WTFox/luna.nvim",
+   "https://github.com/neg-serg/neg.nvim",
+   "https://github.com/ntk148v/lauds",
 
    -- writing
-   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+   -- "https://github.com/MeanderingProgrammer/render-markdown.nvim",
    "https://github.com/techwizrd/render-latex.nvim",
-   -- "https://github.com/OXY2DEV/markview.nvim",
+   "https://github.com/OXY2DEV/markview.nvim",
    "https://github.com/YousefHadder/markdown-plus.nvim",
    "https://github.com/jmbuhr/otter.nvim",
    "https://github.com/quarto-dev/quarto-nvim",
@@ -89,7 +92,6 @@ require("snacks").setup({
 })
 
 require("lz.n").load({
-   { "render-markdown.nvim" },
    {
       "tiny-code-action.nvim",
       after = function()
@@ -253,6 +255,6 @@ require("vim._core.ui2").enable({
    },
 })
 
--- vim.cmd.colorscheme("duskfox")
--- vim.cmd.colorscheme("tokyonight")
-vim.cmd.colorscheme("catppuccin")
+-- vim.cmd.colorscheme("lauds")
+vim.cmd.colorscheme("tokyonight")
+-- vim.cmd.colorscheme("luna")

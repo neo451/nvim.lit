@@ -1,12 +1,10 @@
-local Path = require("obsidian.path")
-
 ---@type table<string, obsidian.BacklinkMatch[]>
 local linked_mentions_cache = {}
 
 ---@param match obsidian.BacklinkMatch
 ---@return string, integer, integer, string
 local function backlink_sort_key(match)
-   local rel_path = Path.new(match.path):vault_relative_path() or tostring(match.path)
+   local rel_path = api.vault_relative_path(match.path) or tostring(match.path)
    return rel_path, match.line or 0, match.start or 0, match.text or ""
 end
 
