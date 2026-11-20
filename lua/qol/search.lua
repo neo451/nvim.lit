@@ -1,7 +1,6 @@
 --- TODO: a complete function for prefix
 
 local config = {
-   trigger = "<C-S-;>",
    default_engine = "google",
    query_map = {
       google = "https://www.google.com/search?q=%s",
@@ -39,7 +38,7 @@ local function query_browser(input)
    if input then
       return _query_browser(input)
    end
-   local viz = require("obsidian.api").get_visual_selection()
+   local viz = require("qol.util").get_visual_selection()
 
    local default = nil
    if viz then
@@ -47,6 +46,8 @@ local function query_browser(input)
    else
       default = vim.bo.filetype == "markdown" and vim.fn.expand("<cWORD>") or nil
    end
+
+   ---@cast default string|nil
 
    vim.ui.input({
       prompt = "Search: ",
@@ -62,5 +63,4 @@ end
 
 return {
    query_browser = query_browser,
-   config = config,
 }
