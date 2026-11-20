@@ -1,4 +1,5 @@
 vim.lsp.enable("rime_ls")
+vim.lsp.enable("harper_ls")
 -- vim.lsp.enable("pele")
 
 require("markdown-plus").setup({})

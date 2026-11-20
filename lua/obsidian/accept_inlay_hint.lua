@@ -60,6 +60,11 @@ function M.accept_previous_inlay_hint()
                local f = vim.lsp.commands[command.command]
                if f ~= nil then
                   f(command, {})
+                  vim.schedule(function()
+                     require("obsidian.inlay_hints").refresh(bufnr)
+                  end)
+               else
+                  return false
                end
             end
 
