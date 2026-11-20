@@ -1,7 +1,7 @@
 {
   "plugins": {
     "agentic.nvim": {
-      "rev": "f0bef086b3ed6121d9a18a5a820d071c69f2f0f5",
+      "rev": "4750d6ce4298b3018dd67f975a1457afbeeaa09f",
       "src": "https://github.com/carlos-algms/agentic.nvim"
     },
     "blink-cmp-words": {
@@ -21,17 +21,25 @@
       "rev": "09d9ebef2cc5a5c04db7a349cd6c61bdf84ecc8e",
       "src": "https://github.com/esmuellert/codediff.nvim"
     },
+    "conform.nvim": {
+      "rev": "016802de402556da54c36bd7359b441266b01cdd",
+      "src": "https://github.com/stevearc/conform.nvim"
+    },
     "friendly-snippets": {
-      "rev": "b4d01b0fdf3c9a549961c2f9ffe8dc09be166219",
+      "rev": "7a1c9f7897a4eb078b157a04c7af81e5869215b1",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "6ab6a29d56888dcf66edfeb082ad4a46e7f075bb",
+      "rev": "22f0bbd3140a8a3b34fec75e5a640513ca6d4ce3",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "grug-far.nvim": {
       "rev": "91b7e58b6ffc6ddad5acb7a7c1df21257724449e",
       "src": "https://github.com/MagicDuck/grug-far.nvim"
+    },
+    "guh.nvim": {
+      "rev": "39df7dc86785539231a04dd61e2b79f280a08ba4",
+      "src": "https://github.com/justinmk/guh.nvim"
     },
     "jieba.nvim": {
       "rev": "adfb101e645f790acce3e6787e08a85429a31ed4",
@@ -46,7 +54,7 @@
       "src": "https://github.com/lumen-oss/lz.n"
     },
     "markdown-plus.nvim": {
-      "rev": "09de3f1af476636eb6b31c5528edfb6ec6558624",
+      "rev": "ac14838e1bb02b31a565a0e1b4e7dc772f0afbf4",
       "src": "https://github.com/YousefHadder/markdown-plus.nvim"
     },
     "markview.nvim": {
@@ -54,7 +62,7 @@
       "src": "https://github.com/OXY2DEV/markview.nvim"
     },
     "mini.nvim": {
-      "rev": "9b132c10d34675315327a7d58cc6684cb4e8faf2",
+      "rev": "f9ac12d7cbd2563cfc2cce9a8152fc8df2ad0d6f",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "neojj": {
@@ -78,7 +86,7 @@
       "src": "https://github.com/igorlfs/nvim-lsp-file-operations"
     },
     "nvim-treesitter": {
-      "rev": "915f2bd3d4e2a33704bfc476b5137e9befa82f3d",
+      "rev": "19bdfc04f40ed2ccb3340591d125f759b0406875",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
@@ -119,7 +127,7 @@
       "src": "https://github.com/kkharji/sqlite.lua"
     },
     "telescope.nvim": {
-      "rev": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
+      "rev": "1e1bab730218eaf97fce743be3f56e51075928ac",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "tiny-code-action.nvim": {

@@ -1,7 +1,3 @@
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_python3_provider = 0
-vim.g.loaded_ruby_provider = 0
-vim.g.node_host_prog = vim.fn.exepath("neovim-node-host")
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.loader.enable(true)
@@ -10,14 +6,16 @@ local opt = vim.opt
 local o = vim.o
 
 -- ui
-o.cmdheight = 0
+o.cmdheight = 0 -- works with :h ui2
 o.number = true
 o.relativenumber = true
-o.breakindent = true
-o.showmode = false
 o.cursorline = true
-o.list = true
+o.splitright = true
+o.splitbelow = true
 
+-- text
+o.list = true
+---@diagnostic disable-next-line: missing-fields
 opt.fillchars = {
    foldopen = "",
    foldclose = "",
@@ -27,17 +25,12 @@ opt.fillchars = {
    eob = " ",
 }
 
--- o.foldtext = ""
--- opt.formatoptions = "jcroqlnt" -- tcqj
-
 o.updatetime = 300
-
 o.iskeyword = "@,48-57,_,192-255,-" -- Treat dash as `word` textobject part
 
--- builtin completion
-o.complete = ".,w,b,kspell" -- Use less sources
 -- search
-o.ignorecase = true
+o.ignorecase = true -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
+o.smartcase = true
 
 -- term
 o.shell = "fish"
@@ -46,20 +39,10 @@ o.shell = "fish"
 o.expandtab = true
 o.tabstop = 2 -- Number of spaces tabs count for
 o.shiftwidth = 2
-
--- window manage
-o.splitright = true
-o.splitbelow = true
-
--- editing
-o.autowrite = true
--- Obsidian Headless watches the vault and can capture Neovim's transient
--- `filename~` write-back files as real notes.
-o.backup = false
-o.writebackup = false
--- o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
+o.formatoptions = "jcroqlnt" -- Format options
 
 -- completion
+o.complete = ".,w,b,kspell" -- Use less sources
 o.completeopt = "menu,menuone,noselect,popup,fuzzy"
 -- o.wildmode = "longest:full,full" -- Command-line completion mode
 vim.cmd([[set wildmode=noselect:lastused,full]])
@@ -68,7 +51,10 @@ vim.cmd([[set wildmode=noselect:lastused,full]])
 o.undofile = true
 o.undolevels = 10000
 
-o.formatoptions = "jcroqlnt" -- Format options
+-- Obsidian Headless watches the vault and can capture Neovim's transient
+-- `filename~` write-back files as real notes.
+o.backup = false
+o.writebackup = false
 
 -- writing
 o.spelllang = "en,cjk"

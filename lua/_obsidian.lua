@@ -97,13 +97,17 @@ obsidian.setup({
       auto_install = true,
    },
 
+   trash = {
+      enabled = true,
+   },
+
    -- search = {
    --    sort_by = "frecency",
    -- },
 
    picker = {
       -- name = false,
-      name = "snacks.picker",
+      -- name = "snacks.picker",
       -- name = "mini.pick",
       -- name = "fzf-lua",
       -- name = "telescope.nvim",

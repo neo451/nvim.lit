@@ -1,74 +1,139 @@
--- if true then
---    return
--- end
 local function is_rime_item(item)
-   return item.client_name == "rime_ls"
+   return item and item.client_name == "rime_ls"
 end
 
-local pending_space
-local double_space_timeout_ms = 500
+local last_commit
 
--- A quick second space after a Rime commit restores the raw spelling and
--- inserts a literal space, providing an escape hatch for names and unknown
--- English words.
-local function consume_pending_space(cmp)
-   if not pending_space then
-      return false
-   end
-
-   local pending = pending_space
-   pending_space = nil
-   if pending.bufnr ~= vim.api.nvim_get_current_buf() or not vim.api.nvim_buf_is_valid(pending.bufnr) then
-      return false
-   end
-   if pending.expires_at and vim.uv.now() > pending.expires_at then
-      return false
-   end
-
-   local cursor = vim.api.nvim_win_get_cursor(0)
-   if
-      vim.api.nvim_get_current_line() ~= pending.accepted_line
-      or cursor[1] ~= pending.accepted_cursor[1]
-      or cursor[2] ~= pending.accepted_cursor[2]
-   then
-      return false
-   end
-
-   cmp.hide()
-   if pending.original_line then
-      -- Text may not be changed directly from an expression mapping. Restore
-      -- the raw spelling and add the separator on the next event-loop turn.
-      vim.schedule(function()
-         if pending.bufnr ~= vim.api.nvim_get_current_buf() or not vim.api.nvim_buf_is_valid(pending.bufnr) then
-            return
-         end
-         local row, col = pending.original_cursor[1], pending.original_cursor[2]
-         local line = pending.original_line:sub(1, col) .. " " .. pending.original_line:sub(col + 1)
-         vim.api.nvim_buf_set_lines(pending.bufnr, row - 1, row, false, { line })
-         vim.api.nvim_win_set_cursor(0, { row, col + 1 })
-      end)
-      return true
-   end
-   return " "
-end
-
-local function accept_rime_on_space(cmp, index)
+-- Blink creates an undo point, but undo may also reverse unrelated insert edits.
+-- Save only the actual text changed by the last Rime acceptance.
+local function accept_rime(cmp, index, suffix)
    local bufnr = vim.api.nvim_get_current_buf()
    local original_line = vim.api.nvim_get_current_line()
    local original_cursor = vim.api.nvim_win_get_cursor(0)
    return cmp.accept({
       index = index,
       callback = function()
-         pending_space = {
-            bufnr = bufnr,
-            accepted_line = vim.api.nvim_get_current_line(),
-            accepted_cursor = vim.api.nvim_win_get_cursor(0),
-            original_line = original_line,
-            original_cursor = original_cursor,
-            expires_at = vim.uv.now() + double_space_timeout_ms,
+         if bufnr ~= vim.api.nvim_get_current_buf() then
+            return
+         end
+         local accepted_line = vim.api.nvim_get_current_line()
+         local cursor = vim.api.nvim_win_get_cursor(0)
+         last_commit = nil
+         if cursor[1] ~= original_cursor[1] or original_line == accepted_line then
+            return
+         end
+         local start = 1
+         while start <= math.min(#original_line, #accepted_line)
+            and original_line:byte(start) == accepted_line:byte(start) do
+            start = start + 1
+         end
+         local old_end, new_end = #original_line, #accepted_line
+         while old_end >= start and new_end >= start
+            and original_line:byte(old_end) == accepted_line:byte(new_end) do
+            old_end, new_end = old_end - 1, new_end - 1
+         end
+         local raw = original_line:sub(start, old_end)
+         local converted = accepted_line:sub(start, new_end)
+         if not raw:match("^[%a]+[%a%d']*$") or converted == "" or cursor[2] ~= new_end then
+            return
+         end
+         last_commit = {
+            bufnr = bufnr, row = cursor[1], col = start - 1,
+            raw = raw, converted = converted, line = accepted_line, cursor = cursor[2],
          }
+         if suffix then
+            -- Keymap is an expression mapping: defer buffer edits until it returns.
+            vim.schedule(function()
+               local commit = last_commit
+               if not commit or commit.bufnr ~= bufnr or vim.api.nvim_get_current_buf() ~= bufnr
+                  or vim.api.nvim_get_current_line() ~= commit.line
+                  or not vim.deep_equal(vim.api.nvim_win_get_cursor(0), { commit.row, commit.cursor }) then
+                  return
+               end
+               vim.api.nvim_buf_set_text(bufnr, commit.row - 1, commit.cursor, commit.row - 1, commit.cursor, { suffix })
+               vim.api.nvim_win_set_cursor(0, { commit.row, commit.cursor + #suffix })
+               commit.line = vim.api.nvim_get_current_line()
+               commit.cursor = commit.cursor + #suffix
+            end)
+         end
       end,
    })
+end
+
+local function restore_rime()
+   local commit = last_commit
+   if not commit then
+      return false
+   end
+   if not vim.g.rime_enabled or commit.bufnr ~= vim.api.nvim_get_current_buf() then
+      last_commit = nil
+      return false
+   end
+   local cursor = vim.api.nvim_win_get_cursor(0)
+   if cursor[1] ~= commit.row or cursor[2] ~= commit.cursor or vim.api.nvim_get_current_line() ~= commit.line then
+      last_commit = nil
+      return false
+   end
+   last_commit = nil
+   require("blink.cmp").hide()
+   -- Do not edit the buffer inside an insert-mode mapping callback.
+   vim.schedule(function()
+      if not vim.api.nvim_buf_is_valid(commit.bufnr) or commit.bufnr ~= vim.api.nvim_get_current_buf()
+         or vim.api.nvim_get_current_line() ~= commit.line
+         or not vim.deep_equal(vim.api.nvim_win_get_cursor(0), { commit.row, commit.cursor }) then
+         return
+      end
+      vim.api.nvim_buf_set_text(commit.bufnr, commit.row - 1, commit.col, commit.row - 1,
+         commit.col + #commit.converted, { commit.raw })
+      vim.api.nvim_win_set_cursor(0, { commit.row, commit.cursor + #commit.raw - #commit.converted })
+   end)
+   return true
+end
+
+-- Leave Markdown syntax (-, *, #, quotes, brackets) and English apostrophes literal.
+local punctuation = { [","] = "，", ["."] = "。", ["?"] = "？", ["!"] = "！", [":"] = "：", [";"] = "；" }
+local prose_filetypes = {
+   markdown = true, plaintex = true, quarto = true, text = true,
+   tex = true, typst = true, gitcommit = true,
+}
+
+local function is_han(cp)
+   return (cp >= 0x3400 and cp <= 0x9fff) or (cp >= 0x20000 and cp <= 0x3134f)
+end
+
+local function after_han()
+   local col = vim.api.nvim_win_get_cursor(0)[2]
+   local before = vim.api.nvim_get_current_line():sub(1, col)
+   return before ~= "" and is_han(vim.fn.strgetchar(before, vim.fn.strchars(before) - 1))
+end
+
+-- Reject punctuation (including full-width variants), but keep Chinese words.
+local function filter_rime_items(ctx, items)
+   local keyword = ctx.get_keyword()
+   local filtered = {}
+   for _, item in ipairs(items) do
+      if not is_rime_item(item) then
+         filtered[#filtered + 1] = item
+      elseif keyword:match("%a") then
+         local text = item.textEdit and item.textEdit.newText or item.insertText
+         if not text then
+            text = item.label:gsub("^%d+[%.、%s]+", "")
+         end
+         local is_word = text:match("[%a%d]") ~= nil
+         if not is_word then
+            for i = 0, vim.fn.strchars(text) - 1 do
+               if is_han(vim.fn.strgetchar(text, i)) then
+                  is_word = true
+                  break
+               end
+            end
+         end
+         if is_word then
+            filtered[#filtered + 1] = item
+         end
+      end
+   end
+   return filtered
 end
 
 -- Return completion-list indexes rather than assuming Rime is the only LSP.
@@ -100,12 +165,11 @@ require("blink.cmp.completion.list").show_emitter:on(function(event)
    end
    local indexes = get_rime_item_indexes(2, event.items)
    if #indexes == 1 then
-      require("blink.cmp").accept({ index = indexes[1], force = true })
+      accept_rime(require("blink.cmp"), indexes[1])
    end
 end)
 
-require("blink.cmp").setup({
-   keymap = {
+local keymap = {
       preset = "default",
       -- Space selects only when Rime is the highest-ranked item. An exact
       -- English dictionary match suppresses accidental Chinese conversion but
@@ -115,11 +179,6 @@ require("blink.cmp").setup({
             if not vim.g.rime_enabled then
                return false
             end
-            local escaped = consume_pending_space(cmp)
-            if escaped then
-               return escaped
-            end
-
             local list = require("blink.cmp.completion.list")
             local top_item = list.items[1]
             if top_item and is_rime_item(top_item) then
@@ -127,7 +186,7 @@ require("blink.cmp").setup({
                if not is_rime_item(list.items[index]) then
                   index = 1
                end
-               return accept_rime_on_space(cmp, index)
+               return accept_rime(cmp, index)
             end
             if top_item then
                cmp.hide()
@@ -142,9 +201,12 @@ require("blink.cmp").setup({
             if not vim.g.rime_enabled then
                return false
             end
+            if prose_filetypes[vim.bo.filetype] and after_han() then
+               return punctuation[";"]
+            end
             local indexes = get_rime_item_indexes(2)
             if #indexes == 2 then
-               return cmp.accept({ index = indexes[2] })
+               return accept_rime(cmp, indexes[2])
             end
             return false
          end,
@@ -157,13 +219,55 @@ require("blink.cmp").setup({
             end
             local indexes = get_rime_item_indexes(3)
             if #indexes == 3 then
-               return cmp.accept({ index = indexes[3] })
+               return accept_rime(cmp, indexes[3])
             end
             return false
          end,
          "fallback",
       },
-   },
+      ["<C-y>"] = {
+         function(cmp)
+            local list = require("blink.cmp.completion.list")
+            local index = list.selected_item_idx or 1
+            if vim.g.rime_enabled and is_rime_item(list.items[index]) then
+               return accept_rime(cmp, index)
+            end
+            return false
+         end,
+         "select_and_accept",
+         "fallback",
+      },
+}
+
+for key, wide in pairs(punctuation) do
+   if key ~= ";" then
+      keymap[key] = {
+         function(cmp)
+            if not vim.g.rime_enabled or not prose_filetypes[vim.bo.filetype] then
+               return false
+            end
+            local list = require("blink.cmp.completion.list")
+            local top = list.items[1]
+            if is_rime_item(top) and not after_han() then
+               local index = list.selected_item_idx or 1
+               if not is_rime_item(list.items[index]) then
+                  index = 1
+               end
+               return accept_rime(cmp, index, wide)
+            end
+            if after_han() then
+               cmp.hide()
+               return wide
+            end
+            return false
+         end,
+         "fallback",
+      }
+   end
+end
+
+require("blink.cmp").setup({
+   keymap = keymap,
 
    completion = {
       menu = {
@@ -200,7 +304,7 @@ require("blink.cmp").setup({
       },
       providers = {
          lsp = {
-            transform_items = function(_, items)
+            transform_items = function(ctx, items)
                -- Preserve Text items (Rime candidates) instead of using Blink's
                -- default LSP transformer, which filters them out.
                for _, item in ipairs(items) do
@@ -212,7 +316,7 @@ require("blink.cmp").setup({
                      item.score_offset = item.score_offset + 100
                   end
                end
-               return items
+               return filter_rime_items(ctx, items)
             end,
          },
          dadbod = {
@@ -243,3 +347,5 @@ require("blink.cmp").setup({
       },
    },
 })
+
+return { restore_rime = restore_rime, filter_rime_items = filter_rime_items }

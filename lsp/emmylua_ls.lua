@@ -33,8 +33,8 @@ if vim.uv.fs_stat(PLUGIN_DIR) ~= nil then
    end
 end
 
-for _, plugin in ipairs(vim.pack.get()) do
-   table.insert(library, plugin.path)
+for _, plugin_path in ipairs(vim.g.emmylua_pack_library or {}) do
+   table.insert(library, plugin_path)
 end
 
 ---@type vim.lsp.Config

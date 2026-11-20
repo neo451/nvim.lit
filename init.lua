@@ -38,10 +38,13 @@ vim.pack.add({
 
    -- git
    "https://github.com/esmuellert/codediff.nvim",
+   "https://github.com/justinmk/guh.nvim",
 
    -- ui
    "https://github.com/shortcuts/no-neck-pain.nvim",
    "https://github.com/rachartier/tiny-code-action.nvim",
+
+   "https://github.com/stevearc/conform.nvim",
 
    -- treesitter
    {
@@ -73,6 +76,12 @@ vim.pack.add({
    end,
 })
 
+-- vim.pack.get() may yield while resolving package metadata; cache these paths
+-- at startup instead of calling it from an LSP config during FileType handling.
+vim.g.emmylua_pack_library = vim.tbl_map(function(plugin)
+   return plugin.path
+end, vim.pack.get())
+
 require("_mini")
 require("_treesitter")
 require("snacks").setup({
@@ -89,6 +98,22 @@ require("lz.n").load({
       cmd = "Obsidian",
       after = function()
          require("_obsidian")
+      end,
+   },
+   {
+      "conform.nvim",
+      after = function()
+         require("conform").setup({
+            formatters_by_ft = {
+               lua = { "stylua" },
+               markdown = { "prettier" },
+            },
+            format_on_save = {
+               -- These options will be passed to conform.format()
+               timeout_ms = 500,
+               lsp_format = "fallback",
+            },
+         })
       end,
    },
    {
@@ -134,7 +159,6 @@ require("lz.n").load({
          },
          {
             "<leader>ad", -- ai Diagnostics
-
             function()
                require("agentic").add_current_line_diagnostics()
             end,
@@ -248,6 +272,14 @@ vim.cmd("packadd cfilter")
 
 require("options")
 require("experiments")
+
+vim.api.nvim_create_autocmd("BufEnter", {
+   pattern = "guh://*",
+   callback = function(ev)
+      vim.lsp.start(vim.lsp.config.guh_ls, { bufnr = ev.buf })
+   end,
+   desc = "Attach Guh code-action LSP to guh:// buffers",
+})
 
 vim.lsp.enable({
    "gopls",

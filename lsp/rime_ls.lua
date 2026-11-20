@@ -1,4 +1,6 @@
-vim.g.rime_enabled = true
+vim.g.rime_enabled = false
+
+-- TODO: full-half width toggle with rime toggle
 
 local prose_filetypes = {
    gitcommit = true,
@@ -64,6 +66,8 @@ return {
       shared_data_dir = rime_shared_data_dir,
       user_data_dir = rime_user_data_dir,
       log_dir = "/tmp",
+      -- Blink filters punctuation candidates and maps prose punctuation after Han;
+      -- keep Rime paging keys from treating Markdown syntax as input.
       paging_characters = {},
       trigger_characters = {},
       schema_trigger_character = "&",

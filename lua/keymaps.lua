@@ -120,12 +120,16 @@ local function accept_previous_inlay_hint()
    return false
 end
 
--- Accept the nearest link-suggestion hint, or fix the previous spell error.
+-- Correct the last Rime commit, accept a link hint, or fix a spelling error.
 set("i", "<C-l>", function()
+   local blink = package.loaded["_blink"]
+   if blink and blink.restore_rime() then
+      return
+   end
    if not accept_previous_inlay_hint() then
       vim.api.nvim_feedkeys(vim.keycode("<Esc>[s1z=`]a"), "n", false)
    end
-end, { desc = "Accept previous inlay hint or fix previous spelling" })
+end, { desc = "Correct Rime, accept inlay hint, or fix spelling" })
 
 -- Builtin completion: open the menu, then use <C-n>/<C-p> to move.
 set("i", "<C-n>", function()
@@ -242,6 +246,10 @@ end, "Open Lazygit")
 
 nmap_leader("gd", function()
    vim.cmd("CodeDiff main")
+end, "Open Lazygit")
+
+nmap_leader("gh", function()
+   vim.cmd("Guh obsidian-nvim/obsidian.nvim")
 end, "Open Lazygit")
 
 -- b is for 'Buffer'
