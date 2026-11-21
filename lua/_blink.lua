@@ -1,3 +1,5 @@
+local cmp = require("blink.cmp")
+
 local function is_rime_item(item)
    return item and item.client_name == "rime_ls"
 end
@@ -75,7 +77,7 @@ local function restore_rime()
       return false
    end
    last_commit = nil
-   require("blink.cmp").hide()
+   cmp.hide()
    -- Do not edit the buffer inside an insert-mode mapping callback.
    vim.schedule(function()
       if not vim.api.nvim_buf_is_valid(commit.bufnr) or commit.bufnr ~= vim.api.nvim_get_current_buf()
@@ -142,7 +144,7 @@ end
 -- Return completion-list indexes rather than assuming Rime is the only LSP.
 -- This keeps selection stable alongside markdown, dictionary and code sources.
 local function get_rime_item_indexes(count, items)
-   items = items or require("blink.cmp.completion.list").items
+   items = items or cmp.get_items()
    local indexes = {}
    for index, item in ipairs(items or {}) do
       if is_rime_item(item) then
@@ -158,19 +160,28 @@ end
 -- rime-ls processes a trailing number as a candidate selection. Once it
 -- responds with the single committed candidate, accept it immediately instead
 -- of requiring a second space/Enter press.
-require("blink.cmp.completion.list").show_emitter:on(function(event)
-   if not vim.g.rime_enabled then
-      return
-   end
-   local cursor_col = event.context.cursor[2]
-   if event.context.line:sub(cursor_col, cursor_col):match("%d") == nil then
-      return
-   end
-   local indexes = get_rime_item_indexes(2, event.items)
-   if #indexes == 1 then
-      accept_rime(require("blink.cmp"), indexes[1])
-   end
-end)
+vim.api.nvim_create_autocmd("User", {
+   group = vim.api.nvim_create_augroup("BlinkRimeAutoAccept", { clear = true }),
+   pattern = "BlinkCmpShow",
+   callback = function(event)
+      if not vim.g.rime_enabled then
+         return
+      end
+      local context = event.data and event.data.context
+      local current_context = cmp.get_context()
+      if not context or not current_context or current_context.id ~= context.id then
+         return
+      end
+      local cursor_col = context.cursor[2]
+      if context.line:sub(cursor_col, cursor_col):match("%d") == nil then
+         return
+      end
+      local indexes = get_rime_item_indexes(2)
+      if #indexes == 1 then
+         accept_rime(cmp, indexes[1])
+      end
+   end,
+})
 
 local keymap = {
       preset = "default",
@@ -182,11 +193,11 @@ local keymap = {
             if not vim.g.rime_enabled then
                return false
             end
-            local list = require("blink.cmp.completion.list")
-            local top_item = list.items[1]
+            local items = cmp.get_items()
+            local top_item = items[1]
             if top_item and is_rime_item(top_item) then
-               local index = list.selected_item_idx or 1
-               if not is_rime_item(list.items[index]) then
+               local index = cmp.get_selected_item_idx() or 1
+               if not is_rime_item(items[index]) then
                   index = 1
                end
                return accept_rime(cmp, index)
@@ -230,9 +241,9 @@ local keymap = {
       },
       ["<C-y>"] = {
          function(cmp)
-            local list = require("blink.cmp.completion.list")
-            local index = list.selected_item_idx or 1
-            if vim.g.rime_enabled and is_rime_item(list.items[index]) then
+            local items = cmp.get_items()
+            local index = cmp.get_selected_item_idx() or 1
+            if vim.g.rime_enabled and is_rime_item(items[index]) then
                return accept_rime(cmp, index)
             end
             return false
@@ -249,11 +260,11 @@ for key, wide in pairs(punctuation) do
             if not vim.g.rime_enabled or not prose_filetypes[vim.bo.filetype] then
                return false
             end
-            local list = require("blink.cmp.completion.list")
-            local top = list.items[1]
+            local items = cmp.get_items()
+            local top = items[1]
             if is_rime_item(top) and not after_han() then
-               local index = list.selected_item_idx or 1
-               if not is_rime_item(list.items[index]) then
+               local index = cmp.get_selected_item_idx() or 1
+               if not is_rime_item(items[index]) then
                   index = 1
                end
                return accept_rime(cmp, index, wide)
@@ -269,7 +280,7 @@ for key, wide in pairs(punctuation) do
    end
 end
 
-require("blink.cmp").setup({
+cmp.setup({
    keymap = keymap,
 
    completion = {

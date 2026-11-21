@@ -4,11 +4,13 @@ vim.g.rime_enabled = true
 vim.bo.filetype = "markdown"
 
 local config
-local listener
-local list = { items = {}, show_emitter = { on = function(_, fn) listener = fn end } }
+local list = { items = {}, context = nil, selected_item_idx = nil }
 local cmp = {
    setup = function(opts) config = opts end,
    hide = function() end,
+   get_context = function() return list.context end,
+   get_items = function() return list.items end,
+   get_selected_item_idx = function() return list.selected_item_idx end,
    accept = function(opts)
       local item = list.items[opts.index]
       assert(item and item.client_name == "rime_ls")
@@ -21,7 +23,6 @@ local cmp = {
    end,
 }
 package.loaded["blink.cmp"] = cmp
-package.loaded["blink.cmp.completion.list"] = list
 local rime = require("_blink")
 local function check(actual, expected)
    assert(actual == expected, tostring(actual) .. " != " .. tostring(expected))
@@ -109,5 +110,23 @@ check(config.keymap['"'][1](cmp), false)
 vim.g.rime_enabled = false
 line("中文")
 check(config.keymap["."][1](cmp), false)
-assert(listener)
+
+-- BlinkCmpShow is the public seam for automatically accepting a numbered
+-- Rime candidate. Ignore stale events from a superseded completion context.
+vim.g.rime_enabled = true
+local numbered = { client_name = "rime_ls", label = "你好", reading = "nihao1", word = "你好" }
+list.items = { numbered }
+list.context = { id = 2 }
+line("nihao1")
+vim.api.nvim_exec_autocmds("User", {
+   pattern = "BlinkCmpShow",
+   data = { context = { id = 1, cursor = { 1, 6 }, line = "nihao1X" } },
+})
+check(vim.api.nvim_get_current_line(), "nihao1X")
+vim.api.nvim_exec_autocmds("User", {
+   pattern = "BlinkCmpShow",
+   data = { context = { id = 2, cursor = { 1, 6 }, line = "nihao1X" } },
+})
+check(vim.api.nvim_get_current_line(), "你好X")
+
 print("Rime/Blink checks passed")
