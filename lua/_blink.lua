@@ -90,8 +90,11 @@ local function restore_rime()
    return true
 end
 
--- Leave Markdown syntax (-, *, #, quotes, brackets) and English apostrophes literal.
-local punctuation = { [","] = "，", ["."] = "。", ["?"] = "？", ["!"] = "！", [":"] = "：", [";"] = "；" }
+-- Leave Markdown syntax (-, *, #, brackets) and English quotes literal.
+local punctuation = {
+   [","] = "，", ["."] = "。", ["?"] = "？", ["!"] = "！", [":"] = "：", [";"] = "；",
+   ["("] = "（", [")"] = "）", ['"'] = "＂",
+}
 local prose_filetypes = {
    markdown = true, plaintex = true, quarto = true, text = true,
    tex = true, typst = true, gitcommit = true,

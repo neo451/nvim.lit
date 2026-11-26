@@ -61,9 +61,9 @@ o.spelllang = "en,cjk"
 o.spellfile = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.add")
 vim.g.spell_aff = vim.fs.joinpath(vim.fn.stdpath("config"), "spell", "en.utf-8.aff")
 
-vim.diagnostic.config({
-   -- virtual_text = {
-   virtual_lines = {
-      current_line = true,
-   },
-})
+-- vim.diagnostic.config({
+--    -- virtual_text = {
+--    virtual_lines = {
+--       current_line = true,
+--    },
+-- })

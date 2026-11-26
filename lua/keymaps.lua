@@ -3,7 +3,7 @@ local set = vim.keymap.set
 local diy_search = require("qol.search")
 set({ "n", "x" }, "<C-S-;>", diy_search.query_browser, { remap = true })
 
-set("i", "jk", "<esc>l")
+set("i", "jj", "<esc>l")
 set({ "n", "t" }, "<localleader>T", "<cmd>lua Snacks.terminal()<cr>")
 set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
@@ -214,6 +214,10 @@ end, "Hide Notifications")
 set("n", "<leader>fp", function()
    Snacks.picker.projects()
 end, { desc = "Find Project" })
+
+set("n", "<leader>fy", function()
+   require("cliphist_picker").open()
+end, { desc = "Clipboard history" })
 
 set("n", "<leader>fR", function()
    Snacks.picker.resume()

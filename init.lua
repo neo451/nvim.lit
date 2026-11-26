@@ -304,6 +304,7 @@ require("vim._core.ui2").enable({
       targets = "msg",
    },
 })
+dofile(vim.fs.joinpath(vim.fn.stdpath("config"), "diy", "ui2_diagnostics.lua"))
 
 -- vim.cmd.colorscheme("lauds")
 vim.cmd.colorscheme("tokyonight")

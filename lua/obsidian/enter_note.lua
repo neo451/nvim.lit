@@ -96,7 +96,8 @@ end
 ---@param note obsidian.Note
 return function(note)
    -- require("obsidian.winbar") -- TODO: make only attach per note
-   vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
+   -- vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
+   vim.wo.foldexpr = "v:lua.require'obsidian.folding'.foldexpr()"
    vim.wo.foldtext = "v:lua.vim.lsp.foldtext()"
    vim.wo.foldmethod = "expr"
    vim.wo.foldlevel = 99
@@ -126,6 +127,9 @@ return function(note)
    -- vim.keymap.set({ "n", "x" }, "<leader>oL", actions._link, { desc = "Link" })
 
    -- vim.keymap.set("n", "<leader>xt", _actions.process_image, { buffer = bufnr })
+   --
+   vim.keymap.set("n", "<Tab>", actions.fold_cycle, { buffer = bufnr })
+   vim.keymap.set("n", "<S-Tab>", actions.fold_cycle_global, { buffer = bufnr })
 
    vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, { buffer = bufnr })
    vim.keymap.set("n", "<leader>p", function()
